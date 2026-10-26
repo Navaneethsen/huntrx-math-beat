@@ -549,12 +549,12 @@ export const translations: Record<Language, Translations> = {
       playingAs: (idolName, role) => `Jouw Idol: ${idolName} (${role})`,
       currentStageBadge: (stageNum) => `Stage ${stageNum}`,
       continueStageBtn: (stageNum, skillName) =>
-        `▶ Ga Verder: Stage ${stageNum} • ${skillName}`,
+        `Ga Verder: Stage ${stageNum} • ${skillName}`,
       continueStageSub: (modeTitle, complexityTitle) =>
         `${modeTitle} • ${complexityTitle}`,
       tryOtherPowerBtn: '🔀 Andere Reken-Kracht Proberen',
       changeActivityBtn: '🎮 Andere Activiteit Kiezen',
-      switchPlayerBtn: '👥 Andere Speler / Nieuw',
+      switchPlayerBtn: 'Andere Speler / Nieuw',
       customizeWizardBtn: '⚙️ Stap-voor-Stap Kiezen',
     },
     profiles: {
@@ -570,7 +570,7 @@ export const translations: Record<Language, Translations> = {
       cancelBtn: 'Annuleren',
       stagesClearedLabel: (count) => `${count} stages voltooid`,
       nextStageAutoBtn: (stageNum, skillName, complexityTitle) =>
-        `▶ Volgende Stage (${stageNum}): ${skillName} • ${complexityTitle} 🚀`,
+        `Volgende Stage (${stageNum}): ${skillName} • ${complexityTitle} 🚀`,
       tryAnotherPowerVictoryBtn: '🔀 Andere Reken-Kracht Kiezen',
     },
   },
@@ -866,12 +866,12 @@ export const translations: Record<Language, Translations> = {
       playingAs: (idolName, role) => `Playing as ${idolName} (${role})`,
       currentStageBadge: (stageNum) => `Stage ${stageNum}`,
       continueStageBtn: (stageNum, skillName) =>
-        `▶ Continue Stage ${stageNum} • ${skillName}`,
+        `Continue Stage ${stageNum} • ${skillName}`,
       continueStageSub: (modeTitle, complexityTitle) =>
         `${modeTitle} • ${complexityTitle}`,
       tryOtherPowerBtn: '🔀 Try Another Math Power',
       changeActivityBtn: '🎮 Change Activity Mode',
-      switchPlayerBtn: '👥 Switch / New Player',
+      switchPlayerBtn: 'Switch / New Player',
       customizeWizardBtn: '⚙️ Step-by-Step Setup',
     },
     profiles: {
@@ -887,7 +887,7 @@ export const translations: Record<Language, Translations> = {
       cancelBtn: 'Cancel',
       stagesClearedLabel: (count) => `${count} stages cleared`,
       nextStageAutoBtn: (stageNum, skillName, complexityTitle) =>
-        `▶ Next Stage (${stageNum}): ${skillName} • ${complexityTitle} 🚀`,
+        `Next Stage (${stageNum}): ${skillName} • ${complexityTitle} 🚀`,
       tryAnotherPowerVictoryBtn: '🔀 Try Another Math Power',
     },
   },

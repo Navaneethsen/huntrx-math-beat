@@ -24,6 +24,8 @@ import {
   UserPlus,
   ChevronRight,
   Trash2,
+  Menu,
+  X,
 } from 'lucide-react';
 import { Language, translations } from './i18n/translations';
 import {
@@ -152,6 +154,7 @@ export const App: React.FC = () => {
   const [showDojo, setShowDojo] = useState(false);
   const [showXRay, setShowXRay] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showHeaderMenu, setShowHeaderMenu] = useState(false);
   const [leveledUpBanner, setLeveledUpBanner] = useState<number | null>(null);
 
   // Audio & Modals
@@ -849,7 +852,7 @@ export const App: React.FC = () => {
   return (
     <div
       data-theme={theme}
-      className={`app-shell ${
+      className={`app-shell overflow-x-hidden w-full ${
         theme === 'light' ? 'theme-light' : 'theme-dark'
       } min-h-screen transition-colors duration-300 text-white flex flex-col justify-between pb-8 ${
         isGoldenCombo && screen === 'playing'
@@ -857,11 +860,11 @@ export const App: React.FC = () => {
           : 'bg-[#090414] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-950/60 via-[#090414] to-[#05020a]'
       }`}
     >
-      {/* Top Navigation + Idol XP / Gems / Photobook Bar */}
+      {/* Top Navigation + Idol XP / Gems / Hamburger Menu Bar */}
       <header className="sticky top-0 z-40 backdrop-blur-md bg-[#090414]/90 border-b border-fuchsia-500/30 px-3 sm:px-6 py-2.5">
-        <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-2">
+        <div className="relative max-w-6xl mx-auto flex items-center justify-between gap-2">
           {/* Logo & Back Button */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2 min-w-0">
             {screen !== 'menu' && (
               <button
                 type="button"
@@ -869,7 +872,7 @@ export const App: React.FC = () => {
                   soundEngine.playTap();
                   setScreen('menu');
                 }}
-                className="p-2 rounded-xl bg-purple-900/60 hover:bg-purple-800 border border-fuchsia-400/40 text-fuchsia-200 flex items-center gap-1 text-xs font-bold"
+                className="p-2 rounded-xl bg-purple-900/60 hover:bg-purple-800 border border-fuchsia-400/40 text-fuchsia-200 flex items-center gap-1 text-xs font-bold shrink-0"
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span className="hidden sm:inline">{t.backToStageBtn}</span>
@@ -877,29 +880,31 @@ export const App: React.FC = () => {
             )}
             <div
               onClick={() => setScreen('menu')}
-              className="cursor-pointer flex items-center gap-2"
+              className="cursor-pointer flex items-center gap-2 min-w-0"
             >
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-pink-500 via-purple-600 to-amber-400 p-0.5 shadow-[0_0_15px_rgba(236,72,153,0.5)]">
-                <div className="keep-dark-card w-full h-full bg-[#120626] rounded-[10px] flex items-center justify-center font-display font-black text-amber-300 text-sm">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-pink-500 via-purple-600 to-amber-400 p-0.5 shadow-[0_0_15px_rgba(236,72,153,0.5)] shrink-0">
+                <div className="keep-dark-card w-full h-full bg-[#120626] rounded-[10px] flex items-center justify-center font-display font-black text-amber-300 text-xs sm:text-sm">
                   H/X
                 </div>
               </div>
-              <div>
+              <div className="min-w-0">
                 <h1
-                  className={`font-display font-black text-sm sm:text-lg tracking-wide bg-gradient-to-r ${
+                  className={`font-display font-black text-xs sm:text-lg tracking-wide bg-gradient-to-r ${
                     theme === 'light'
                       ? 'from-purple-800 via-pink-600 to-amber-600'
                       : 'from-amber-200 via-pink-300 to-cyan-300'
-                  } bg-clip-text text-transparent leading-none`}
+                  } bg-clip-text text-transparent leading-none truncate`}
                 >
-                  {t.appTitle}
+                  <span className="sm:hidden">HUNTR/X</span>
+                  <span className="hidden sm:inline">{t.appTitle}</span>
                 </h1>
                 {/* Live Idol Rank & XP Mini-Bar */}
                 <div className="flex items-center gap-1.5 mt-0.5">
-                  <span className="text-[10px] font-black text-amber-300">
-                    Lv.{levelInfo.level} {levelInfo.title}
+                  <span className="text-[10px] font-black text-amber-300 truncate">
+                    Lv.{levelInfo.level}{' '}
+                    <span className="hidden xs:inline sm:inline">{levelInfo.title}</span>
                   </span>
-                  <div className="w-16 sm:w-24 h-1.5 bg-purple-950 rounded-full overflow-hidden border border-purple-600/50">
+                  <div className="w-10 sm:w-24 h-1.5 bg-purple-950 rounded-full overflow-hidden border border-purple-600/50 shrink-0">
                     <div
                       style={{ width: `${levelInfo.progressPct}%` }}
                       className="h-full bg-gradient-to-r from-pink-500 to-amber-400 transition-all duration-300"
@@ -910,8 +915,8 @@ export const App: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Controls: Profile Switcher, Number Dojo, Photocard Album, Gems, How to Play, Sound, Beat, NL/EN */}
-          <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* Right Controls: Compact Player Pill, Dojo, Gems & Hamburger Dropdown Menu */}
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             {/* Multi-User Profile Switcher Button */}
             <button
               type="button"
@@ -922,8 +927,8 @@ export const App: React.FC = () => {
               }}
               className="px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-pink-500/25 to-purple-500/25 hover:from-pink-500/40 hover:to-purple-500/40 border border-pink-400/70 text-pink-100 text-xs font-extrabold flex items-center gap-1.5 shadow-[0_0_12px_rgba(236,72,153,0.25)] transition-all"
             >
-              <Users className="w-3.5 h-3.5 text-amber-300" />
-              <span className="max-w-[90px] truncate">
+              <Users className="w-3.5 h-3.5 text-amber-300 shrink-0" />
+              <span className="max-w-[72px] sm:max-w-[110px] truncate">
                 {activeProfile ? activeProfile.name : lang === 'nl' ? 'Spelers' : 'Players'}
               </span>
             </button>
@@ -949,148 +954,180 @@ export const App: React.FC = () => {
                 soundEngine.playTap();
                 setShowPhotocards(true);
               }}
-              className="px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/25 to-pink-500/25 hover:from-amber-500/40 hover:to-pink-500/40 border border-amber-300/70 text-amber-200 text-xs font-extrabold flex items-center gap-1.5 shadow-[0_0_15px_rgba(251,191,36,0.3)] transition-all"
+              className="px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/25 to-pink-500/25 hover:from-amber-500/40 hover:to-pink-500/40 border border-amber-300/70 text-amber-200 text-xs font-extrabold flex items-center gap-1 shadow-[0_0_15px_rgba(251,191,36,0.3)] transition-all"
             >
-              <Gift className="w-3.5 h-3.5 text-amber-300" />
               <span>💎 {progress.gems}</span>
-              <span className="hidden sm:inline text-pink-200">
+              <span className="hidden md:inline text-pink-200">
                 • 🃏 {progress.unlockedCards.length}/{PHOTOCARD_CATALOG.length}
               </span>
             </button>
 
+            {/* Hamburger Settings Dropdown Trigger (Music, Sound, Theme, Language, Rules) */}
             <button
               type="button"
-              data-testid="open-tutorial-btn"
+              data-testid="header-menu-btn"
               onClick={() => {
                 soundEngine.playTap();
-                setShowTutorial(true);
+                setShowHeaderMenu((prev) => !prev);
               }}
-              className="px-2.5 py-1.5 rounded-xl bg-fuchsia-500/20 hover:bg-fuchsia-500/30 border border-fuchsia-400/50 text-fuchsia-200 text-xs font-bold flex items-center gap-1 transition-all"
-            >
-              <HelpCircle className="w-3.5 h-3.5 text-amber-300" />
-              <span className="hidden md:inline">{t.howToPlayBtn}</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                const next = !sfxOn;
-                setSfxOn(next);
-                soundEngine.sfxEnabled = next;
-                if (!next) {
-                  setBeatOn(false);
-                  soundEngine.toggleBeat(false);
-                }
-              }}
-              title={sfxOn ? t.soundOn : t.soundOff}
-              className={`p-2 rounded-xl border text-xs font-bold transition-all ${
-                sfxOn
-                  ? 'bg-purple-900/60 border-purple-500/50 text-amber-300'
-                  : 'bg-slate-900 border-slate-700 text-slate-500'
-              }`}
-            >
-              {sfxOn ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-            </button>
-
-            <button
-              type="button"
-              data-testid="music-toggle"
-              onClick={() => {
-                if (!sfxOn) {
-                  setSfxOn(true);
-                  soundEngine.sfxEnabled = true;
-                }
-                const nextBeat = soundEngine.toggleBeat();
-                setBeatOn(nextBeat);
-              }}
-              title={
-                beatOn
-                  ? `${t.beatOn}: ${
-                      lang === 'nl'
-                        ? MUSIC_TRACKS[activeMusicTrack].labelNl
-                        : MUSIC_TRACKS[activeMusicTrack].labelEn
-                    }`
-                  : t.beatOff
-              }
-              className={`px-2.5 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1 transition-all ${
-                beatOn
-                  ? 'keep-white-text bg-gradient-to-r from-pink-600 to-purple-600 border-amber-300 text-white shadow-[0_0_12px_rgba(236,72,153,0.6)]'
-                  : 'bg-purple-950/60 border-purple-700/50 text-purple-300 hover:border-purple-500'
-              }`}
-            >
-              <Music className="w-3.5 h-3.5" />
-              <span className="hidden lg:inline">
-                {beatOn
-                  ? lang === 'nl'
-                    ? MUSIC_TRACKS[activeMusicTrack].labelNl
-                    : MUSIC_TRACKS[activeMusicTrack].labelEn
-                  : t.beatOff}
-              </span>
-            </button>
-
-            {/* Instant Dark / Light Theme Toggle */}
-            <button
-              type="button"
-              data-testid="theme-toggle"
-              onClick={toggleTheme}
-              title={
-                theme === 'dark'
-                  ? lang === 'nl'
-                    ? 'Schakel naar Licht Thema (Dag)'
-                    : 'Switch to Light Theme (Day)'
-                  : lang === 'nl'
-                  ? 'Schakel naar Donker Thema (Concert)'
-                  : 'Switch to Dark Theme (Concert)'
-              }
-              className={`px-2.5 py-1.5 rounded-xl border text-xs font-extrabold flex items-center gap-1 transition-all cursor-pointer ${
-                theme === 'light'
-                  ? 'bg-amber-300/90 border-amber-500 text-slate-950 shadow-[0_2px_10px_rgba(245,158,11,0.35)]'
+              aria-label="Menu"
+              className={`p-2 rounded-xl border text-xs font-extrabold flex items-center justify-center transition-all ${
+                showHeaderMenu
+                  ? 'keep-white-text bg-gradient-to-r from-pink-500 to-amber-400 text-slate-950 border-white shadow-[0_0_15px_rgba(236,72,153,0.5)]'
                   : 'bg-purple-950/80 border-fuchsia-400/50 text-amber-300 hover:border-amber-300'
               }`}
             >
-              {theme === 'dark' ? (
-                <>
-                  <Sun className="w-4 h-4 text-amber-300" />
-                  <span className="hidden sm:inline">
-                    {lang === 'nl' ? 'Licht' : 'Light'}
-                  </span>
-                </>
-              ) : (
-                <>
-                  <Moon className="w-4 h-4 text-purple-900" />
-                  <span className="hidden sm:inline">
-                    {lang === 'nl' ? 'Donker' : 'Dark'}
-                  </span>
-                </>
-              )}
+              {showHeaderMenu ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
-
-            {/* Instant Dutch / English Language Toggle */}
-            <div className="flex items-center bg-purple-950/90 border border-fuchsia-500/40 rounded-xl p-0.5">
-              <button
-                type="button"
-                onClick={() => toggleLanguage('nl')}
-                className={`px-2 py-1 rounded-lg text-xs font-extrabold transition-all ${
-                  lang === 'nl'
-                    ? 'bg-gradient-to-r from-pink-500 to-amber-400 text-slate-950 shadow'
-                    : 'text-purple-300 hover:text-white'
-                }`}
-              >
-                🇳🇱 NL
-              </button>
-              <button
-                type="button"
-                onClick={() => toggleLanguage('en')}
-                className={`px-2 py-1 rounded-lg text-xs font-extrabold transition-all ${
-                  lang === 'en'
-                    ? 'bg-gradient-to-r from-pink-500 to-amber-400 text-slate-950 shadow'
-                    : 'text-purple-300 hover:text-white'
-                }`}
-              >
-                🇬🇧 EN
-              </button>
-            </div>
           </div>
+
+          {/* Hamburger Dropdown Menu Panel (Music, Sound FX, Light/Dark Theme, NL/EN Language, Rules) */}
+          {showHeaderMenu && (
+            <>
+              <div
+                className="fixed inset-0 z-40"
+                onClick={() => setShowHeaderMenu(false)}
+              />
+              <div
+                data-testid="header-dropdown-menu"
+                className="light-surface-card absolute right-0 top-full mt-2 w-72 sm:w-80 z-50 rounded-2xl bg-gradient-to-b from-[#220a47] to-[#120529] border-2 border-fuchsia-400/60 p-3.5 shadow-[0_14px_40px_rgba(0,0,0,0.65)] space-y-2.5 animate-fadeIn"
+              >
+                {/* 1. Language Switcher (NL / EN) */}
+                <div className="flex items-center justify-between gap-2 bg-purple-950/60 border border-purple-700/50 rounded-xl p-2">
+                  <span className="text-xs font-extrabold text-purple-200 pl-1">
+                    🌐 {t.langSwitchLabel}
+                  </span>
+                  <div className="flex items-center bg-purple-950/90 border border-fuchsia-500/40 rounded-lg p-0.5">
+                    <button
+                      type="button"
+                      onClick={() => toggleLanguage('nl')}
+                      className={`px-2.5 py-1 rounded-md text-xs font-extrabold transition-all ${
+                        lang === 'nl'
+                          ? 'bg-gradient-to-r from-pink-500 to-amber-400 text-slate-950 shadow'
+                          : 'text-purple-300 hover:text-white'
+                      }`}
+                    >
+                      🇳🇱 NL
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => toggleLanguage('en')}
+                      className={`px-2.5 py-1 rounded-md text-xs font-extrabold transition-all ${
+                        lang === 'en'
+                          ? 'bg-gradient-to-r from-pink-500 to-amber-400 text-slate-950 shadow'
+                          : 'text-purple-300 hover:text-white'
+                      }`}
+                    >
+                      🇬🇧 EN
+                    </button>
+                  </div>
+                </div>
+
+                {/* 2. Theme Toggle (Light / Dark) */}
+                <button
+                  type="button"
+                  data-testid="theme-toggle"
+                  onClick={toggleTheme}
+                  className="w-full px-3 py-2.5 rounded-xl bg-purple-950/60 hover:bg-purple-900/70 border border-purple-700/50 flex items-center justify-between text-xs font-extrabold transition-all"
+                >
+                  <span className="flex items-center gap-2 text-purple-100">
+                    {theme === 'dark' ? (
+                      <Sun className="w-4 h-4 text-amber-300" />
+                    ) : (
+                      <Moon className="w-4 h-4 text-purple-700" />
+                    )}
+                    <span>{lang === 'nl' ? 'Kleurthema' : 'Color Theme'}</span>
+                  </span>
+                  <span className="px-2.5 py-1 rounded-lg bg-amber-400/20 border border-amber-300/50 text-amber-300">
+                    {theme === 'dark'
+                      ? lang === 'nl'
+                        ? '☀️ Schakel Licht'
+                        : '☀️ Switch to Light'
+                      : lang === 'nl'
+                      ? '🌙 Schakel Donker'
+                      : '🌙 Switch to Dark'}
+                  </span>
+                </button>
+
+                {/* 3. Background Music / Beat Toggle */}
+                <button
+                  type="button"
+                  data-testid="music-toggle"
+                  onClick={() => {
+                    if (!sfxOn) {
+                      setSfxOn(true);
+                      soundEngine.sfxEnabled = true;
+                    }
+                    const nextBeat = soundEngine.toggleBeat();
+                    setBeatOn(nextBeat);
+                  }}
+                  className="w-full px-3 py-2.5 rounded-xl bg-purple-950/60 hover:bg-purple-900/70 border border-purple-700/50 flex items-center justify-between text-xs font-extrabold transition-all"
+                >
+                  <span className="flex items-center gap-2 text-purple-100">
+                    <Music className="w-4 h-4 text-pink-400" />
+                    <span>{lang === 'nl' ? 'Achtergrond Beat' : 'Background Beat'}</span>
+                  </span>
+                  <span
+                    className={`px-2.5 py-1 rounded-lg border ${
+                      beatOn
+                        ? 'keep-white-text bg-gradient-to-r from-pink-600 to-purple-600 border-amber-300 text-white'
+                        : 'bg-purple-900/60 border-purple-600 text-purple-300'
+                    }`}
+                  >
+                    {beatOn ? t.beatOn : t.beatOff}
+                  </span>
+                </button>
+
+                {/* 4. Sound Effects (SFX) Toggle */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const next = !sfxOn;
+                    setSfxOn(next);
+                    soundEngine.sfxEnabled = next;
+                    if (!next) {
+                      setBeatOn(false);
+                      soundEngine.toggleBeat(false);
+                    }
+                  }}
+                  className="w-full px-3 py-2.5 rounded-xl bg-purple-950/60 hover:bg-purple-900/70 border border-purple-700/50 flex items-center justify-between text-xs font-extrabold transition-all"
+                >
+                  <span className="flex items-center gap-2 text-purple-100">
+                    {sfxOn ? (
+                      <Volume2 className="w-4 h-4 text-amber-300" />
+                    ) : (
+                      <VolumeX className="w-4 h-4 text-slate-400" />
+                    )}
+                    <span>{lang === 'nl' ? 'Geluidseffecten' : 'Sound Effects'}</span>
+                  </span>
+                  <span
+                    className={`px-2.5 py-1 rounded-lg border ${
+                      sfxOn
+                        ? 'bg-emerald-500/20 border-emerald-400/50 text-emerald-200'
+                        : 'bg-slate-800 border-slate-700 text-slate-400'
+                    }`}
+                  >
+                    {sfxOn ? t.soundOn : t.soundOff}
+                  </span>
+                </button>
+
+                {/* 5. How to Play / Rules Modal */}
+                <button
+                  type="button"
+                  data-testid="open-tutorial-btn"
+                  onClick={() => {
+                    soundEngine.playTap();
+                    setShowHeaderMenu(false);
+                    setShowTutorial(true);
+                  }}
+                  className="w-full px-3 py-2.5 rounded-xl bg-fuchsia-500/20 hover:bg-fuchsia-500/30 border border-fuchsia-400/50 text-fuchsia-200 text-xs font-extrabold flex items-center justify-center gap-2 transition-all"
+                >
+                  <HelpCircle className="w-4 h-4 text-amber-300" />
+                  <span>{t.howToPlayBtn}</span>
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </header>
 
@@ -1103,26 +1140,28 @@ export const App: React.FC = () => {
             {wizardStep === 0 && activeProfile ? (
               <div
                 data-testid="returning-player-dashboard"
-                className="light-surface-card relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#240b4c] via-[#3b0a57] to-[#14072e] border-2 border-amber-300/60 p-5 sm:p-7 shadow-[0_0_45px_rgba(236,72,153,0.3)] space-y-5"
+                className="light-surface-card relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#240b4c] via-[#3b0a57] to-[#14072e] border-2 border-amber-300/60 p-4 sm:p-7 shadow-[0_0_45px_rgba(236,72,153,0.3)] space-y-4"
               >
                 {/* Top Row: Active Player & Idol Avatar + Quick Switch Player Button */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div className="flex items-center gap-3.5">
-                    <HunterAvatar hunter={activeProfile.hunter} size={78} animate />
-                    <div>
-                      <div className="inline-flex flex-wrap items-center gap-2 px-3 py-0.5 rounded-full bg-amber-400/20 border border-amber-300/50 text-amber-300 text-xs font-extrabold uppercase tracking-wider mb-1">
-                        <Sparkles className="w-3.5 h-3.5" />
-                        <span>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-3.5 min-w-0">
+                    <div className="shrink-0">
+                      <HunterAvatar hunter={activeProfile.hunter} size={70} animate />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-amber-400/20 border border-amber-300/50 text-amber-300 text-[11px] font-extrabold uppercase tracking-wider mb-1">
+                        <Sparkles className="w-3 h-3 shrink-0" />
+                        <span className="truncate">
                           {t.welcomeBack.currentStageBadge(
                             getStageNumber(activeProfile.skill, activeProfile.sealSize)
                           )}{' '}
                           • Lv.{levelInfo.level} {levelInfo.title}
                         </span>
                       </div>
-                      <h2 className="font-display font-black text-2xl sm:text-3xl text-white leading-tight">
+                      <h2 className="font-display font-black text-xl sm:text-3xl text-white leading-tight">
                         {t.welcomeBack.greeting(activeProfile.name)}
                       </h2>
-                      <p className="text-xs sm:text-sm text-pink-200 font-bold">
+                      <p className="text-xs sm:text-sm text-pink-200 font-bold mt-0.5">
                         {t.welcomeBack.playingAs(
                           t.hunters[activeProfile.hunter].name,
                           t.hunters[activeProfile.hunter].role
@@ -1140,15 +1179,15 @@ export const App: React.FC = () => {
                       soundEngine.playTap();
                       setShowProfileModal(true);
                     }}
-                    className="self-start sm:self-center px-3.5 py-2 rounded-2xl bg-purple-900/80 hover:bg-purple-800 border border-pink-400/50 text-pink-100 font-display font-bold text-xs flex items-center gap-1.5 shadow transition-all"
+                    className="w-full sm:w-auto px-3.5 py-2.5 rounded-xl bg-purple-900/80 hover:bg-purple-800 border border-pink-400/50 text-pink-100 font-display font-bold text-xs flex items-center justify-center gap-2 shadow transition-all shrink-0"
                   >
-                    <Users className="w-4 h-4 text-amber-300" />
+                    <Users className="w-4 h-4 text-amber-300 shrink-0" />
                     <span>{t.welcomeBack.switchPlayerBtn}</span>
                   </button>
                 </div>
 
                 {/* Primary 1-Tap Action: Continue Current/Next Stage Immediately! */}
-                <div className="bg-purple-950/60 border-2 border-fuchsia-400/40 rounded-2xl p-4 sm:p-5 space-y-3">
+                <div className="bg-purple-950/60 border-2 border-fuchsia-400/40 rounded-2xl p-3.5 sm:p-5 space-y-2.5">
                   <button
                     type="button"
                     data-testid="continue-stage-btn"
@@ -1159,11 +1198,11 @@ export const App: React.FC = () => {
                         activeProfile.sealSize
                       )
                     }
-                    className="w-full py-4 px-5 rounded-2xl bg-gradient-to-r from-pink-500 via-fuchsia-500 to-amber-400 text-slate-950 font-display font-black text-lg sm:text-2xl tracking-wide shadow-[0_0_35px_rgba(236,72,153,0.65)] hover:brightness-110 active:scale-[0.99] transition-all flex flex-col items-center justify-center gap-1"
+                    className="w-full py-3.5 sm:py-4 px-4 rounded-xl bg-gradient-to-r from-pink-500 via-fuchsia-500 to-amber-400 text-slate-950 font-display font-black text-base sm:text-2xl tracking-wide shadow-[0_0_35px_rgba(236,72,153,0.65)] hover:brightness-110 active:scale-[0.99] transition-all flex flex-col items-center justify-center gap-1 text-center"
                   >
-                    <div className="flex items-center gap-2">
-                      <Play className="w-6 h-6 fill-slate-950 shrink-0" />
-                      <span>
+                    <div className="flex items-center justify-center gap-2">
+                      <Play className="w-5 h-5 sm:w-6 sm:h-6 fill-slate-950 shrink-0" />
+                      <span className="leading-snug">
                         {t.welcomeBack.continueStageBtn(
                           getStageNumber(activeProfile.skill, activeProfile.sealSize),
                           t.skills[activeProfile.skill].name
@@ -1183,7 +1222,7 @@ export const App: React.FC = () => {
                   </button>
 
                   {/* Quick Jump Buttons: Try Another Math Power, Change Activity, or Full Wizard */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-0.5">
                     <button
                       type="button"
                       data-testid="dashboard-try-power-btn"
@@ -1224,18 +1263,18 @@ export const App: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Quick Rewards & Dojo Bar */}
-                <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
-                  <div className="flex flex-wrap items-center gap-2">
+                {/* Quick Rewards & Dojo Bar (Balanced 2-Column Grid + Derpy Quote) */}
+                <div className="space-y-3 pt-1">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                     <button
                       type="button"
                       onClick={() => {
                         soundEngine.playTap();
                         setShowPhotocards(true);
                       }}
-                      className="px-3.5 py-2 rounded-xl bg-amber-400 text-slate-950 font-display font-black text-xs flex items-center gap-1.5 shadow hover:scale-105 transition-transform"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-amber-400 text-slate-950 font-display font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow hover:brightness-105 transition-all"
                     >
-                      <Gift className="w-4 h-4" />
+                      <Gift className="w-4 h-4 shrink-0" />
                       <span>
                         {lang === 'nl'
                           ? `Fotoboek (${progress.unlockedCards.length}/12 Kaarten)`
@@ -1249,7 +1288,7 @@ export const App: React.FC = () => {
                         soundEngine.playTap();
                         setShowDojo(true);
                       }}
-                      className="px-3.5 py-2 rounded-xl bg-cyan-400 text-slate-950 font-display font-black text-xs flex items-center gap-1.5 shadow hover:scale-105 transition-transform"
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-cyan-400 text-slate-950 font-display font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow hover:brightness-105 transition-all"
                     >
                       <span>🥋</span>
                       <span>
@@ -1260,9 +1299,9 @@ export const App: React.FC = () => {
                     </button>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <DerpyTigerMascot size={44} />
-                    <span className="text-xs text-purple-200 font-bold">
+                  <div className="flex items-center justify-center sm:justify-start gap-2.5 bg-purple-950/40 border border-purple-700/40 rounded-xl px-3 py-2">
+                    <DerpyTigerMascot size={38} />
+                    <span className="text-xs text-purple-200 font-bold italic">
                       {t.hunters[activeProfile.hunter].quote}
                     </span>
                   </div>
@@ -2408,14 +2447,6 @@ export const App: React.FC = () => {
                 className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-amber-400 to-yellow-300 text-slate-950 font-display font-black text-xs sm:text-sm shadow hover:brightness-110 transition-all"
               >
                 {t.gregTangVisitLink}
-              </a>
-              <a
-                href="https://www.youtube.com/channel/UCWvrB8eZ18wB5o7QnzMAdcA"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-3.5 py-2.5 rounded-2xl bg-purple-900/70 border border-pink-400/40 text-pink-100 font-display font-bold text-xs hover:bg-purple-800/80 transition-all"
-              >
-                🎵 정훈남JHN STUDIO ↗
               </a>
             </div>
           </div>
