@@ -78,3 +78,19 @@ node --test tests/
 ```
 
 ---
+
+## ☁️ Deploy to Cloudflare Pages (Free)
+
+### Option 1: Automatic GitHub Deployment (Recommended)
+1. Push this repository to GitHub.
+2. Open your [Cloudflare Dashboard](https://dash.cloudflare.com/) → **Compute (Workers & Pages)** → **Create** → **Pages** → **Import an existing Git repository**.
+3. Select your GitHub repository and use these build settings:
+   - **Framework preset**: `Vite`
+   - **Build command**: `npm run build`
+   - **Build output directory**: `dist`
+4. Click **Save and Deploy** — Cloudflare will automatically rebuild and publish your site on every `git push`!
+
+### Option 2: Direct CLI Deploy via Wrangler
+```bash
+npm run deploy
+```

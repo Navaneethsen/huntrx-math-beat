@@ -51,7 +51,7 @@ export const MUSIC_TRACKS: Record<MusicTrackId, TrackMeta> = {
 class KPopSoundEngine {
   private ctx: AudioContext | null = null;
   public sfxEnabled = true;
-  public beatEnabled = true;
+  public beatEnabled = false;
   private currentTrack: MusicTrackId = 'menu';
   private isDucked = false;
   private audioElements: Partial<Record<MusicTrackId, HTMLAudioElement>> = {};

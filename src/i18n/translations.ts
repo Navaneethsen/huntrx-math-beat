@@ -198,6 +198,62 @@ export interface Translations {
     nextFocusSkill: (skillName: string) => string;
     speedNote: string;
   };
+
+  // Stage-by-Stage Wizard, Returning Player Dashboard & Multi-User Profiles
+  wizard: {
+    stepOf: (step: number, total: number) => string;
+    backBtn: string;
+    nextBtn: string;
+    step1Short: string;
+    step2Short: string;
+    step3Short: string;
+    step4Short: string;
+    step1Title: string;
+    step1Subtitle: string;
+    playerNameLabel: string;
+    playerNamePlaceholder: string;
+    saveProfileAndNextBtn: string;
+    savedPlayersTitle: string;
+    orCreateNewTitle: string;
+    step2Title: string;
+    step2Subtitle: string;
+    step3Title: string;
+    step3Subtitle: string;
+    recommendedBadge: string;
+    step4Title: string;
+    step4Subtitle: string;
+    complexity: {
+      s4: { title: string; badge: string; desc: string };
+      s5: { title: string; badge: string; desc: string };
+      s6: { title: string; badge: string; desc: string };
+    };
+  };
+  welcomeBack: {
+    greeting: (name: string) => string;
+    playingAs: (idolName: string, role: string) => string;
+    currentStageBadge: (stageNum: number) => string;
+    continueStageBtn: (stageNum: number, skillName: string) => string;
+    continueStageSub: (modeTitle: string, complexityTitle: string) => string;
+    tryOtherPowerBtn: string;
+    changeActivityBtn: string;
+    switchPlayerBtn: string;
+    customizeWizardBtn: string;
+  };
+  profiles: {
+    modalTitle: string;
+    modalSubtitle: string;
+    activeBadge: string;
+    selectBtn: string;
+    newPlayerBtn: string;
+    resetProgressBtn: string;
+    confirmResetBtn: string;
+    deletePlayerBtn: string;
+    confirmDeleteBtn: string;
+    cancelBtn: string;
+    stagesClearedLabel: (count: number) => string;
+    nextStageAutoBtn: (stageNum: number, skillName: string, complexityTitle: string) => string;
+    tryAnotherPowerVictoryBtn: string;
+  };
 }
 
 export const translations: Record<Language, Translations> = {
@@ -448,6 +504,75 @@ export const translations: Record<Language, Translations> = {
       nextFocusSkill: (skillName) => `Blijf ${skillName} oefenen, of probeer een iets groter level.`,
       speedNote: 'Snelheid is een bonus. Goed nadenken telt het meest!',
     },
+    wizard: {
+      stepOf: (step, total) => `Stap ${step} van ${total}`,
+      backBtn: '← Terug',
+      nextBtn: 'Volgende →',
+      step1Short: '1. Speler & Idol',
+      step2Short: '2. Activiteit',
+      step3Short: '3. Reken-Kracht',
+      step4Short: '4. Uitdaging',
+      step1Title: 'Wie speelt er vandaag? 🎤',
+      step1Subtitle: 'Kies jouw HUNTR/X Idol en vul je naam in (wordt bewaard op dit apparaat!):',
+      playerNameLabel: 'Jouw Idol-Naam:',
+      playerNamePlaceholder: 'Typ je naam (bijv. Nova, Mila...)',
+      saveProfileAndNextBtn: 'Bewaar Speler & Kies Activiteit →',
+      savedPlayersTitle: 'Bestaande Spelers op dit apparaat:',
+      orCreateNewTitle: 'Of maak een nieuwe speler aan:',
+      step2Title: 'Wat voor show wil je spelen? 🎶',
+      step2Subtitle: 'Kies jouw favoriete activiteit voor deze ronde:',
+      step3Title: 'Welke Reken-Kracht wil je oefenen? ⚡',
+      step3Subtitle: 'Kies een sommen-kracht (of ga verder met je aanbevolen level!):',
+      recommendedBadge: '⭐ Jouw Volgende Stage',
+      step4Title: 'Hoe uitdagend maken we de ster? 🌟',
+      step4Subtitle: 'Kies de moeilijkheid (hoeveel getallen per zegel) en start de show!',
+      complexity: {
+        s4: {
+          title: 'Makkelijk (Warm-Up)',
+          badge: '⭐ 4 Getallen',
+          desc: 'Rustig opwarmen met 4 getallen in elke ster.',
+        },
+        s5: {
+          title: 'Gemiddeld (Idol Uitdaging)',
+          badge: '⭐⭐ 5 Getallen',
+          desc: 'De klassieke Kakooma-ster met 5 getallen!',
+        },
+        s6: {
+          title: 'Uitdagend (Meester-Zegel)',
+          badge: '⭐⭐⭐ 6 Getallen',
+          desc: 'Voor echte reken-idols: 6 getallen om te kraken!',
+        },
+      },
+    },
+    welcomeBack: {
+      greeting: (name) => `Welkom terug, ${name}! ✨`,
+      playingAs: (idolName, role) => `Jouw Idol: ${idolName} (${role})`,
+      currentStageBadge: (stageNum) => `Stage ${stageNum}`,
+      continueStageBtn: (stageNum, skillName) =>
+        `▶ Ga Verder: Stage ${stageNum} • ${skillName}`,
+      continueStageSub: (modeTitle, complexityTitle) =>
+        `${modeTitle} • ${complexityTitle}`,
+      tryOtherPowerBtn: '🔀 Andere Reken-Kracht Proberen',
+      changeActivityBtn: '🎮 Andere Activiteit Kiezen',
+      switchPlayerBtn: '👥 Andere Speler / Nieuw',
+      customizeWizardBtn: '⚙️ Stap-voor-Stap Kiezen',
+    },
+    profiles: {
+      modalTitle: 'Spelers op dit Apparaat 👥',
+      modalSubtitle: 'Wissel van speler, maak een nieuw profiel aan of begin opnieuw:',
+      activeBadge: '✓ Actief',
+      selectBtn: 'Kies Speler',
+      newPlayerBtn: '+ Nieuwe Speler Aanmaken',
+      resetProgressBtn: 'Reset Voortgang',
+      confirmResetBtn: 'Ja, Reset naar Stage 1!',
+      deletePlayerBtn: 'Verwijder',
+      confirmDeleteBtn: 'Ja, Verwijder!',
+      cancelBtn: 'Annuleren',
+      stagesClearedLabel: (count) => `${count} stages voltooid`,
+      nextStageAutoBtn: (stageNum, skillName, complexityTitle) =>
+        `▶ Volgende Stage (${stageNum}): ${skillName} • ${complexityTitle} 🚀`,
+      tryAnotherPowerVictoryBtn: '🔀 Andere Reken-Kracht Kiezen',
+    },
   },
   en: {
     appTitle: 'HUNTR/X: HONMOON BEAT',
@@ -695,6 +820,75 @@ export const translations: Record<Language, Translations> = {
       nextFocusFact: (equation) => `Practice ${equation} in the Dojo (after 3 other puzzles).`,
       nextFocusSkill: (skillName) => `Keep practicing ${skillName}, or try a slightly bigger level.`,
       speedNote: 'Speed is a bonus. Careful thinking counts the most!',
+    },
+    wizard: {
+      stepOf: (step, total) => `Step ${step} of ${total}`,
+      backBtn: '← Back',
+      nextBtn: 'Next →',
+      step1Short: '1. Player & Idol',
+      step2Short: '2. Activity',
+      step3Short: '3. Math Power',
+      step4Short: '4. Challenge',
+      step1Title: 'Who is playing today? 🎤',
+      step1Subtitle: 'Pick your HUNTR/X Idol and enter your name (saved on this device!):',
+      playerNameLabel: 'Your Idol Name:',
+      playerNamePlaceholder: 'Type your name (e.g. Nova, Mila...)',
+      saveProfileAndNextBtn: 'Save Player & Pick Activity →',
+      savedPlayersTitle: 'Saved Players on this device:',
+      orCreateNewTitle: 'Or create a new player:',
+      step2Title: 'What kind of activity do you want to play? 🎶',
+      step2Subtitle: 'Pick your favorite concert mode for this round:',
+      step3Title: 'Which Math Power do you want to try? ⚡',
+      step3Subtitle: 'Pick any math skill (or continue with your recommended stage!):',
+      recommendedBadge: '⭐ Your Next Stage',
+      step4Title: 'Choose your Challenge Level! 🌟',
+      step4Subtitle: 'How many numbers in each seal? Pick your complexity and start the show!',
+      complexity: {
+        s4: {
+          title: 'Easy (Warm-Up)',
+          badge: '⭐ 4 Numbers',
+          desc: 'Smooth warm-up with 4 numbers in every star.',
+        },
+        s5: {
+          title: 'Medium (Idol Challenge)',
+          badge: '⭐⭐ 5 Numbers',
+          desc: 'The classic Kakooma star with 5 numbers!',
+        },
+        s6: {
+          title: 'Challenging (Master Seal)',
+          badge: '⭐⭐⭐ 6 Numbers',
+          desc: 'For true math idols: 6 numbers to crack!',
+        },
+      },
+    },
+    welcomeBack: {
+      greeting: (name) => `Welcome back, ${name}! ✨`,
+      playingAs: (idolName, role) => `Playing as ${idolName} (${role})`,
+      currentStageBadge: (stageNum) => `Stage ${stageNum}`,
+      continueStageBtn: (stageNum, skillName) =>
+        `▶ Continue Stage ${stageNum} • ${skillName}`,
+      continueStageSub: (modeTitle, complexityTitle) =>
+        `${modeTitle} • ${complexityTitle}`,
+      tryOtherPowerBtn: '🔀 Try Another Math Power',
+      changeActivityBtn: '🎮 Change Activity Mode',
+      switchPlayerBtn: '👥 Switch / New Player',
+      customizeWizardBtn: '⚙️ Step-by-Step Setup',
+    },
+    profiles: {
+      modalTitle: 'Players on this Device 👥',
+      modalSubtitle: 'Switch players, create a new profile, or reset progress:',
+      activeBadge: '✓ Active',
+      selectBtn: 'Select Player',
+      newPlayerBtn: '+ Create New Player',
+      resetProgressBtn: 'Reset Progress',
+      confirmResetBtn: 'Yes, Reset to Stage 1!',
+      deletePlayerBtn: 'Delete',
+      confirmDeleteBtn: 'Yes, Delete!',
+      cancelBtn: 'Cancel',
+      stagesClearedLabel: (count) => `${count} stages cleared`,
+      nextStageAutoBtn: (stageNum, skillName, complexityTitle) =>
+        `▶ Next Stage (${stageNum}): ${skillName} • ${complexityTitle} 🚀`,
+      tryAnotherPowerVictoryBtn: '🔀 Try Another Math Power',
     },
   },
 };

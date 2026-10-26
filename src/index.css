@@ -53,6 +53,8 @@
 .theme-light [class*="from-[#240b4c]"]:not(.keep-dark-card),
 .theme-light [class*="from-[#250e4c]"]:not(.keep-dark-card),
 .theme-light [class*="from-[#230c47]"]:not(.keep-dark-card),
+.theme-light [class*="from-[#220a47]"]:not(.keep-dark-card),
+.theme-light [class*="from-[#200c45]"]:not(.keep-dark-card),
 .theme-light [class*="from-[#1f0d3d]"]:not(.keep-dark-card),
 .theme-light [class*="from-slate-900"]:not(.keep-dark-card),
 .theme-light [class*="from-purple-950"]:not(.keep-dark-card),
@@ -64,6 +66,14 @@
   background-image: linear-gradient(145deg, #ffffff 0%, #f9f5ff 60%, #fdf2f8 100%) !important;
   border-color: rgba(192, 132, 252, 0.55) !important;
   box-shadow: 0 8px 28px rgba(147, 51, 234, 0.12);
+}
+
+.theme-light input {
+  color: #1e1038 !important;
+}
+
+.theme-light input::placeholder {
+  color: rgba(107, 33, 168, 0.55) !important;
 }
 
 /* Convert dark slate-800 buttons, pills, and empty frame slots into crisp pastel lavender */
@@ -108,6 +118,7 @@
 .theme-light [class*="from-pink-600/35"],
 .theme-light [class*="from-amber-400/30"],
 .theme-light [class*="from-pink-500/30"],
+.theme-light [class*="from-pink-500/35"],
 .theme-light [class*="from-fuchsia-950"] {
   background-color: #fffbeb !important;
   background-image: linear-gradient(135deg, #fffbeb 0%, #fdf2f8 55%, #f5f0ff 100%) !important;
@@ -130,6 +141,7 @@
 
 .theme-light [class*="text-fuchsia-200"]:not(.keep-white-text),
 .theme-light [class*="text-fuchsia-300"]:not(.keep-white-text),
+.theme-light [class*="text-pink-100"]:not(.keep-white-text),
 .theme-light [class*="text-pink-200"]:not(.keep-white-text),
 .theme-light [class*="text-pink-300"]:not(.keep-white-text) {
   color: #9d174d !important;
@@ -172,8 +184,8 @@
 .theme-light [class*="from-fuchsia-600"].text-white,
 .theme-light [class*="from-cyan-500"].text-white,
 .theme-light [class*="from-emerald-500"].text-white,
-.theme-light [class*="from-pink-500"].text-white,
-.theme-light [class*="from-pink-600"].text-white,
+.theme-light [class*="from-pink-500"]:not([class*="from-pink-500/"]).text-white,
+.theme-light [class*="from-pink-600"]:not([class*="from-pink-600/"]).text-white,
 .theme-light [class*="from-sky-400"].text-white,
 .theme-light [class*="from-rose-600"].text-white {
   color: #ffffff !important;

@@ -1,7 +1,30 @@
 import type { Language } from '../i18n/translations';
-import type { Operation, FractionMeta } from './kakoomaGenerator';
+import type { Operation, FractionMeta, SkillId, SealSize } from './kakoomaGenerator';
 import { gcd } from './kakoomaGenerator.ts';
 import type { FactReviewState } from './learningLoop';
+
+export type ProfileHunterId = 'rumi' | 'mira' | 'zoey';
+
+export type ProfileGameMode =
+  | 'soloPractice'
+  | 'honmoonChain'
+  | 'timedRush'
+  | 'coopDuet'
+  | 'versusBattle';
+
+export const STAGE_SKILL_ORDER: SkillId[] = [
+  'add10',
+  'add20',
+  'sub20',
+  'add50',
+  'sub100',
+  'multEasy',
+  'multAll',
+  'divAll',
+  'fracEasy',
+  'fracPro',
+  'mixBoss',
+];
 
 export interface PhotocardItem {
   id: string;
@@ -242,31 +265,27 @@ function normalizeFactReview(
 }
 
 const STORAGE_KEY = 'huntrx_progress_v2';
+export const PROFILES_STORAGE_KEY = 'huntrx_profiles_v3';
 
-export function loadProgress(): PlayerProgress {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      const trickyFacts: TrickyFactItem[] = Array.isArray(parsed.trickyFacts)
-        ? parsed.trickyFacts.filter(isTrickyFact)
-        : [];
-      return {
-        xp: parsed.xp ?? 0,
-        gems: parsed.gems ?? 50,
-        totalSolved: parsed.totalSolved ?? 0,
-        unlockedCards: Array.isArray(parsed.unlockedCards)
-          ? parsed.unlockedCards
-          : ['card_derpy_tiger'],
-        bestSpeedMs: parsed.bestSpeedMs ?? null,
-        trickyFacts,
-        factReview: normalizeFactReview(parsed.factReview, trickyFacts),
-        conqueredTrickyCount: parsed.conqueredTrickyCount ?? 0,
-      };
-    }
-  } catch {
-    // ignore storage errors
-  }
+export interface PlayerProfile {
+  id: string;
+  name: string;
+  hunter: ProfileHunterId;
+  mode: ProfileGameMode;
+  skill: SkillId;
+  sealSize: SealSize;
+  stagesCleared: number;
+  createdAt: number;
+  lastPlayedAt: number;
+  progress: PlayerProgress;
+}
+
+export interface ProfilesStore {
+  activeProfileId: string | null;
+  profiles: PlayerProfile[];
+}
+
+export function createDefaultProgress(): PlayerProgress {
   return {
     xp: 0,
     gems: 60, // Start with 60 gems so she can unlock her first photocard right away!
@@ -281,12 +300,245 @@ export function loadProgress(): PlayerProgress {
   };
 }
 
+function normalizeProgress(raw: unknown): PlayerProgress {
+  if (!raw || typeof raw !== 'object') return createDefaultProgress();
+  const parsed = raw as Record<string, unknown>;
+  const trickyFacts: TrickyFactItem[] = Array.isArray(parsed.trickyFacts)
+    ? parsed.trickyFacts.filter(isTrickyFact)
+    : [];
+  return {
+    xp: typeof parsed.xp === 'number' ? parsed.xp : 0,
+    gems: typeof parsed.gems === 'number' ? parsed.gems : 50,
+    totalSolved: typeof parsed.totalSolved === 'number' ? parsed.totalSolved : 0,
+    unlockedCards: Array.isArray(parsed.unlockedCards)
+      ? (parsed.unlockedCards as string[])
+      : ['card_derpy_tiger'],
+    bestSpeedMs: typeof parsed.bestSpeedMs === 'number' ? parsed.bestSpeedMs : null,
+    trickyFacts,
+    factReview: normalizeFactReview(parsed.factReview, trickyFacts),
+    conqueredTrickyCount:
+      typeof parsed.conqueredTrickyCount === 'number' ? parsed.conqueredTrickyCount : 0,
+  };
+}
+
+export function loadProgress(): PlayerProgress {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      return normalizeProgress(JSON.parse(raw));
+    }
+  } catch {
+    // ignore storage errors
+  }
+  return createDefaultProgress();
+}
+
 export function saveProgress(progress: PlayerProgress): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
   } catch {
     // ignore storage errors
   }
+}
+
+export function getStageNumber(skill: SkillId, sealSize: SealSize): number {
+  const skillIdx = Math.max(0, STAGE_SKILL_ORDER.indexOf(skill));
+  const sizeOffset = sealSize === 4 ? 1 : sealSize === 5 ? 2 : 3;
+  return skillIdx * 3 + sizeOffset;
+}
+
+export function getNextStage(
+  skill: SkillId,
+  sealSize: SealSize
+): { skill: SkillId; sealSize: SealSize; isFinalStage: boolean } {
+  if (sealSize === 4) {
+    return { skill, sealSize: 5, isFinalStage: false };
+  }
+  if (sealSize === 5) {
+    return { skill, sealSize: 6, isFinalStage: false };
+  }
+  const currentIdx = STAGE_SKILL_ORDER.indexOf(skill);
+  if (currentIdx >= 0 && currentIdx < STAGE_SKILL_ORDER.length - 1) {
+    return {
+      skill: STAGE_SKILL_ORDER[currentIdx + 1],
+      sealSize: 4,
+      isFinalStage: false,
+    };
+  }
+  return { skill: 'mixBoss', sealSize: 6, isFinalStage: true };
+}
+
+export function loadProfilesStore(): ProfilesStore {
+  try {
+    const raw = localStorage.getItem(PROFILES_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && Array.isArray(parsed.profiles)) {
+        const profiles: PlayerProfile[] = parsed.profiles
+          .filter((p: unknown) => p && typeof p === 'object')
+          .map((p: Record<string, unknown>) => ({
+            id: typeof p.id === 'string' ? p.id : `hunter_${Date.now()}`,
+            name: typeof p.name === 'string' && p.name.trim() ? p.name.trim() : 'Hunter',
+            hunter:
+              p.hunter === 'rumi' || p.hunter === 'mira' || p.hunter === 'zoey'
+                ? p.hunter
+                : 'rumi',
+            mode:
+              p.mode === 'soloPractice' ||
+              p.mode === 'honmoonChain' ||
+              p.mode === 'timedRush' ||
+              p.mode === 'coopDuet' ||
+              p.mode === 'versusBattle'
+                ? p.mode
+                : 'soloPractice',
+            skill:
+              typeof p.skill === 'string' && STAGE_SKILL_ORDER.includes(p.skill as SkillId)
+                ? (p.skill as SkillId)
+                : 'add10',
+            sealSize: p.sealSize === 4 || p.sealSize === 5 || p.sealSize === 6 ? p.sealSize : 4,
+            stagesCleared: typeof p.stagesCleared === 'number' ? p.stagesCleared : 0,
+            createdAt: typeof p.createdAt === 'number' ? p.createdAt : Date.now(),
+            lastPlayedAt: typeof p.lastPlayedAt === 'number' ? p.lastPlayedAt : Date.now(),
+            progress: normalizeProgress(p.progress),
+          }));
+
+        const activeProfileId =
+          typeof parsed.activeProfileId === 'string' &&
+          profiles.some((p) => p.id === parsed.activeProfileId)
+            ? parsed.activeProfileId
+            : profiles[0]?.id ?? null;
+
+        return { activeProfileId, profiles };
+      }
+    }
+
+    // Check legacy v2 storage for seamless migration if the player already played
+    const legacyRaw = localStorage.getItem(STORAGE_KEY);
+    if (legacyRaw) {
+      const legacyProgress = normalizeProgress(JSON.parse(legacyRaw));
+      if (
+        legacyProgress.xp > 0 ||
+        legacyProgress.totalSolved > 0 ||
+        legacyProgress.unlockedCards.length > 1
+      ) {
+        const migratedSkill: SkillId =
+          legacyProgress.totalSolved >= 40
+            ? 'multEasy'
+            : legacyProgress.totalSolved >= 20
+            ? 'add20'
+            : 'add10';
+        const migratedProfile: PlayerProfile = {
+          id: 'hunter_migrated_1',
+          name: 'Rumi Star',
+          hunter: 'rumi',
+          mode: 'soloPractice',
+          skill: migratedSkill,
+          sealSize: 4,
+          stagesCleared: Math.floor(legacyProgress.totalSolved / 8),
+          createdAt: Date.now(),
+          lastPlayedAt: Date.now(),
+          progress: legacyProgress,
+        };
+        const migratedStore: ProfilesStore = {
+          activeProfileId: migratedProfile.id,
+          profiles: [migratedProfile],
+        };
+        saveProfilesStore(migratedStore);
+        return migratedStore;
+      }
+    }
+  } catch {
+    // ignore storage errors
+  }
+
+  return { activeProfileId: null, profiles: [] };
+}
+
+export function saveProfilesStore(store: ProfilesStore): void {
+  try {
+    localStorage.setItem(PROFILES_STORAGE_KEY, JSON.stringify(store));
+    const active = store.profiles.find((p) => p.id === store.activeProfileId);
+    if (active) {
+      saveProgress(active.progress);
+    }
+  } catch {
+    // ignore storage errors
+  }
+}
+
+export function createPlayerProfile(
+  store: ProfilesStore,
+  name: string,
+  hunter: ProfileHunterId
+): ProfilesStore {
+  const cleanName =
+    name.trim() || (hunter === 'rumi' ? 'Rumi' : hunter === 'mira' ? 'Mira' : 'Zoey');
+  const newProfile: PlayerProfile = {
+    id: `hunter_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+    name: cleanName,
+    hunter,
+    mode: 'soloPractice',
+    skill: 'add10',
+    sealSize: 4,
+    stagesCleared: 0,
+    createdAt: Date.now(),
+    lastPlayedAt: Date.now(),
+    progress: createDefaultProgress(),
+  };
+  const next: ProfilesStore = {
+    activeProfileId: newProfile.id,
+    profiles: [...store.profiles, newProfile],
+  };
+  saveProfilesStore(next);
+  return next;
+}
+
+export function switchPlayerProfile(store: ProfilesStore, profileId: string): ProfilesStore {
+  if (!store.profiles.some((p) => p.id === profileId)) return store;
+  const next: ProfilesStore = {
+    activeProfileId: profileId,
+    profiles: store.profiles.map((p) =>
+      p.id === profileId ? { ...p, lastPlayedAt: Date.now() } : p
+    ),
+  };
+  saveProfilesStore(next);
+  return next;
+}
+
+export function resetPlayerProfileProgress(
+  store: ProfilesStore,
+  profileId: string
+): ProfilesStore {
+  const next: ProfilesStore = {
+    ...store,
+    profiles: store.profiles.map((p) =>
+      p.id === profileId
+        ? {
+            ...p,
+            mode: 'soloPractice',
+            skill: 'add10',
+            sealSize: 4,
+            stagesCleared: 0,
+            lastPlayedAt: Date.now(),
+            progress: createDefaultProgress(),
+          }
+        : p
+    ),
+  };
+  saveProfilesStore(next);
+  return next;
+}
+
+export function deletePlayerProfile(store: ProfilesStore, profileId: string): ProfilesStore {
+  const remaining = store.profiles.filter((p) => p.id !== profileId);
+  const nextActiveId =
+    store.activeProfileId === profileId ? remaining[0]?.id ?? null : store.activeProfileId;
+  const next: ProfilesStore = {
+    activeProfileId: nextActiveId,
+    profiles: remaining,
+  };
+  saveProfilesStore(next);
+  return next;
 }
 
 export function getLevelInfo(xp: number, lang: Language) {
