@@ -1,0 +1,399 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    background-color: #090414;
+    color: #ffffff;
+    font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+    letter-spacing: 0.01em;
+  }
+
+  .font-display {
+    font-family: 'Fredoka', 'Nunito', system-ui, sans-serif;
+  }
+
+  html.theme-light,
+  html.theme-light body {
+    background-color: #fdf7ff;
+    color: #1e1038;
+  }
+}
+
+/* ============================================================================
+   DAYLIGHT PASTEL K-POP LIGHT THEME (.theme-light)
+   High-contrast, cheerful pastel stage for bright daytime play on iPad/Mobile!
+   ============================================================================ */
+.theme-light.app-shell {
+  background: linear-gradient(135deg, #fff5fa 0%, #f5f0ff 50%, #eef9ff 100%) !important;
+  color: #1e1038 !important;
+}
+
+.theme-light header {
+  background-color: rgba(255, 255, 255, 0.94) !important;
+  border-bottom-color: rgba(232, 121, 249, 0.45) !important;
+  box-shadow: 0 4px 20px rgba(168, 85, 247, 0.08);
+}
+
+/* Convert all dark purple/indigo/slate surfaces & modal cards into bright white & pastel K-Pop cards */
+.theme-light .light-surface-card,
+.theme-light .light-subcard,
+.theme-light [class*="bg-purple-950"]:not(.keep-dark-card),
+.theme-light [class*="bg-purple-900"]:not(.keep-dark-card),
+.theme-light [class*="bg-indigo-950"]:not(.keep-dark-card),
+.theme-light [class*="bg-sky-950"]:not(.keep-dark-card),
+.theme-light [class*="bg-cyan-950"]:not(.keep-dark-card),
+.theme-light [class*="bg-slate-900"]:not(.keep-dark-card),
+.theme-light [class*="bg-slate-950"]:not(.keep-dark-card),
+.theme-light [class*="from-[#240b4c]"]:not(.keep-dark-card),
+.theme-light [class*="from-[#250e4c]"]:not(.keep-dark-card),
+.theme-light [class*="from-[#230c47]"]:not(.keep-dark-card),
+.theme-light [class*="from-[#1f0d3d]"]:not(.keep-dark-card),
+.theme-light [class*="from-slate-900"]:not(.keep-dark-card),
+.theme-light [class*="from-purple-950"]:not(.keep-dark-card),
+.theme-light [class*="from-purple-900"]:not(.keep-dark-card),
+.theme-light [class*="from-indigo-950"]:not(.keep-dark-card),
+.theme-light [class*="from-sky-950"]:not(.keep-dark-card),
+.theme-light [class*="from-fuchsia-950"]:not(.keep-dark-card) {
+  background-color: #ffffff !important;
+  background-image: linear-gradient(145deg, #ffffff 0%, #f9f5ff 60%, #fdf2f8 100%) !important;
+  border-color: rgba(192, 132, 252, 0.55) !important;
+  box-shadow: 0 8px 28px rgba(147, 51, 234, 0.12);
+}
+
+/* Convert dark slate-800 buttons, pills, and empty frame slots into crisp pastel lavender */
+.theme-light .light-pill-btn,
+.theme-light [class*="bg-slate-800"]:not(.keep-white-text):not(.keep-dark-card) {
+  background-color: #f3e8ff !important;
+  background-image: linear-gradient(180deg, #ffffff 0%, #f3e8ff 100%) !important;
+  border-color: #c084fc !important;
+  color: #3b0764 !important;
+}
+
+/* Number Dojo specific Light Mode styling (Title, Equation Box, Answer Choice Buttons) */
+.theme-light .dojo-title {
+  background-image: linear-gradient(90deg, #581c87 0%, #db2777 55%, #d97706 100%) !important;
+}
+
+.theme-light .dojo-eq-box {
+  background-color: #f5f3ff !important;
+  background-image: linear-gradient(135deg, #f5f3ff 0%, #eff6ff 50%, #fdf2f8 100%) !important;
+  border-color: #a855f7 !important;
+  box-shadow: inset 0 2px 10px rgba(168, 85, 247, 0.12) !important;
+}
+
+.theme-light .dojo-choice-btn {
+  background-color: #ffffff !important;
+  background-image: linear-gradient(180deg, #ffffff 0%, #f3e8ff 100%) !important;
+  border-color: #a855f7 !important;
+  color: #1e1038 !important;
+  box-shadow: 0 6px 16px rgba(147, 51, 234, 0.15) !important;
+}
+
+.theme-light .dojo-choice-btn:hover {
+  background-image: linear-gradient(180deg, #fffbeb 0%, #fce7f3 100%) !important;
+  border-color: #f59e0b !important;
+}
+
+/* Active selection cards in Light Mode get a warm golden-pink highlight */
+.theme-light [class*="border-amber-300"]:not(.keep-dark-card) {
+  border-color: #f59e0b !important;
+}
+
+.theme-light [class*="from-pink-600/35"],
+.theme-light [class*="from-amber-400/30"],
+.theme-light [class*="from-pink-500/30"],
+.theme-light [class*="from-fuchsia-950"] {
+  background-color: #fffbeb !important;
+  background-image: linear-gradient(135deg, #fffbeb 0%, #fdf2f8 55%, #f5f0ff 100%) !important;
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.18) !important;
+}
+
+/* High-legibility dark indigo/plum/berry text on light pastel cards */
+.theme-light .text-white:not(.keep-white-text):not(.keep-dark-card) {
+  color: #1e1038 !important;
+}
+
+.theme-light [class*="text-purple-100"]:not(.keep-white-text),
+.theme-light [class*="text-purple-200"]:not(.keep-white-text),
+.theme-light [class*="text-purple-300"]:not(.keep-white-text),
+.theme-light [class*="text-purple-400"]:not(.keep-white-text),
+.theme-light [class*="text-slate-300"]:not(.keep-white-text),
+.theme-light [class*="text-slate-400"]:not(.keep-white-text) {
+  color: #4c1d95 !important;
+}
+
+.theme-light [class*="text-fuchsia-200"]:not(.keep-white-text),
+.theme-light [class*="text-fuchsia-300"]:not(.keep-white-text),
+.theme-light [class*="text-pink-200"]:not(.keep-white-text),
+.theme-light [class*="text-pink-300"]:not(.keep-white-text) {
+  color: #9d174d !important;
+}
+
+.theme-light [class*="text-amber-100"]:not(.keep-white-text),
+.theme-light [class*="text-amber-200"]:not(.keep-white-text),
+.theme-light [class*="text-amber-300"]:not(.keep-white-text) {
+  color: #b45309 !important;
+}
+
+.theme-light [class*="text-cyan-100"]:not(.keep-white-text),
+.theme-light [class*="text-cyan-200"]:not(.keep-white-text),
+.theme-light [class*="text-cyan-300"]:not(.keep-white-text),
+.theme-light [class*="text-sky-100"]:not(.keep-white-text),
+.theme-light [class*="text-sky-200"]:not(.keep-white-text),
+.theme-light [class*="text-sky-300"]:not(.keep-white-text) {
+  color: #0369a1 !important;
+}
+
+.theme-light [class*="text-emerald-200"]:not(.keep-white-text),
+.theme-light [class*="text-emerald-300"]:not(.keep-white-text) {
+  color: #047857 !important;
+}
+
+.theme-light [class*="text-rose-200"]:not(.keep-white-text),
+.theme-light [class*="text-rose-300"]:not(.keep-white-text),
+.theme-light [class*="text-rose-400"]:not(.keep-white-text) {
+  color: #be123c !important;
+}
+
+/* Keep white/bright text inside solid vibrant gradient badges, active tabs, and unlocked holographic cards */
+.theme-light .keep-white-text,
+.theme-light .keep-white-text *,
+.theme-light .keep-dark-card,
+.theme-light .keep-dark-card .text-white,
+.theme-light .keep-dark-card .text-white:not(#_),
+.theme-light [class*="from-purple-600"].text-white,
+.theme-light [class*="from-amber-500"].text-white,
+.theme-light [class*="from-fuchsia-600"].text-white,
+.theme-light [class*="from-cyan-500"].text-white,
+.theme-light [class*="from-emerald-500"].text-white,
+.theme-light [class*="from-pink-500"].text-white,
+.theme-light [class*="from-pink-600"].text-white,
+.theme-light [class*="from-sky-400"].text-white,
+.theme-light [class*="from-rose-600"].text-white {
+  color: #ffffff !important;
+}
+
+.theme-light .keep-dark-card [class*="text-purple-100"],
+.theme-light .keep-dark-card [class*="text-purple-200"] {
+  color: #f3e8ff !important;
+}
+
+.theme-light .keep-dark-card [class*="text-amber-200"],
+.theme-light .keep-dark-card [class*="text-amber-300"],
+.theme-light .keep-dark-card[class*="text-amber-300"] {
+  color: #fde68a !important;
+}
+
+.theme-light .keep-dark-card [class*="text-emerald-100"],
+.theme-light .keep-dark-card [class*="text-emerald-200"] {
+  color: #d1fae5 !important;
+}
+
+/* NumberSenseXRay SVG Number-Line high-contrast text fills in Light Mode */
+.theme-light .xray-svg-amber {
+  fill: #b45309 !important;
+}
+
+.theme-light .xray-svg-cyan {
+  fill: #0369a1 !important;
+}
+
+.theme-light .xray-svg-pink {
+  fill: #be185d !important;
+}
+
+/* Honmoon Seal & Expanded Center Loop custom Light Mode polish */
+.theme-light .seal-polygon-bg {
+  fill: rgba(255, 255, 255, 0.85) !important;
+}
+
+.theme-light .seal-orb-default {
+  background-image: linear-gradient(180deg, #ffffff 0%, #f3e8ff 100%) !important;
+  border-color: #c084fc !important;
+  color: #2e1065 !important;
+  box-shadow: 0 6px 18px rgba(168, 85, 247, 0.24) !important;
+}
+
+.theme-light .seal-orb-default:hover {
+  border-color: #f59e0b !important;
+}
+
+.theme-light .seal-orb-golden {
+  background-image: linear-gradient(180deg, #fffbeb 0%, #fde68a 100%) !important;
+  border-color: #f59e0b !important;
+  color: #78350f !important;
+  box-shadow: 0 6px 22px rgba(245, 158, 11, 0.4) !important;
+}
+
+.theme-light .center-loop-card {
+  background-color: #ffffff !important;
+  background-image: linear-gradient(180deg, #ffffff 0%, #fdf4ff 60%, #fef3c7 100%) !important;
+  border-color: #f59e0b !important;
+  box-shadow: 0 14px 48px rgba(168, 85, 247, 0.3) !important;
+}
+
+.theme-light .center-loop-eq-box {
+  background-color: #f5f3ff !important;
+  background-image: none !important;
+  border-color: #a855f7 !important;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 6px, 0) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes centerLoopOpen {
+  0% {
+    opacity: 0;
+    transform: scale(0.32);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes centerLoopClose {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.35);
+  }
+}
+
+@keyframes stepSlideUp {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0) scale(0.94);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes targetBurst {
+  0% {
+    opacity: 0;
+    transform: scale(0.4) rotate(-8deg);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.16) rotate(2deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes floatPopup {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 14px) scale(0.75);
+  }
+  25% {
+    opacity: 1;
+    transform: translate(-50%, -4px) scale(1.08);
+  }
+  80% {
+    opacity: 1;
+    transform: translate(-50%, -14px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -24px) scale(0.95);
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translate(-50%, -50%) translateX(0); }
+  25% { transform: translate(-50%, -50%) translateX(-6px); }
+  50% { transform: translate(-50%, -50%) translateX(6px); }
+  75% { transform: translate(-50%, -50%) translateX(-4px); }
+}
+
+@keyframes lightstickWave {
+  0%, 100% { transform: rotate(-18deg) translateY(0px); }
+  50% { transform: rotate(18deg) translateY(-6px); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-pop-in {
+  animation: popIn 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: transform, opacity;
+}
+
+.animate-center-open {
+  animation: centerLoopOpen 0.48s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: transform, opacity;
+}
+
+.animate-center-close {
+  animation: centerLoopClose 0.24s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  will-change: transform, opacity;
+}
+
+.animate-step-up {
+  animation: stepSlideUp 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: transform, opacity;
+}
+
+.animate-target-burst {
+  animation: targetBurst 0.48s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: transform, opacity;
+}
+
+.animate-floatPopup {
+  animation: floatPopup 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-shake {
+  animation: shake 0.35s ease-in-out;
+}
+
+.animate-lightstick {
+  animation: lightstickWave 1.1s ease-in-out infinite;
+}
+
+.font-display {
+  font-family: 'Fredoka', 'Nunito', system-ui, sans-serif !important;
+}

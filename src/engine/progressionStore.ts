@@ -1,0 +1,505 @@
+import type { Language } from '../i18n/translations';
+import type { Operation, FractionMeta } from './kakoomaGenerator';
+import { gcd } from './kakoomaGenerator.ts';
+import type { FactReviewState } from './learningLoop';
+
+export interface PhotocardItem {
+  id: string;
+  rarity: 'rare' | 'epic' | 'golden';
+  icon: string;
+  image: string;
+  color: string;
+  title: { nl: string; en: string };
+  subtitle: { nl: string; en: string };
+}
+
+export const PHOTOCARD_CATALOG: PhotocardItem[] = [
+  {
+    id: 'card_rumi_gold',
+    rarity: 'golden',
+    icon: '👑',
+    image: '/images/card_rumi_gold.png',
+    color: 'from-amber-400 via-yellow-300 to-fuchsia-600',
+    title: { nl: 'Golden Leader Rumi', en: 'Golden Leader Rumi' },
+    subtitle: { nl: 'Saingeom Sterrenzwaard Meesteres', en: 'Saingeom Star-Sword Master' },
+  },
+  {
+    id: 'card_mira_dance',
+    rarity: 'golden',
+    icon: '💃',
+    image: '/images/card_mira_dance.png',
+    color: 'from-pink-500 via-rose-400 to-cyan-400',
+    title: { nl: 'Neon Dancer Mira', en: 'Neon Dancer Mira' },
+    subtitle: { nl: 'Gokdo Maan-Speer Virtuoos', en: 'Gokdo Moon-Polearm Virtuoso' },
+  },
+  {
+    id: 'card_zoey_rap',
+    rarity: 'golden',
+    icon: '🎤',
+    image: '/images/card_zoey_rap.png',
+    color: 'from-lime-400 via-emerald-400 to-purple-600',
+    title: { nl: 'Maknae Rapper Zoey', en: 'Maknae Rapper Zoey' },
+    subtitle: { nl: 'Shinkal Spirit-Messen Kampioen', en: 'Shinkal Spirit-Blades Champion' },
+  },
+  {
+    id: 'card_derpy_tiger',
+    rarity: 'epic',
+    icon: '🐯',
+    image: '/images/card_derpy_tiger.png',
+    color: 'from-sky-400 via-cyan-300 to-blue-600',
+    title: { nl: 'Derpy de Blauwe Tijger', en: 'Derpy the Blue Tiger' },
+    subtitle: { nl: 'Magische Reken-Mascotte', en: 'Magical Math Mascot' },
+  },
+  {
+    id: 'card_sussie_magpie',
+    rarity: 'rare',
+    icon: '🐦‍⬛',
+    image: '/images/card_sussie_magpie.png',
+    color: 'from-indigo-400 via-purple-500 to-slate-800',
+    title: { nl: 'Sussie de Zes-Ogige Ekster', en: 'Sussie the Six-Eyed Magpie' },
+    subtitle: { nl: 'Spot elk geheim getal!', en: 'Spots every hidden number!' },
+  },
+  {
+    id: 'card_golden_honmoon',
+    rarity: 'golden',
+    icon: '🌕',
+    image: '/images/card_golden_honmoon.png',
+    color: 'from-yellow-300 via-amber-500 to-orange-600',
+    title: { nl: 'De Gouden Honmoon', en: 'The Golden Honmoon' },
+    subtitle: { nl: 'Onbreekbare Muziek-Barrière', en: 'Unbreakable Music Barrier' },
+  },
+  {
+    id: 'card_jinu_redeemed',
+    rarity: 'epic',
+    icon: '🎩',
+    image: '/images/card_jinu_redeemed.png',
+    color: 'from-purple-500 via-fuchsia-500 to-indigo-900',
+    title: { nl: 'Jinu (Saja Boys)', en: 'Jinu (Saja Boys)' },
+    subtitle: { nl: '400-Jarige Idol Rival', en: '400-Year-Old Idol Rival' },
+  },
+  {
+    id: 'card_soda_pop',
+    rarity: 'rare',
+    icon: '🥤',
+    image: '/images/card_soda_pop.png',
+    color: 'from-pink-400 via-cyan-400 to-blue-500',
+    title: { nl: 'Soda Pop Spellbreaker', en: 'Soda Pop Spellbreaker' },
+    subtitle: { nl: 'Immuun voor demonen-hypnose!', en: 'Immune to demon hypnosis!' },
+  },
+  {
+    id: 'card_lightstick_vip',
+    rarity: 'epic',
+    icon: '🪄',
+    image: '/images/card_lightstick_vip.png',
+    color: 'from-fuchsia-400 via-pink-500 to-amber-300',
+    title: { nl: 'HUNTR/X VIP Lightstick', en: 'HUNTR/X VIP Lightstick' },
+    subtitle: { nl: 'Verlicht het hele stadion!', en: 'Lights up the whole stadium!' },
+  },
+  {
+    id: 'card_saingeom_blade',
+    rarity: 'epic',
+    icon: '⚔️',
+    image: '/images/card_saingeom_blade.png',
+    color: 'from-cyan-300 via-blue-500 to-purple-700',
+    title: { nl: 'Sterren-Saingeom Zwaard', en: 'Starlight Saingeom Sword' },
+    subtitle: { nl: 'Snijdt door elke lastige som!', en: 'Cuts through any tough sum!' },
+  },
+  {
+    id: 'card_takedown_single',
+    rarity: 'rare',
+    icon: '💿',
+    image: '/images/card_takedown_single.png',
+    color: 'from-rose-500 via-purple-600 to-slate-900',
+    title: { nl: 'Platinum Hit: "Takedown"', en: 'Platinum Hit: "Takedown"' },
+    subtitle: { nl: '#1 op de Wereldwijde Hitlijst', en: '#1 on the Global Charts' },
+  },
+  {
+    id: 'card_world_tour_trophy',
+    rarity: 'golden',
+    icon: '🏆',
+    image: '/images/card_world_tour_trophy.png',
+    color: 'from-amber-300 via-yellow-500 to-pink-600',
+    title: { nl: 'Wereldtournee Reken-Trofee', en: 'World Tour Math Trophy' },
+    subtitle: { nl: 'Ultieme Ouder & Dochter Kampioen', en: 'Ultimate Parent & Daughter Champ' },
+  },
+];
+
+export interface TrickyFactItem {
+  id: string;
+  aLabel: string;
+  bLabel: string;
+  targetLabel: string;
+  op: Operation;
+  choices: string[];
+  hintNl: string;
+  hintEn: string;
+}
+
+export const DEFAULT_STARTER_TRICKY_FACTS: TrickyFactItem[] = [
+  {
+    id: '7×8=56',
+    aLabel: '7',
+    bLabel: '8',
+    targetLabel: '56',
+    op: '×',
+    choices: ['48', '54', '56', '64'],
+    hintNl: 'Ezelsbruggetje: 5, 6, 7, 8 → 56 = 7 × 8! Of: (5 × 8 = 40) + (2 × 8 = 16) = 56.',
+    hintEn: 'Memory trick: 5, 6, 7, 8 → 56 = 7 × 8! Or: (5 × 8 = 40) + (2 × 8 = 16) = 56.',
+  },
+  {
+    id: '15−8=7',
+    aLabel: '15',
+    bLabel: '8',
+    targetLabel: '7',
+    op: '−',
+    choices: ['6', '7', '8', '9'],
+    hintNl: 'Via de 10: van 8 naar 10 is +2, en van 10 naar 15 is +5. Samen 2 + 5 = 7!',
+    hintEn: 'Bridge through 10: from 8 to 10 is +2, and from 10 to 15 is +5. Together 2 + 5 = 7!',
+  },
+  {
+    id: '54÷6=9',
+    aLabel: '54',
+    bLabel: '6',
+    targetLabel: '9',
+    op: '÷',
+    choices: ['7', '8', '9', '6'],
+    hintNl: 'Omkeer-truc: 10 × 6 = 60, dus 9 × 6 = 54! Daarom is 54 ÷ 6 = 9.',
+    hintEn: 'Inverse trick: 10 × 6 = 60, so 9 × 6 = 54! That means 54 ÷ 6 = 9.',
+  },
+  {
+    id: '1/4+1/2=3/4',
+    aLabel: '1/4',
+    bLabel: '1/2',
+    targetLabel: '3/4',
+    op: '+',
+    choices: ['2/4', '3/4', '2/6', '1/4'],
+    hintNl: '1/2 (een halve taart) is precies hetzelfde als 2/4 (twee kwarten). 1/4 + 2/4 = 3/4!',
+    hintEn: '1/2 (half a pie) is the exact same size as 2/4 (two quarters). 1/4 + 2/4 = 3/4!',
+  },
+];
+
+export interface PlayerProgress {
+  xp: number;
+  gems: number;
+  totalSolved: number;
+  unlockedCards: string[];
+  bestSpeedMs: number | null;
+  trickyFacts: TrickyFactItem[];
+  factReview: Record<string, FactReviewState>;
+  conqueredTrickyCount: number;
+}
+
+function dueReviewState(): FactReviewState {
+  return { consecutiveCorrect: 0, promptsUntilReview: 0, mastered: false, rewardClaimed: false };
+}
+
+function isTrickyFact(value: unknown): value is TrickyFactItem {
+  if (!value || typeof value !== 'object') return false;
+  const fact = value as Record<string, unknown>;
+  return (
+    typeof fact.id === 'string' &&
+    typeof fact.aLabel === 'string' &&
+    typeof fact.bLabel === 'string' &&
+    typeof fact.targetLabel === 'string' &&
+    Array.isArray(fact.choices)
+  );
+}
+
+function normalizeReviewState(value: unknown): FactReviewState | null {
+  if (!value || typeof value !== 'object') return null;
+  const state = value as Record<string, unknown>;
+  const toCount = (n: unknown) =>
+    typeof n === 'number' && Number.isFinite(n) ? Math.max(0, Math.floor(n)) : 0;
+  return {
+    consecutiveCorrect: toCount(state.consecutiveCorrect),
+    promptsUntilReview: toCount(state.promptsUntilReview),
+    mastered: state.mastered === true,
+    rewardClaimed: state.rewardClaimed === true,
+  };
+}
+
+function normalizeFactReview(
+  value: unknown,
+  facts: TrickyFactItem[]
+): Record<string, FactReviewState> {
+  const result: Record<string, FactReviewState> = {};
+  if (value && typeof value === 'object' && !Array.isArray(value)) {
+    for (const [id, raw] of Object.entries(value as Record<string, unknown>)) {
+      const state = normalizeReviewState(raw);
+      if (state) result[id] = state;
+    }
+  }
+  // Every fact still waiting in the queue needs an open (unmastered) review state.
+  for (const fact of facts) {
+    const existing = result[fact.id];
+    if (!existing) {
+      result[fact.id] = dueReviewState();
+    } else if (existing.mastered) {
+      result[fact.id] = { ...existing, mastered: false, consecutiveCorrect: 0 };
+    }
+  }
+  return result;
+}
+
+const STORAGE_KEY = 'huntrx_progress_v2';
+
+export function loadProgress(): PlayerProgress {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      const trickyFacts: TrickyFactItem[] = Array.isArray(parsed.trickyFacts)
+        ? parsed.trickyFacts.filter(isTrickyFact)
+        : [];
+      return {
+        xp: parsed.xp ?? 0,
+        gems: parsed.gems ?? 50,
+        totalSolved: parsed.totalSolved ?? 0,
+        unlockedCards: Array.isArray(parsed.unlockedCards)
+          ? parsed.unlockedCards
+          : ['card_derpy_tiger'],
+        bestSpeedMs: parsed.bestSpeedMs ?? null,
+        trickyFacts,
+        factReview: normalizeFactReview(parsed.factReview, trickyFacts),
+        conqueredTrickyCount: parsed.conqueredTrickyCount ?? 0,
+      };
+    }
+  } catch {
+    // ignore storage errors
+  }
+  return {
+    xp: 0,
+    gems: 60, // Start with 60 gems so she can unlock her first photocard right away!
+    totalSolved: 0,
+    unlockedCards: ['card_derpy_tiger'],
+    bestSpeedMs: null,
+    trickyFacts: DEFAULT_STARTER_TRICKY_FACTS,
+    factReview: Object.fromEntries(
+      DEFAULT_STARTER_TRICKY_FACTS.map((fact) => [fact.id, dueReviewState()])
+    ),
+    conqueredTrickyCount: 0,
+  };
+}
+
+export function saveProgress(progress: PlayerProgress): void {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+  } catch {
+    // ignore storage errors
+  }
+}
+
+export function getLevelInfo(xp: number, lang: Language) {
+  const xpPerLevel = 500;
+  const level = Math.floor(xp / xpPerLevel) + 1;
+  const currentLevelXp = xp % xpPerLevel;
+  const progressPct = Math.min(100, Math.round((currentLevelXp / xpPerLevel) * 100));
+
+  const titlesNl = [
+    'Trainee Hunter',
+    'Rookie Idol',
+    'Neon Vocalist',
+    'Rhythm Star',
+    'Honmoon Beschermer',
+    'Saja Boys Verslinder',
+    'Golden Superstar',
+    'HUNTR/X Legende',
+  ];
+  const titlesEn = [
+    'Trainee Hunter',
+    'Rookie Idol',
+    'Neon Vocalist',
+    'Rhythm Star',
+    'Honmoon Guardian',
+    'Saja Boys Slayer',
+    'Golden Superstar',
+    'HUNTR/X Legend',
+  ];
+
+  const idx = Math.min(level - 1, titlesNl.length - 1);
+  return {
+    level,
+    title: lang === 'nl' ? titlesNl[idx] : titlesEn[idx],
+    currentLevelXp,
+    xpPerLevel,
+    progressPct,
+  };
+}
+
+/**
+ * Generates a kid-friendly mental math strategy ("Slimme Reken-Truc!")
+ * that explains HOW to compute a + b, a − b, a × b, or fractions quickly in your head!
+ */
+export function getSmartMathTrick(
+  a: number,
+  b: number,
+  target: number,
+  op: Operation,
+  lang: Language,
+  fractionData?: FractionMeta
+): string {
+  // 0. Fraction Mental Math Tricks!
+  if (fractionData) {
+    const den = fractionData.denominator;
+    if (!fractionData.simplify) {
+      return lang === 'nl'
+        ? `💡 Breuken-Truc: De onderkant (noemer ${den}) blijft gelijk! Tel alleen de bovenkanten op: ${a} + ${b} = ${target} → ${target}/${den}!`
+        : `💡 Fraction Trick: The bottom denominator (${den}) stays the same! Just add the top numerators: ${a} + ${b} = ${target} → ${target}/${den}!`;
+    } else {
+      const ga = gcd(a, den);
+      const gb = gcd(b, den);
+      const gt = gcd(target, den);
+      const fa = `${a / ga}/${den / ga}`;
+      const fb = `${b / gb}/${den / gb}`;
+      const ft = `${target / gt}/${den / gt}`;
+      return lang === 'nl'
+        ? `💡 Gelijknamig Maken (noemer ${den}): ${fa} = ${a}/${den} en ${fb} = ${b}/${den}. Samen ${a}/${den} + ${b}/${den} = ${target}/${den} (${ft})!`
+        : `💡 Common Denominator (${den}): ${fa} = ${a}/${den} and ${fb} = ${b}/${den}. Together ${a}/${den} + ${b}/${den} = ${target}/${den} (${ft})!`;
+    }
+  }
+
+  // 1. Subtraction ('−') Mental Math Tricks! (Here a is minuend, b is subtrahend, target = a - b)
+  if (op === '−') {
+    const minuend = Math.max(a, b);
+    const subtrahend = Math.min(a, b);
+    const diff = minuend - subtrahend;
+
+    // Close numbers -> Count UP! (Aanvul-truc: e.g. 15 - 12 = 3 or 42 - 38 = 4)
+    if (diff <= 5 || subtrahend > minuend * 0.65) {
+      return lang === 'nl'
+        ? `💡 Aanvul-Truc: Tel omhoog van ${subtrahend} naar ${minuend} (${subtrahend} + ${diff} = ${minuend}) → het verschil is ${diff}!`
+        : `💡 Count-Up Trick: Count up from ${subtrahend} to ${minuend} (${subtrahend} + ${diff} = ${minuend}) → the difference is ${diff}!`;
+    }
+
+    // Bridging back through 10 (Via de 10 terug: e.g. 14 - 6 -> 14 - 4 = 10, 10 - 2 = 8)
+    if (minuend > 10 && minuend < 20 && subtrahend > minuend - 10) {
+      const stepTo10 = minuend - 10;
+      const rest = subtrahend - stepTo10;
+      return lang === 'nl'
+        ? `💡 Via de 10 Terug: Eerst ${minuend} − ${stepTo10} = 10, en dan 10 − ${rest} = ${diff}!`
+        : `💡 Bridge Back via 10: First ${minuend} − ${stepTo10} = 10, then 10 − ${rest} = ${diff}!`;
+    }
+
+    // Fact Family (Sommenfamilie: e.g. 25 - 10 = 15 because 15 + 10 = 25)
+    return lang === 'nl'
+      ? `💡 Omkeer-Truc: Omdat ${subtrahend} + ${diff} = ${minuend}, weet je meteen dat ${minuend} − ${subtrahend} = ${diff}!`
+      : `💡 Fact-Family Trick: Since ${subtrahend} + ${diff} = ${minuend}, you know right away that ${minuend} − ${subtrahend} = ${diff}!`;
+  }
+
+  // 2. Division ('÷') Mental Math Tricks! (Here a is dividend, b is divisor, target = a / b)
+  if (op === '÷') {
+    const dividend = Math.max(a, b);
+    const divisor = Math.min(a, b);
+    const quotient = Math.round(dividend / divisor);
+
+    if (divisor === 2) {
+      return lang === 'nl'
+        ? `💡 Halveer-Truc: Delen door 2 is gewoon de helft nemen! De helft van ${dividend} is ${quotient}!`
+        : `💡 Halving Trick: Dividing by 2 is just taking half! Half of ${dividend} is ${quotient}!`;
+    }
+    if (divisor === 4) {
+      const half1 = dividend / 2;
+      return lang === 'nl'
+        ? `💡 Dubbel-Halveren (÷4): De helft van ${dividend} is ${half1}, en de helft van ${half1} is ${quotient}!`
+        : `💡 Half-Half Trick (÷4): Half of ${dividend} is ${half1}, and half of ${half1} is ${quotient}!`;
+    }
+    if (divisor === 5) {
+      return lang === 'nl'
+        ? `💡 Vijf-Deeltruc: Omdat ${quotient} × 5 = ${dividend}, is ${dividend} ÷ 5 = ${quotient}!`
+        : `💡 Divide-by-5 Trick: Since ${quotient} × 5 = ${dividend}, ${dividend} ÷ 5 = ${quotient}!`;
+    }
+    return lang === 'nl'
+      ? `💡 Tafel-Omkeertruc: Denk aan de tafel van ${divisor}: hoeveel keer ${divisor} is ${dividend}? ${quotient} × ${divisor} = ${dividend} → dus ${quotient}!`
+      : `💡 Inverse Table Trick: Think of the ${divisor}× table: what times ${divisor} makes ${dividend}? ${quotient} × ${divisor} = ${dividend} → so ${quotient}!`;
+  }
+
+  const min = Math.min(a, b);
+  const max = Math.max(a, b);
+
+  if (op === '+') {
+    // 1. Doubles (e.g., 6 + 6 = 12)
+    if (a === b) {
+      return lang === 'nl'
+        ? `💡 Dubbel-Kracht: ${a} + ${b} = ${target}!`
+        : `💡 Double Power: ${a} + ${b} = ${target}!`;
+    }
+    // 2. Near-doubles (e.g., 6 + 7 = 6 + 6 + 1 = 13)
+    if (max - min === 1 && min >= 4) {
+      const dbl = min * 2;
+      return lang === 'nl'
+        ? `💡 Bijna-Dubbel Truc: ${min} + ${min} = ${dbl}, plus 1 erbij = ${target}!`
+        : `💡 Near-Double Trick: ${min} + ${min} = ${dbl}, plus 1 more = ${target}!`;
+    }
+    // 3. Friends of 10 (Vriendjes van 10)
+    if (target === 10) {
+      return lang === 'nl'
+        ? `💡 Vriendjes van 10! ${min} en ${max} maken samen altijd 10!`
+        : `💡 Friends of 10! ${min} and ${max} always bond to make 10!`;
+    }
+    // 4. Bridging through 10 (Over het tiental: e.g. 8 + 5 -> 8 + 2 = 10, + 3 = 13)
+    if (max < 10 && target > 10 && target < 20) {
+      const toTen = 10 - max;
+      const leftover = min - toTen;
+      return lang === 'nl'
+        ? `💡 Eerst naar de 10: ${max} + ${toTen} = 10, en dan nog + ${leftover} = ${target}!`
+        : `💡 Bridge through 10: ${max} + ${toTen} = 10, plus ${leftover} more = ${target}!`;
+    }
+    // 5. Bridging through next multiple of 10 for 2-digit numbers
+    const nextTen = Math.ceil(max / 10) * 10;
+    if (max > 10 && nextTen > max && target > nextTen) {
+      const step1 = nextTen - max;
+      const step2 = min - step1;
+      if (step2 > 0) {
+        return lang === 'nl'
+          ? `💡 Tiental-Sprong: ${max} + ${step1} = ${nextTen}, plus ${step2} = ${target}!`
+          : `💡 Make a 10 Jump: ${max} + ${step1} = ${nextTen}, plus ${step2} = ${target}!`;
+      }
+    }
+    return lang === 'nl'
+      ? `💡 Super gevonden: ${min} en ${max} vormen samen ${target}!`
+      : `💡 Awesome bond: ${min} and ${max} combine to make ${target}!`;
+  } else {
+    // Multiplication ('×') tricks!
+    // 1. Times 10
+    if (max === 10) {
+      return lang === 'nl'
+        ? `💡 Tafel van 10 Truc: Plak een 0 achter de ${min} → ${target}!`
+        : `💡 Times 10 Trick: Just put a 0 after ${min} → ${target}!`;
+    }
+    // 2. Times 9 (10x minus 1x)
+    if (max === 9 || min === 9) {
+      const other = max === 9 ? min : max;
+      const tenTimes = other * 10;
+      return lang === 'nl'
+        ? `💡 Negen-Truc: 10 × ${other} = ${tenTimes}, haal er ${other} vanaf = ${target}!`
+        : `💡 Times-9 Trick: 10 × ${other} = ${tenTimes}, minus ${other} = ${target}!`;
+    }
+    // 3. Times 5 (Half of 10x)
+    if (max === 5 || min === 5) {
+      const other = max === 5 ? min : max;
+      return lang === 'nl'
+        ? `💡 Vijf-Truc: De helft van 10 × ${other} (${other * 10}) is ${target}!`
+        : `💡 Times-5 Trick: Half of 10 × ${other} (${other * 10}) is ${target}!`;
+    }
+    // 4. Times 4 (Double-Double!)
+    if (min === 4 || max === 4) {
+      const other = min === 4 ? max : min;
+      const dbl = other * 2;
+      return lang === 'nl'
+        ? `💡 4× is Dubbel-Dubbel: ${other} × 2 = ${dbl}, en ${dbl} × 2 = ${target}!`
+        : `💡 4× is Double-Double: ${other} × 2 = ${dbl}, and ${dbl} × 2 = ${target}!`;
+    }
+    // 5. Hard tables (6, 7, 8) -> Use 5x stepping stone!
+    if (min >= 6) {
+      const fivePart = 5 * max;
+      const restFactor = min - 5;
+      const restPart = restFactor * max;
+      return lang === 'nl'
+        ? `💡 Tafel-Steunpunt: 5 × ${max} = ${fivePart}, plus ${restFactor} × ${max} (${restPart}) = ${target}!`
+        : `💡 Stepping Stone: 5 × ${max} = ${fivePart}, plus ${restFactor} × ${max} (${restPart}) = ${target}!`;
+    }
+    return lang === 'nl'
+      ? `💡 Knap gerekend: ${min} groepjes van ${max} = ${target}!`
+      : `💡 Sharp math: ${min} groups of ${max} = ${target}!`;
+  }
+}
