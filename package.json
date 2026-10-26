@@ -1,5 +1,5 @@
 {
-  "name": "huntrx-math-beat",
+  "name": "kpop-demon-hunters-kakooma",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "deploy": "npm run build && npx wrangler pages deploy dist"
+    "deploy": "npm run build && npx wrangler deploy"
   },
   "dependencies": {
     "canvas-confetti": "^1.9.3",
