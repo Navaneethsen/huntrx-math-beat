@@ -7,6 +7,10 @@ import {
   generateMissingRuneChallenge,
   generateBreakApartChallenge,
   generatePowerLabChallenge,
+  generateStageGridChallenge,
+  generateSoulScaleChallenge,
+  generateRhythmPatternChallenge,
+  generateTargetTrioChallenge,
   generateTangChallenge,
   challengeToTrickyFact,
 } from '../src/engine/tangGamesEngine.ts';
@@ -19,6 +23,10 @@ const GAMES = [
   'missingRune',
   'breakApart',
   'powerLab',
+  'stageGrid',
+  'soulScale',
+  'rhythmPattern',
+  'targetTrio',
 ];
 
 test('generateBubblePopChallenge produces 6 unique bubbles with a valid solution pair across g3–g8 and streaks', () => {
@@ -115,7 +123,64 @@ test('generatePowerLabChallenge covers visual IB PYP concepts across g3–g8', (
   }
 });
 
-test('generateTangChallenge dispatches all 6 K-Pop Demon Hunters Arcade games and challengeToTrickyFact converts every one for the Dojo', () => {
+test('generateStageGridChallenge scales from visual tile arrays to area, perimeter, missing side, and 3D volume across g3–g8', () => {
+  for (const group of GROUPS) {
+    for (let i = 0; i < 15; i++) {
+      const ch = generateStageGridChallenge(group, 2);
+      assert.equal(ch.kind, 'stageGrid');
+      assert.ok(ch.rows >= 2 && ch.cols >= 2);
+      assert.equal(ch.choices.length, 4);
+      assert.equal(new Set(ch.choices).size, 4);
+      assert.ok(ch.choices.includes(ch.answer));
+      if (group === 'g8') {
+        assert.equal(ch.mode, 'volume');
+        assert.equal(ch.answer, ch.cols * ch.rows * ch.height3d);
+      }
+    }
+  }
+});
+
+test('generateSoulScaleChallenge produces balanced equations across g3–g8', () => {
+  for (const group of GROUPS) {
+    for (let i = 0; i < 15; i++) {
+      const ch = generateSoulScaleChallenge(group, 2);
+      assert.equal(ch.kind, 'soulScale');
+      assert.ok(ch.leftItems.length >= 1 && ch.rightItems.length >= 1);
+      assert.equal(ch.choices.length, 4);
+      assert.equal(new Set(ch.choices).size, 4);
+      assert.ok(ch.choices.includes(ch.answer));
+    }
+  }
+});
+
+test('generateRhythmPatternChallenge produces stepping-stone sequences across g3–g8 including negative & square patterns', () => {
+  for (const group of GROUPS) {
+    for (let i = 0; i < 15; i++) {
+      const ch = generateRhythmPatternChallenge(group, 2);
+      assert.equal(ch.kind, 'rhythmPattern');
+      assert.ok(ch.sequence.length >= 4);
+      assert.equal(ch.sequence[ch.sequence.length - 1], '?');
+      assert.equal(ch.choices.length, 4);
+      assert.equal(new Set(ch.choices).size, 4);
+      assert.ok(ch.choices.includes(ch.answer));
+    }
+  }
+});
+
+test('generateTargetTrioChallenge produces 3-card combos and geometry angle sums across g3–g8', () => {
+  for (const group of GROUPS) {
+    for (let i = 0; i < 15; i++) {
+      const ch = generateTargetTrioChallenge(group, 2);
+      assert.equal(ch.kind, 'targetTrio');
+      assert.equal(ch.cards.length, 3);
+      assert.equal(ch.choices.length, 4);
+      assert.equal(new Set(ch.choices).size, 4);
+      assert.ok(ch.choices.includes(ch.answer));
+    }
+  }
+});
+
+test('generateTangChallenge dispatches all 10 K-Pop Demon Hunters Arcade games and challengeToTrickyFact converts every one for the Dojo', () => {
   for (const gameId of GAMES) {
     for (const group of GROUPS) {
       const ch = generateTangChallenge(gameId, group, 2);

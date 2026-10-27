@@ -7,7 +7,11 @@ export type TangMiniGameId =
   | 'subZero'
   | 'missingRune'
   | 'breakApart'
-  | 'powerLab';
+  | 'powerLab'
+  | 'stageGrid'
+  | 'soulScale'
+  | 'rhythmPattern'
+  | 'targetTrio';
 
 export interface BubblePopChallenge {
   kind: 'sodaBubbles';
@@ -85,13 +89,69 @@ export interface PowerLabChallenge {
   coachTip: { nl: string; en: string };
 }
 
+export interface StageGridChallenge {
+  kind: 'stageGrid';
+  rows: number;
+  cols: number;
+  height3d?: number;
+  mode: 'array' | 'area' | 'perimeter' | 'missingSide' | 'volume';
+  visualFormula: string;
+  unitLabel: string;
+  answer: number;
+  choices: number[];
+  conceptBadge: { nl: string; en: string };
+  prompt: { nl: string; en: string };
+  coachTip: { nl: string; en: string };
+}
+
+export interface SoulScaleChallenge {
+  kind: 'soulScale';
+  leftItems: string[];
+  rightItems: string[];
+  leftTotal: number;
+  equationDisplay: string;
+  answer: number;
+  choices: number[];
+  conceptBadge: { nl: string; en: string };
+  prompt: { nl: string; en: string };
+  coachTip: { nl: string; en: string };
+}
+
+export interface RhythmPatternChallenge {
+  kind: 'rhythmPattern';
+  sequence: (number | '?')[];
+  ruleBadge: { nl: string; en: string };
+  equationDisplay: string;
+  answer: number;
+  choices: number[];
+  conceptBadge: { nl: string; en: string };
+  prompt: { nl: string; en: string };
+  coachTip: { nl: string; en: string };
+}
+
+export interface TargetTrioChallenge {
+  kind: 'targetTrio';
+  cards: [string, string, string];
+  targetDisplay: string;
+  equationDisplay: string;
+  answer: number;
+  choices: number[];
+  conceptBadge: { nl: string; en: string };
+  prompt: { nl: string; en: string };
+  coachTip: { nl: string; en: string };
+}
+
 export type TangChallenge =
   | BubblePopChallenge
   | NumberLineChallenge
   | SubZeroChallenge
   | MissingRuneChallenge
   | BreakApartChallenge
-  | PowerLabChallenge;
+  | PowerLabChallenge
+  | StageGridChallenge
+  | SoulScaleChallenge
+  | RhythmPatternChallenge
+  | TargetTrioChallenge;
 
 const BUBBLE_COLORS = [
   'from-pink-500 to-rose-500',
@@ -1570,6 +1630,753 @@ export function generatePowerLabChallenge(
   }
 }
 
+/**
+ * 7. 🍱 Zoey’s Stage Grid (Arrays, Area, Perimeter & 3D Volume)
+ * Scales across g3 -> g8:
+ * - g3: Small visual tile array 2..3 × 2..4 (counting in equal rows)
+ * - g4: Multiplication array 3..5 × 3..6 (rows × cols)
+ * - g5: Stage Area (L × W) or Perimeter (2L + 2W)
+ * - g6: Larger Stage Area or Perimeter (up to 12 × 9)
+ * - g7: Missing Side from Area ([ ? ] × W = Area)
+ * - g8: 3D Stage Cube Volume (L × W × H)
+ */
+export function generateStageGridChallenge(
+  group: SchoolGroupId = 'g5',
+  streak = 0
+): StageGridChallenge {
+  const boost = Math.min(3, Math.floor(streak / 2));
+
+  if (group === 'g3') {
+    const rows = randInt(2, 3);
+    const cols = randInt(2, 4 + Math.min(1, boost));
+    const ans = rows * cols;
+    return {
+      kind: 'stageGrid',
+      rows,
+      cols,
+      mode: 'array',
+      visualFormula: `${rows} × ${cols} = [ ? ]`,
+      unitLabel: 'tegels',
+      answer: ans,
+      choices: buildUniqueChoices(ans, [ans - 2, ans + 2, rows + cols, ans + 1]),
+      conceptBadge: { nl: 'Tegel-Rooster', en: 'Tile Array' },
+      prompt: {
+        nl: `${rows} rijen van ${cols} tegels!`,
+        en: `${rows} rows of ${cols} tiles!`,
+      },
+      coachTip: {
+        nl: `💡 Tel per rij: ${rows} × ${cols} = ${ans}!`,
+        en: `💡 Count by rows: ${rows} × ${cols} = ${ans}!`,
+      },
+    };
+  }
+
+  if (group === 'g4') {
+    const rows = randInt(3, 5);
+    const cols = randInt(3, 6 + Math.min(2, boost));
+    const ans = rows * cols;
+    return {
+      kind: 'stageGrid',
+      rows,
+      cols,
+      mode: 'array',
+      visualFormula: `${rows} × ${cols} = [ ? ]`,
+      unitLabel: 'blokken',
+      answer: ans,
+      choices: buildUniqueChoices(ans, [ans - rows, ans + rows, rows + cols, ans + 2]),
+      conceptBadge: { nl: 'Keer-Rooster (×)', en: 'Array Grid (×)' },
+      prompt: {
+        nl: `Hoeveel podium-blokken in ${rows} × ${cols}?`,
+        en: `How many stage blocks in ${rows} × ${cols}?`,
+      },
+      coachTip: {
+        nl: `💡 ${rows} rijen × ${cols} kolommen = ${ans}!`,
+        en: `💡 ${rows} rows × ${cols} columns = ${ans}!`,
+      },
+    };
+  }
+
+  if (group === 'g5' || group === 'g6') {
+    const isPerimeter = Math.random() < 0.45;
+    const rows = group === 'g5' ? randInt(3, 6) : randInt(5, 9);
+    const cols = group === 'g5' ? randInt(4, 7) : randInt(6, 11);
+    if (isPerimeter) {
+      const ans = 2 * (rows + cols);
+      return {
+        kind: 'stageGrid',
+        rows,
+        cols,
+        mode: 'perimeter',
+        visualFormula: `${cols}m + ${rows}m + ${cols}m + ${rows}m = [ ? ] m`,
+        unitLabel: 'm',
+        answer: ans,
+        choices: buildUniqueChoices(ans, [rows * cols, rows + cols, ans - 2, ans + 4]),
+        conceptBadge: { nl: 'Omtrek (Perimeter)', en: 'Stage Perimeter' },
+        prompt: {
+          nl: `Wat is de omtrek (rand eromheen) van ${cols}m bij ${rows}m?`,
+          en: `What is the perimeter (all 4 sides) of ${cols}m by ${rows}m?`,
+        },
+        coachTip: {
+          nl: `💡 Omtrek = 2 × (${cols} + ${rows}) = ${ans}m!`,
+          en: `💡 Perimeter = 2 × (${cols} + ${rows}) = ${ans}m!`,
+        },
+      };
+    } else {
+      const ans = rows * cols;
+      return {
+        kind: 'stageGrid',
+        rows,
+        cols,
+        mode: 'area',
+        visualFormula: `${cols}m × ${rows}m = [ ? ] m²`,
+        unitLabel: 'm²',
+        answer: ans,
+        choices: buildUniqueChoices(ans, [2 * (rows + cols), ans - cols, ans + rows, ans + 2]),
+        conceptBadge: { nl: 'Oppervlakte (Area m²)', en: 'Stage Area (m²)' },
+        prompt: {
+          nl: `Bereken de oppervlakte (${cols}m × ${rows}m)!`,
+          en: `Find the stage area (${cols}m × ${rows}m)!`,
+        },
+        coachTip: {
+          nl: `💡 Oppervlakte = lengte × breedte = ${cols} × ${rows} = ${ans} m²!`,
+          en: `💡 Area = length × width = ${cols} × ${rows} = ${ans} m²!`,
+        },
+      };
+    }
+  }
+
+  if (group === 'g7') {
+    const rows = randInt(4, 9);
+    const cols = randInt(6, 12);
+    const area = rows * cols;
+    return {
+      kind: 'stageGrid',
+      rows,
+      cols,
+      mode: 'missingSide',
+      visualFormula: `[ ? ]m × ${rows}m = ${area} m²`,
+      unitLabel: 'm',
+      answer: cols,
+      choices: buildUniqueChoices(cols, [cols - 1, cols + 1, cols + 2, rows]),
+      conceptBadge: { nl: 'Ontbrekende Zijde (m²)', en: 'Missing Side (Area)' },
+      prompt: {
+        nl: `Oppervlakte = ${area} m² en breedte = ${rows}m. Hoe lang is de zijde?`,
+        en: `Area = ${area} m² and width = ${rows}m. Find the missing length!`,
+      },
+      coachTip: {
+        nl: `💡 Deel de oppervlakte door de breedte: ${area} ÷ ${rows} = ${cols}m!`,
+        en: `💡 Divide area by width: ${area} ÷ ${rows} = ${cols}m!`,
+      },
+    };
+  }
+
+  // g8: 3D Stage Cube Volume (L × W × H)
+  const cols = randInt(3, 7);
+  const rows = randInt(2, 5);
+  const height3d = randInt(2, 5);
+  const ans = cols * rows * height3d;
+  return {
+    kind: 'stageGrid',
+    rows,
+    cols,
+    height3d,
+    mode: 'volume',
+    visualFormula: `${cols}m × ${rows}m × ${height3d}m = [ ? ] m³`,
+    unitLabel: 'm³',
+    answer: ans,
+    choices: buildUniqueChoices(ans, [
+      cols * rows,
+      ans + cols * rows,
+      ans - height3d,
+      cols + rows + height3d,
+    ]),
+    conceptBadge: { nl: '3D Volume (Inhoud m³)', en: '3D Volume (m³)' },
+    prompt: {
+      nl: `Bereken de 3D inhoud: ${cols}m × ${rows}m × ${height3d}m!`,
+      en: `Find the 3D stage volume: ${cols}m × ${rows}m × ${height3d}m!`,
+    },
+    coachTip: {
+      nl: `💡 Eerst grondvlak ${cols} × ${rows} = ${cols * rows}, daarna × ${height3d} = ${ans} m³!`,
+      en: `💡 Base area ${cols} × ${rows} = ${cols * rows}, then × ${height3d} = ${ans} m³!`,
+    },
+  };
+}
+
+/**
+ * 8. ⚖️ Jinu’s Soul Scale (Visual Balance Beam & Algebraic Weights)
+ * Scales across g3 -> g8:
+ * - g3: Balance to 10 ([ 6 ] + [ 4 ] = [ 7 ] + [ ? ])
+ * - g4: Balance to 20 ([ 9 ] + [ 7 ] = [ 10 ] + [ ? ])
+ * - g5: Two-digit balance ([ 24 ] + [ 16 ] = [ 15 ] + [ ? ])
+ * - g6: Product balance ([ 6 × 7 ] = [ 30 ] + [ ? ])
+ * - g7: 2-Step Algebra Balance (2 × [ ? ] + 5 = 21)
+ * - g8: Negative & Multi-Bag Balance (3 × [ ? ] − 6 = 21 or [ -14 ] + [ ? ] = 18)
+ */
+export function generateSoulScaleChallenge(
+  group: SchoolGroupId = 'g5',
+  streak = 0
+): SoulScaleChallenge {
+  const boost = Math.min(6, streak);
+
+  if (group === 'g3') {
+    const total = randInt(6, 10);
+    const l1 = randInt(2, total - 2);
+    const l2 = total - l1;
+    const r1 = randInt(1, total - 1);
+    const ans = total - r1;
+    return {
+      kind: 'soulScale',
+      leftItems: [`${l1}`, `${l2}`],
+      rightItems: [`${r1}`, '?'],
+      leftTotal: total,
+      equationDisplay: `${l1} + ${l2}  ⚖️  ${r1} + [ ? ]`,
+      answer: ans,
+      choices: buildUniqueChoices(ans, [ans - 1, ans + 1, ans + 2, total]),
+      conceptBadge: { nl: 'Weegschaal t/m 10', en: 'Balance to 10' },
+      prompt: {
+        nl: `Maak beide kanten even zwaar (${total})!`,
+        en: `Balance both sides to equal ${total}!`,
+      },
+      coachTip: {
+        nl: `💡 Links is ${l1} + ${l2} = ${total}. Rechts: ${r1} + ${ans} = ${total}!`,
+        en: `💡 Left is ${l1} + ${l2} = ${total}. Right: ${r1} + ${ans} = ${total}!`,
+      },
+    };
+  }
+
+  if (group === 'g4') {
+    const l1 = randInt(6, 12);
+    const l2 = randInt(5, 11);
+    const total = l1 + l2;
+    const r1 = 10;
+    const ans = total - r1;
+    return {
+      kind: 'soulScale',
+      leftItems: [`${l1}`, `${l2}`],
+      rightItems: [`${r1}`, '?'],
+      leftTotal: total,
+      equationDisplay: `${l1} + ${l2}  ⚖️  10 + [ ? ]`,
+      answer: ans,
+      choices: buildUniqueChoices(ans, [ans - 1, ans + 1, ans + 2, total]),
+      conceptBadge: { nl: 'Balans via 10', en: 'Balance via 10' },
+      prompt: {
+        nl: `Houd de weegschaal in balans!`,
+        en: `Keep the Soul Scale balanced!`,
+      },
+      coachTip: {
+        nl: `💡 Links = ${total}. Dus rechts 10 + ${ans} = ${total}!`,
+        en: `💡 Left = ${total}. So right is 10 + ${ans} = ${total}!`,
+      },
+    };
+  }
+
+  if (group === 'g5') {
+    const l1 = randInt(14, 28 + boost);
+    const l2 = randInt(12, 26 + boost);
+    const total = l1 + l2;
+    const r1 = Math.floor(total / 10) * 10 - 5;
+    const ans = total - r1;
+    return {
+      kind: 'soulScale',
+      leftItems: [`${l1}`, `${l2}`],
+      rightItems: [`${r1}`, '?'],
+      leftTotal: total,
+      equationDisplay: `${l1} + ${l2}  ⚖️  ${r1} + [ ? ]`,
+      answer: ans,
+      choices: buildUniqueChoices(ans, [ans - 2, ans + 2, ans + 5, total - l1]),
+      conceptBadge: { nl: 'Dubbele Balans', en: 'Double Balance' },
+      prompt: {
+        nl: `Links weegt ${total}. Wat hoort er bij ${r1}?`,
+        en: `Left weighs ${total}. What balances ${r1}?`,
+      },
+      coachTip: {
+        nl: `💡 ${l1} + ${l2} = ${total}, en ${total} − ${r1} = ${ans}!`,
+        en: `💡 ${l1} + ${l2} = ${total}, and ${total} − ${r1} = ${ans}!`,
+      },
+    };
+  }
+
+  if (group === 'g6') {
+    const a = randInt(5, 9);
+    const b = randInt(6, 9);
+    const total = a * b;
+    const r1 = randInt(12, total - 8);
+    const ans = total - r1;
+    return {
+      kind: 'soulScale',
+      leftItems: [`${a} × ${b}`],
+      rightItems: [`${r1}`, '?'],
+      leftTotal: total,
+      equationDisplay: `${a} × ${b}  ⚖️  ${r1} + [ ? ]`,
+      answer: ans,
+      choices: buildUniqueChoices(ans, [ans - 2, ans + 2, ans + 4, total]),
+      conceptBadge: { nl: 'Keer-Balans (× & +)', en: 'Product Balance' },
+      prompt: {
+        nl: `Reken eerst ${a} × ${b} uit en maak rechts gelijk!`,
+        en: `First find ${a} × ${b}, then balance the right side!`,
+      },
+      coachTip: {
+        nl: `💡 ${a} × ${b} = ${total}. Daarna ${total} − ${r1} = ${ans}!`,
+        en: `💡 ${a} × ${b} = ${total}. Then ${total} − ${r1} = ${ans}!`,
+      },
+    };
+  }
+
+  if (group === 'g7') {
+    const coeff = randInt(2, 5);
+    const ans = randInt(4, 11);
+    const extra = randInt(3, 12);
+    const total = coeff * ans + extra;
+    return {
+      kind: 'soulScale',
+      leftItems: [`${coeff} × [ ? ]`, `+ ${extra}`],
+      rightItems: [`${total}`],
+      leftTotal: total,
+      equationDisplay: `${coeff} × [ ? ] + ${extra}  ⚖️  ${total}`,
+      answer: ans,
+      choices: buildUniqueChoices(ans, [ans - 1, ans + 1, ans + 2, coeff + extra]),
+      conceptBadge: { nl: 'Algebra Balans (2-staps)', en: '2-Step Algebra Scale' },
+      prompt: {
+        nl: `Haal eerst ${extra} weg aan beide kanten en deel door ${coeff}!`,
+        en: `First subtract ${extra} from both sides, then divide by ${coeff}!`,
+      },
+      coachTip: {
+        nl: `💡 ${total} − ${extra} = ${coeff * ans}, en ${coeff * ans} ÷ ${coeff} = ${ans}!`,
+        en: `💡 ${total} − ${extra} = ${coeff * ans}, and ${coeff * ans} ÷ ${coeff} = ${ans}!`,
+      },
+    };
+  }
+
+  // g8: Signed Integer Balance or Subtracted Algebra Balance
+  const coeff = randInt(3, 6);
+  const ans = randInt(5, 12);
+  const sub = randInt(4, 14);
+  const total = coeff * ans - sub;
+  return {
+    kind: 'soulScale',
+    leftItems: [`${coeff} × [ ? ]`, `− ${sub}`],
+    rightItems: [`${total}`],
+    leftTotal: total,
+    equationDisplay: `${coeff} × [ ? ] − ${sub}  ⚖️  ${total}`,
+    answer: ans,
+    choices: buildUniqueChoices(ans, [ans - 1, ans + 1, ans + 2, ans - 2]),
+    conceptBadge: { nl: 'Meester-Balans (Algebra)', en: 'Master Algebra Scale' },
+    prompt: {
+      nl: `Tel eerst ${sub} erbij op en deel door ${coeff}!`,
+      en: `First add ${sub} to both sides, then divide by ${coeff}!`,
+    },
+    coachTip: {
+      nl: `💡 ${total} + ${sub} = ${coeff * ans}, en ${coeff * ans} ÷ ${coeff} = ${ans}!`,
+      en: `💡 ${total} + ${sub} = ${coeff * ans}, and ${coeff * ans} ÷ ${coeff} = ${ans}!`,
+    },
+  };
+}
+
+/**
+ * 9. ⚡ Rumi’s Rhythm Pattern (Stepping-Stone Sequences & Function Rules)
+ * Scales across g3 -> g8:
+ * - g3: +1, +2, +5 steps
+ * - g4: +3, +4, +10 or -2 steps
+ * - g5: +6..+9 steps or ×2 doubling
+ * - g6: Growing gaps (+2, +4, +6, +8) or +12/+15/+25
+ * - g7: Sub-zero negative integer sequences (12 -> 5 -> -2 -> [ ? ])
+ * - g8: Square number sequence (1, 4, 9, 16, [ ? ]) or 2-step rule (×2 + 1)
+ */
+export function generateRhythmPatternChallenge(
+  group: SchoolGroupId = 'g5',
+  streak = 0
+): RhythmPatternChallenge {
+  if (group === 'g3') {
+    const step = [1, 2, 5][randInt(0, 2)];
+    const start = randInt(1, 5);
+    const seq = [start, start + step, start + step * 2, '?' as const];
+    const ans = start + step * 3;
+    return {
+      kind: 'rhythmPattern',
+      sequence: seq,
+      ruleBadge: { nl: `Sprong +${step}`, en: `Step +${step}` },
+      equationDisplay: `${start} ➔ ${start + step} ➔ ${start + step * 2} ➔ [ ? ]`,
+      answer: ans,
+      choices: buildUniqueChoices(ans, [ans - 1, ans + 1, ans + step, ans - step]),
+      conceptBadge: { nl: 'Reken-Ritme (+)', en: 'Rhythm Steps (+)' },
+      prompt: {
+        nl: `Volg de beat: tel steeds +${step} erbij!`,
+        en: `Follow the beat: add +${step} each step!`,
+      },
+      coachTip: {
+        nl: `💡 Elke stap is +${step}: ${start + step * 2} + ${step} = ${ans}!`,
+        en: `💡 Each step is +${step}: ${start + step * 2} + ${step} = ${ans}!`,
+      },
+    };
+  }
+
+  if (group === 'g4') {
+    const step = [3, 4, 5, 10][randInt(0, 3)];
+    const start = randInt(2, 12);
+    const seq = [start, start + step, start + step * 2, '?' as const];
+    const ans = start + step * 3;
+    return {
+      kind: 'rhythmPattern',
+      sequence: seq,
+      ruleBadge: { nl: `Ritme +${step}`, en: `Beat +${step}` },
+      equationDisplay: `${start} ➔ ${start + step} ➔ ${start + step * 2} ➔ [ ? ]`,
+      answer: ans,
+      choices: buildUniqueChoices(ans, [ans - 2, ans + 2, ans + step, ans - 1]),
+      conceptBadge: { nl: 'Tafel-Sprongen', en: 'Skip-Counting' },
+      prompt: {
+        nl: `Welk getal komt op het volgende ritme-blok?`,
+        en: `Which number lands on the next rhythm pad?`,
+      },
+      coachTip: {
+        nl: `💡 Het patroon is +${step}: ${start + step * 2} + ${step} = ${ans}!`,
+        en: `💡 The pattern is +${step}: ${start + step * 2} + ${step} = ${ans}!`,
+      },
+    };
+  }
+
+  if (group === 'g5') {
+    const isDouble = Math.random() < 0.4;
+    if (isDouble) {
+      const start = randInt(2, 5);
+      const seq = [start, start * 2, start * 4, '?' as const];
+      const ans = start * 8;
+      return {
+        kind: 'rhythmPattern',
+        sequence: seq,
+        ruleBadge: { nl: 'Verdubbelen (×2)', en: 'Doubling (×2)' },
+        equationDisplay: `${start} ➔ ${start * 2} ➔ ${start * 4} ➔ [ ? ]`,
+        answer: ans,
+        choices: buildUniqueChoices(ans, [start * 6, ans + 2, ans - 4, ans + start]),
+        conceptBadge: { nl: 'Verdubbel-Beat (×2)', en: 'Double Beat (×2)' },
+        prompt: {
+          nl: `Elke stap verdubbelt (× 2)! Wat komt nu?`,
+          en: `Each step doubles (× 2)! What comes next?`,
+        },
+        coachTip: {
+          nl: `💡 Verdubbel ${start * 4}: ${start * 4} × 2 = ${ans}!`,
+          en: `💡 Double ${start * 4}: ${start * 4} × 2 = ${ans}!`,
+        },
+      };
+    } else {
+      const step = randInt(6, 9);
+      const start = randInt(4, 15);
+      const seq = [start, start + step, start + step * 2, '?' as const];
+      const ans = start + step * 3;
+      return {
+        kind: 'rhythmPattern',
+        sequence: seq,
+        ruleBadge: { nl: `Patroon +${step}`, en: `Pattern +${step}` },
+        equationDisplay: `${start} ➔ ${start + step} ➔ ${start + step * 2} ➔ [ ? ]`,
+        answer: ans,
+        choices: buildUniqueChoices(ans, [ans - 2, ans + 2, ans + step, ans - 1]),
+        conceptBadge: { nl: 'Getallenrij (+)', en: 'Number Sequence (+)' },
+        prompt: {
+          nl: `Ontdek de sprong en kraak het 4e blok!`,
+          en: `Spot the jump and unlock the 4th pad!`,
+        },
+        coachTip: {
+          nl: `💡 Elke sprong is +${step}: ${start + step * 2} + ${step} = ${ans}!`,
+          en: `💡 Every jump is +${step}: ${start + step * 2} + ${step} = ${ans}!`,
+        },
+      };
+    }
+  }
+
+  if (group === 'g6') {
+    // Growing step difference: +2, +4, +6, +8 or +3, +6, +9, +12
+    const baseDiff = [2, 3, 4][randInt(0, 2)];
+    const n0 = randInt(2, 10);
+    const n1 = n0 + baseDiff;
+    const n2 = n1 + baseDiff * 2;
+    const n3 = n2 + baseDiff * 3;
+    const ans = n3 + baseDiff * 4;
+    return {
+      kind: 'rhythmPattern',
+      sequence: [n0, n1, n2, n3, '?'],
+      ruleBadge: {
+        nl: `Groei-sprong (+${baseDiff}, +${baseDiff * 2}, +${baseDiff * 3}...)`,
+        en: `Growing jump (+${baseDiff}, +${baseDiff * 2}, +${baseDiff * 3}...)`,
+      },
+      equationDisplay: `${n0} ➔ ${n1} ➔ ${n2} ➔ ${n3} ➔ [ ? ]`,
+      answer: ans,
+      choices: buildUniqueChoices(ans, [
+        n3 + baseDiff * 3,
+        ans + baseDiff,
+        ans - 2,
+        ans + 2,
+      ]),
+      conceptBadge: { nl: 'Groeiend Patroon', en: 'Growing Sequence' },
+      prompt: {
+        nl: `De sprong wordt elke keer groter! Wat komt na ${n3}?`,
+        en: `The jump grows bigger each time! What comes after ${n3}?`,
+      },
+      coachTip: {
+        nl: `💡 Sprongen: +${baseDiff}, +${baseDiff * 2}, +${baseDiff * 3}, dus nu +${baseDiff * 4} → ${n3} + ${baseDiff * 4} = ${ans}!`,
+        en: `💡 Jumps: +${baseDiff}, +${baseDiff * 2}, +${baseDiff * 3}, so next is +${baseDiff * 4} → ${n3} + ${baseDiff * 4} = ${ans}!`,
+      },
+    };
+  }
+
+  if (group === 'g7') {
+    // Sub-zero countdown sequence crossing 0!
+    const step = randInt(4, 9);
+    const start = randInt(step + 2, step * 2 - 1);
+    const n1 = start - step;
+    const n2 = n1 - step; // negative!
+    const ans = n2 - step;
+    return {
+      kind: 'rhythmPattern',
+      sequence: [start, n1, n2, '?'],
+      ruleBadge: { nl: `Sub-Zero Sprong −${step}`, en: `Sub-Zero Step −${step}` },
+      equationDisplay: `${start} ➔ ${n1} ➔ ${n2} ➔ [ ? ]`,
+      answer: ans,
+      choices: buildUniqueChoices(ans, [ans - 2, ans + 2, -ans, n2 + step], true),
+      conceptBadge: { nl: 'Sub-Zero Getallenrij', en: 'Sub-Zero Sequence' },
+      prompt: {
+        nl: `Tel steeds −${step} verder onder nul!`,
+        en: `Keep subtracting −${step} below zero!`,
+      },
+      coachTip: {
+        nl: `💡 ${n2} − ${step} = ${ans}!`,
+        en: `💡 ${n2} − ${step} = ${ans}!`,
+      },
+    };
+  }
+
+  // g8: Square Numbers (n²) or Function Machine (×2 + c)
+  const useSquares = Math.random() < 0.5;
+  if (useSquares) {
+    const startN = randInt(1, 4 + Math.min(2, streak));
+    const n0 = startN * startN;
+    const n1 = (startN + 1) * (startN + 1);
+    const n2 = (startN + 2) * (startN + 2);
+    const n3 = (startN + 3) * (startN + 3);
+    const ans = (startN + 4) * (startN + 4);
+    return {
+      kind: 'rhythmPattern',
+      sequence: [n0, n1, n2, n3, '?'],
+      ruleBadge: { nl: 'Kwadraten-Reeks (n²)', en: 'Square Numbers (n²)' },
+      equationDisplay: `${n0} ➔ ${n1} ➔ ${n2} ➔ ${n3} ➔ [ ? ]`,
+      answer: ans,
+      choices: buildUniqueChoices(ans, [ans - 4, ans + 5, n3 + (n3 - n2), ans - 2]),
+      conceptBadge: { nl: 'Kwadraten-Patroon (n²)', en: 'Squares Pattern (n²)' },
+      prompt: {
+        nl: `Kwadraten-reeks (${startN}², ${startN + 1}², ${startN + 2}², ${startN + 3}²): wat is (${startN + 4})²?`,
+        en: `Square sequence (${startN}², ${startN + 1}², ${startN + 2}², ${startN + 3}²): what is (${startN + 4})²?`,
+      },
+      coachTip: {
+        nl: `💡 (${startN + 4})² = ${startN + 4} × ${startN + 4} = ${ans}!`,
+        en: `💡 (${startN + 4})² = ${startN + 4} × ${startN + 4} = ${ans}!`,
+      },
+    };
+  } else {
+    const add = randInt(1, 3);
+    const n0 = randInt(2, 5);
+    const n1 = n0 * 2 + add;
+    const n2 = n1 * 2 + add;
+    const ans = n2 * 2 + add;
+    return {
+      kind: 'rhythmPattern',
+      sequence: [n0, n1, n2, '?'],
+      ruleBadge: { nl: `Regel: ×2 + ${add}`, en: `Rule: ×2 + ${add}` },
+      equationDisplay: `${n0} ➔ ${n1} ➔ ${n2} ➔ [ ? ]`,
+      answer: ans,
+      choices: buildUniqueChoices(ans, [n2 * 2, ans + 2, ans - 2, ans + add]),
+      conceptBadge: { nl: 'Functie-Regel (×2 + c)', en: 'Function Rule (×2 + c)' },
+      prompt: {
+        nl: `Pas de regel (× 2 + ${add}) toe op ${n2}!`,
+        en: `Apply the rule (× 2 + ${add}) to ${n2}!`,
+      },
+      coachTip: {
+        nl: `💡 ${n2} × 2 + ${add} = ${n2 * 2} + ${add} = ${ans}!`,
+        en: `💡 ${n2} × 2 + ${add} = ${n2 * 2} + ${add} = ${ans}!`,
+      },
+    };
+  }
+}
+
+/**
+ * 10. 🎯 Sussie’s Target Trio (3-Card Combo, Make-100 & Geometry Angles)
+ * Scales across g3 -> g8:
+ * - g3: 3-Card Make-10 ([ 4 ] + [ 3 ] + [ ? ] = 10)
+ * - g4: Make-10 Trio ([ 6 ] + [ 4 ] + [ ? ] = 18)
+ * - g5: Make-100 Trio ([ 35 ] + [ 25 ] + [ ? ] = 100)
+ * - g6: Mixed Trio ([ 25 ] + [ 45 ] + [ ? ] = 120)
+ * - g7: Triangle Angles 180° ([ 65° ] + [ 45° ] + [ ?° ] = 180°)
+ * - g8: Full Circle 360° or Signed Integer Trio ([ -15 ] + [ 35 ] + [ ? ] = 50)
+ */
+export function generateTargetTrioChallenge(
+  group: SchoolGroupId = 'g5',
+  streak = 0
+): TargetTrioChallenge {
+  if (group === 'g3') {
+    const target = 10;
+    const c1 = randInt(2, 5);
+    const c2 = randInt(1, 8 - c1);
+    const ans = target - c1 - c2;
+    return {
+      kind: 'targetTrio',
+      cards: [`${c1}`, `${c2}`, '?'],
+      targetDisplay: `${target}`,
+      equationDisplay: `${c1} + ${c2} + [ ? ] = ${target}`,
+      answer: ans,
+      choices: buildUniqueChoices(ans, [ans - 1, ans + 1, ans + 2, c1 + c2]),
+      conceptBadge: { nl: 'Trio naar 10', en: 'Trio to 10' },
+      prompt: {
+        nl: `Maak samen ${target} met 3 kaarten!`,
+        en: `Make ${target} with 3 cards!`,
+      },
+      coachTip: {
+        nl: `💡 ${c1} + ${c2} = ${c1 + c2}, en ${c1 + c2} + ${ans} = ${target}!`,
+        en: `💡 ${c1} + ${c2} = ${c1 + c2}, and ${c1 + c2} + ${ans} = ${target}!`,
+      },
+    };
+  }
+
+  if (group === 'g4') {
+    const c1 = randInt(3, 8);
+    const c2 = 10 - c1;
+    const ans = randInt(4, 12);
+    const target = 10 + ans;
+    return {
+      kind: 'targetTrio',
+      cards: [`${c1}`, `${c2}`, '?'],
+      targetDisplay: `${target}`,
+      equationDisplay: `${c1} + ${c2} + [ ? ] = ${target}`,
+      answer: ans,
+      choices: buildUniqueChoices(ans, [ans - 1, ans + 1, ans + 2, 10]),
+      conceptBadge: { nl: 'Vriendjes van 10 Trio', en: 'Make-10 Trio' },
+      prompt: {
+        nl: `${c1} + ${c2} maakt al 10! Hoeveel erbij voor ${target}?`,
+        en: `${c1} + ${c2} makes 10! How much more to reach ${target}?`,
+      },
+      coachTip: {
+        nl: `💡 (${c1} + ${c2}) = 10, en 10 + ${ans} = ${target}!`,
+        en: `💡 (${c1} + ${c2}) = 10, and 10 + ${ans} = ${target}!`,
+      },
+    };
+  }
+
+  if (group === 'g5') {
+    const target = 100;
+    const c1 = randInt(2, 5) * 10 + 5;
+    const c2 = randInt(1, 3) * 10 + 5;
+    const ans = target - c1 - c2;
+    return {
+      kind: 'targetTrio',
+      cards: [`${c1}`, `${c2}`, '?'],
+      targetDisplay: '100',
+      equationDisplay: `${c1} + ${c2} + [ ? ] = 100`,
+      answer: ans,
+      choices: buildUniqueChoices(ans, [ans - 10, ans + 10, ans + 5, 100 - c1]),
+      conceptBadge: { nl: 'Trio naar 100', en: 'Trio to 100' },
+      prompt: {
+        nl: `Welke kaart maakt samen precies 100?`,
+        en: `Which card completes 100?`,
+      },
+      coachTip: {
+        nl: `💡 ${c1} + ${c2} = ${c1 + c2}, en 100 − ${c1 + c2} = ${ans}!`,
+        en: `💡 ${c1} + ${c2} = ${c1 + c2}, and 100 − ${c1 + c2} = ${ans}!`,
+      },
+    };
+  }
+
+  if (group === 'g6') {
+    const c1 = randInt(25, 55);
+    const c2 = randInt(20, 45);
+    const ans = randInt(15, 45);
+    const target = c1 + c2 + ans;
+    return {
+      kind: 'targetTrio',
+      cards: [`${c1}`, `${c2}`, '?'],
+      targetDisplay: `${target}`,
+      equationDisplay: `${c1} + ${c2} + [ ? ] = ${target}`,
+      answer: ans,
+      choices: buildUniqueChoices(ans, [ans - 5, ans + 5, ans + 10, c1 + c2]),
+      conceptBadge: { nl: '3-Kaarten Som', en: '3-Card Target' },
+      prompt: {
+        nl: `Vind de 3e kaart om ${target} te halen!`,
+        en: `Find the 3rd card to hit ${target}!`,
+      },
+      coachTip: {
+        nl: `💡 ${c1} + ${c2} = ${c1 + c2}. Daarna ${target} − ${c1 + c2} = ${ans}!`,
+        en: `💡 ${c1} + ${c2} = ${c1 + c2}. Then ${target} − ${c1 + c2} = ${ans}!`,
+      },
+    };
+  }
+
+  if (group === 'g7') {
+    // Triangle Angles sum to 180°!
+    const a1 = randInt(40, 85);
+    const a2 = randInt(35, 75);
+    const ans = 180 - a1 - a2;
+    return {
+      kind: 'targetTrio',
+      cards: [`${a1}°`, `${a2}°`, '?°'],
+      targetDisplay: '180°',
+      equationDisplay: `${a1}° + ${a2}° + [ ? ]° = 180°`,
+      answer: ans,
+      choices: buildUniqueChoices(ans, [ans - 10, ans + 10, ans + 5, 180 - a1]),
+      conceptBadge: { nl: 'Driehoek-Hoeken (180°)', en: 'Triangle Angles (180°)' },
+      prompt: {
+        nl: `De 3 hoeken van een driehoek zijn samen 180°!`,
+        en: `The 3 angles of a triangle always add to 180°!`,
+      },
+      coachTip: {
+        nl: `💡 ${a1}° + ${a2}° = ${a1 + a2}°. Dus 180° − ${a1 + a2}° = ${ans}°!`,
+        en: `💡 ${a1}° + ${a2}° = ${a1 + a2}°. So 180° − ${a1 + a2}° = ${ans}°!`,
+      },
+    };
+  }
+
+  // g8: Full 360° Star Rotation or Sub-Zero Integer Trio
+  const isAngle = Math.random() < 0.55;
+  if (isAngle) {
+    const a1 = randInt(95, 155);
+    const a2 = randInt(85, 135);
+    const ans = 360 - a1 - a2;
+    return {
+      kind: 'targetTrio',
+      cards: [`${a1}°`, `${a2}°`, '?°'],
+      targetDisplay: '360°',
+      equationDisplay: `${a1}° + ${a2}° + [ ? ]° = 360°`,
+      answer: ans,
+      choices: buildUniqueChoices(ans, [ans - 10, ans + 10, ans + 15, 360 - a1]),
+      conceptBadge: { nl: 'Volle Cirkel (360°)', en: 'Full Circle (360°)' },
+      prompt: {
+        nl: `Een volle cirkel is 360°! Bereken de ontbrekende hoek:`,
+        en: `A full circle is 360°! Find the missing angle:`,
+      },
+      coachTip: {
+        nl: `💡 ${a1}° + ${a2}° = ${a1 + a2}°. Dus 360° − ${a1 + a2}° = ${ans}°!`,
+        en: `💡 ${a1}° + ${a2}° = ${a1 + a2}°. So 360° − ${a1 + a2}° = ${ans}°!`,
+      },
+    };
+  } else {
+    const c1 = -randInt(8, 22 + Math.min(8, streak));
+    const c2 = randInt(15, 35);
+    const ans = randInt(10, 30);
+    const target = c1 + c2 + ans;
+    return {
+      kind: 'targetTrio',
+      cards: [`${c1}`, `+${c2}`, '?'],
+      targetDisplay: `${target}`,
+      equationDisplay: `(${c1}) + ${c2} + [ ? ] = ${target}`,
+      answer: ans,
+      choices: buildUniqueChoices(ans, [ans - 4, ans + 4, ans - c1, target - c2], true),
+      conceptBadge: { nl: 'Sub-Zero Trio', en: 'Sub-Zero Trio' },
+      prompt: {
+        nl: `Reken eerst (${c1}) + ${c2} uit en vul aan tot ${target}!`,
+        en: `First find (${c1}) + ${c2}, then complete to ${target}!`,
+      },
+      coachTip: {
+        nl: `💡 (${c1}) + ${c2} = ${c1 + c2}. Daarna ${target} − ${c1 + c2} = ${ans}!`,
+        en: `💡 (${c1}) + ${c2} = ${c1 + c2}. Then ${target} − ${c1 + c2} = ${ans}!`,
+      },
+    };
+  }
+}
+
 export function generateTangChallenge(
   gameId: TangMiniGameId,
   group: SchoolGroupId = 'g5',
@@ -1580,6 +2387,10 @@ export function generateTangChallenge(
   if (gameId === 'subZero') return generateSubZeroChallenge(group, streak);
   if (gameId === 'missingRune') return generateMissingRuneChallenge(group, streak);
   if (gameId === 'breakApart') return generateBreakApartChallenge(group, streak);
+  if (gameId === 'stageGrid') return generateStageGridChallenge(group, streak);
+  if (gameId === 'soulScale') return generateSoulScaleChallenge(group, streak);
+  if (gameId === 'rhythmPattern') return generateRhythmPatternChallenge(group, streak);
+  if (gameId === 'targetTrio') return generateTargetTrioChallenge(group, streak);
   return generatePowerLabChallenge(group, streak);
 }
 
@@ -1688,6 +2499,59 @@ export function challengeToTrickyFact(ch: TangChallenge): TrickyFactItem {
       bLabel: '?',
       targetLabel: String(ch.answer),
       op,
+      choices: ch.choices.map(String),
+      hintNl: ch.coachTip.nl,
+      hintEn: ch.coachTip.en,
+    };
+  }
+
+  if (ch.kind === 'stageGrid') {
+    const op: Operation = ch.mode === 'perimeter' ? '+' : ch.mode === 'missingSide' ? '÷' : '×';
+    return {
+      id: `arcade_grid_${ch.mode}_${ch.rows}_${ch.cols}_${ch.answer}`,
+      aLabel: ch.visualFormula.replace('= [ ? ]', '').trim(),
+      bLabel: '?',
+      targetLabel: String(ch.answer),
+      op,
+      choices: ch.choices.map(String),
+      hintNl: ch.coachTip.nl,
+      hintEn: ch.coachTip.en,
+    };
+  }
+
+  if (ch.kind === 'soulScale') {
+    return {
+      id: `arcade_scale_${ch.equationDisplay.replace(/\s+/g, '')}_${ch.answer}`,
+      aLabel: ch.equationDisplay,
+      bLabel: '?',
+      targetLabel: String(ch.answer),
+      op: '+',
+      choices: ch.choices.map(String),
+      hintNl: ch.coachTip.nl,
+      hintEn: ch.coachTip.en,
+    };
+  }
+
+  if (ch.kind === 'rhythmPattern') {
+    return {
+      id: `arcade_pattern_${ch.equationDisplay.replace(/\s+/g, '')}_${ch.answer}`,
+      aLabel: ch.equationDisplay.replace('➔ [ ? ]', '').trim(),
+      bLabel: '?',
+      targetLabel: String(ch.answer),
+      op: '+',
+      choices: ch.choices.map(String),
+      hintNl: ch.coachTip.nl,
+      hintEn: ch.coachTip.en,
+    };
+  }
+
+  if (ch.kind === 'targetTrio') {
+    return {
+      id: `arcade_trio_${ch.equationDisplay.replace(/\s+/g, '')}_${ch.answer}`,
+      aLabel: ch.equationDisplay.replace('= ' + ch.targetDisplay, '').trim(),
+      bLabel: ch.targetDisplay,
+      targetLabel: String(ch.answer),
+      op: '+',
       choices: ch.choices.map(String),
       hintNl: ch.coachTip.nl,
       hintEn: ch.coachTip.en,

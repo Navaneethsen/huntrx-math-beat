@@ -407,6 +407,59 @@
   animation: lightstickWave 1.1s ease-in-out infinite;
 }
 
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translate3d(0, 0px, 0);
+  }
+  50% {
+    transform: translate3d(0, -5px, 0);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 18px rgba(244, 114, 182, 0.28);
+  }
+  50% {
+    box-shadow: 0 0 32px rgba(251, 191, 36, 0.52);
+  }
+}
+
+@keyframes tiltBalance {
+  0%, 100% {
+    transform: rotate(-1.5deg);
+  }
+  50% {
+    transform: rotate(1.5deg);
+  }
+}
+
+.animate-float-slow {
+  animation: floatSlow 3.2s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2.8s ease-in-out infinite;
+}
+
+.animate-tilt-balance {
+  animation: tiltBalance 3.6s ease-in-out infinite;
+  transform-origin: center center;
+}
+
+.kid-block-card {
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease;
+}
+
+.kid-block-card:hover {
+  transform: translateY(-3px) scale(1.015);
+}
+
+.kid-block-card:active {
+  transform: scale(0.98);
+}
+
 .font-display {
   font-family: 'Fredoka', 'Nunito', system-ui, sans-serif !important;
 }

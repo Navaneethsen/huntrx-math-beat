@@ -648,7 +648,7 @@ export function generateChainPuzzle(skill: SkillId, size: SealSize): KakoomaChai
       const candidateCenter = generateSinglePuzzle(skill, outerCount, undefined, sharedMeta);
       if (
         isBoundedFractionPuzzle(candidateCenter) &&
-        candidateCenter.numbers.every((n) => n >= 3)
+        candidateCenter.numbers.every((n) => n >= (outerSize === 6 ? 5 : 3))
       ) {
         const outerPuzzles = candidateCenter.numbers.map((targetNum) =>
           generateSinglePuzzle(skill, outerSize, targetNum, sharedMeta)

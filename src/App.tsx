@@ -66,7 +66,7 @@ import {
   getAutoProgressedCurriculum,
 } from './engine/curriculumGroups';
 import { TangMiniGameId } from './engine/tangGamesEngine';
-import { TangArcadeModal } from './components/TangArcadeModal';
+import { TangArcadeModal, ARCADE_GAMES_CATALOG } from './components/TangArcadeModal';
 import {
   advanceOtherReviews,
   claimMasteryReward,
@@ -163,6 +163,7 @@ export const App: React.FC = () => {
   const [showPhotocards, setShowPhotocards] = useState(false);
   const [showDojo, setShowDojo] = useState(false);
   const [showTangArcade, setShowTangArcade] = useState(false);
+  const [arcadeViewMode, setArcadeViewMode] = useState<'hub' | 'stage'>('hub');
   const [initialTangGame, setInitialTangGame] = useState<TangMiniGameId>('sodaBubbles');
   const [showXRay, setShowXRay] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
@@ -983,11 +984,12 @@ export const App: React.FC = () => {
         <div className="relative max-w-6xl mx-auto flex items-center justify-between gap-2">
           {/* Logo & Back Button */}
           <div className="flex items-center gap-2 min-w-0">
-            {screen !== 'menu' && (
+            {(screen !== 'menu' || showTangArcade) && (
               <button
                 type="button"
                 onClick={() => {
                   soundEngine.playTap();
+                  setShowTangArcade(false);
                   setScreen('menu');
                 }}
                 className="p-2 rounded-xl bg-purple-900/60 hover:bg-purple-800 border border-fuchsia-400/40 text-fuchsia-200 flex items-center gap-1 text-xs font-bold shrink-0"
@@ -997,7 +999,10 @@ export const App: React.FC = () => {
               </button>
             )}
             <div
-              onClick={() => setScreen('menu')}
+              onClick={() => {
+                setShowTangArcade(false);
+                setScreen('menu');
+              }}
               className="cursor-pointer flex items-center gap-2 min-w-0"
             >
               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-pink-500 via-purple-600 to-amber-400 p-0.5 shadow-[0_0_15px_rgba(236,72,153,0.5)] shrink-0">
@@ -1064,17 +1069,22 @@ export const App: React.FC = () => {
               <span>{t.dojoBtnLabel}</span>
             </button>
 
-            {/* Greg Tang Mini-Games Arcade Button */}
+            {/* HUNTR/X Full-Page Math Arcade Button */}
             <button
               type="button"
               data-testid="open-tang-arcade-btn"
               onClick={() => {
                 soundEngine.playTap();
+                setArcadeViewMode('hub');
                 setShowTangArcade(true);
               }}
-              className="px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-fuchsia-500/25 to-pink-500/25 hover:from-fuchsia-500/40 hover:to-pink-500/40 border border-fuchsia-400/70 text-pink-200 text-xs font-extrabold flex items-center gap-1 shadow-[0_0_15px_rgba(236,72,153,0.25)] transition-all"
+              className={`px-3 py-1.5 rounded-xl border text-xs sm:text-sm font-extrabold flex items-center gap-1.5 transition-all cursor-pointer ${
+                showTangArcade
+                  ? 'keep-white-text bg-gradient-to-r from-pink-500 to-amber-400 text-slate-950 border-white shadow-[0_0_18px_rgba(236,72,153,0.55)]'
+                  : 'bg-gradient-to-r from-fuchsia-500/25 to-pink-500/25 hover:from-fuchsia-500/40 hover:to-pink-500/40 border-fuchsia-400/70 text-pink-200 shadow-[0_0_15px_rgba(236,72,153,0.25)]'
+              }`}
             >
-              <span>🎮 {lang === 'nl' ? 'Arcade' : 'Arcade'}</span>
+              <span>🕹️ {lang === 'nl' ? 'Arcade (10)' : 'Arcade (10)'}</span>
             </button>
 
             {/* Collectible Photobook & Gems Button */}
@@ -1260,161 +1270,259 @@ export const App: React.FC = () => {
 
       {/* MAIN CONTENT AREA */}
       <main className="flex-1 w-full max-w-6xl mx-auto px-3 sm:px-6 pt-4">
+        {/* ==================== FULL-PAGE MATH ARCADE VIEW ==================== */}
+        <TangArcadeModal
+          isOpen={showTangArcade}
+          onClose={() => setShowTangArcade(false)}
+          lang={lang}
+          schoolGroup={schoolGroup}
+          onChangeSchoolGroup={handleSelectSchoolGroup}
+          gems={progress.gems}
+          initialGame={initialTangGame}
+          pageMode={true}
+          initialViewMode={arcadeViewMode}
+          onRecordMiss={recordArcadeMiss}
+          onOpenDojo={() => {
+            setShowTangArcade(false);
+            setShowDojo(true);
+          }}
+          onEarnReward={(gemsEarned, xpEarned) => {
+            updateProgress((prev) => ({
+              ...prev,
+              gems: prev.gems + gemsEarned,
+              xp: prev.xp + xpEarned,
+            }));
+          }}
+        />
+
         {/* ==================== MENU SCREEN (RETURNING DASHBOARD + 4-STEP WIZARD) ==================== */}
-        {screen === 'menu' && (
+        {!showTangArcade && screen === 'menu' && (
           <div className="space-y-5 animate-fadeIn">
-            {/* CASE A: RETURNING PLAYER FAST-TRACK DASHBOARD (No redundant Idol prompt!) */}
+            {/* CASE A: RETURNING PLAYER KID-FRIENDLY BLOCK DASHBOARD */}
             {wizardStep === 0 && activeProfile ? (
               <div
                 data-testid="returning-player-dashboard"
-                className="light-surface-card relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#240b4c] via-[#3b0a57] to-[#14072e] border-2 border-amber-300/60 p-4 sm:p-7 shadow-[0_0_45px_rgba(236,72,153,0.3)] space-y-4"
+                className="light-surface-card relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#240b4c] via-[#3b0a57] to-[#14072e] border-2 border-amber-300/60 p-4 sm:p-7 shadow-[0_0_45px_rgba(236,72,153,0.3)] space-y-5"
               >
-                {/* Top Row: Active Player & Idol Avatar + Quick Switch Player Button */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div className="flex items-center gap-3.5 min-w-0">
-                    <div className="shrink-0">
-                      <HunterAvatar hunter={activeProfile.hunter} size={70} animate />
+                {/* BLOCK 1: Hero Idol Banner + Big 1-Tap Play Stage Block */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-stretch">
+                  {/* Left: Idol Avatar + Greeting + Switch Player */}
+                  <div className="lg:col-span-5 bg-purple-950/65 border-2 border-purple-700/60 rounded-2xl p-4 flex flex-col justify-between gap-3">
+                    <div className="flex items-center gap-4 min-w-0">
+                      <div className="shrink-0 animate-float-slow">
+                        <HunterAvatar hunter={activeProfile.hunter} size={78} animate />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/20 border border-amber-300/50 text-amber-300 text-xs font-black uppercase tracking-wider mb-1">
+                          <Sparkles className="w-3.5 h-3.5 shrink-0" />
+                          <span className="truncate">
+                            {t.welcomeBack.currentStageBadge(
+                              getStageNumber(activeProfile.skill, activeProfile.sealSize)
+                            )}{' '}
+                            • Lv.{levelInfo.level}
+                          </span>
+                        </div>
+                        <h2 className="font-display font-black text-2xl sm:text-3xl text-white leading-tight truncate">
+                          {t.welcomeBack.greeting(activeProfile.name)}
+                        </h2>
+                        <div className="flex flex-wrap items-center gap-2 mt-1">
+                          <span className="px-2.5 py-0.5 rounded-lg bg-pink-500/20 border border-pink-400/40 text-pink-200 text-xs sm:text-sm font-black">
+                            🎤 {t.hunters[activeProfile.hunter].name}
+                          </span>
+                          <span className="px-2.5 py-0.5 rounded-lg bg-cyan-500/20 border border-cyan-400/40 text-cyan-200 text-xs sm:text-sm font-black">
+                            ✨ {progress.totalSolved}{' '}
+                            {lang === 'nl' ? 'zegels' : 'seals'}
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg bg-amber-400/20 border border-amber-300/50 text-amber-300 text-[11px] font-extrabold uppercase tracking-wider mb-1">
-                        <Sparkles className="w-3 h-3 shrink-0" />
-                        <span className="truncate">
-                          {t.welcomeBack.currentStageBadge(
-                            getStageNumber(activeProfile.skill, activeProfile.sealSize)
-                          )}{' '}
-                          • Lv.{levelInfo.level} {levelInfo.title}
+
+                    <button
+                      type="button"
+                      data-testid="dashboard-switch-player-btn"
+                      onClick={() => {
+                        soundEngine.playTap();
+                        setShowProfileModal(true);
+                      }}
+                      className="w-full px-4 py-2.5 rounded-xl bg-purple-900/80 hover:bg-purple-800 border border-pink-400/50 text-pink-100 font-display font-black text-sm flex items-center justify-center gap-2 shadow transition-all cursor-pointer"
+                    >
+                      <Users className="w-4 h-4 text-amber-300 shrink-0" />
+                      <span>{t.welcomeBack.switchPlayerBtn}</span>
+                    </button>
+                  </div>
+
+                  {/* Right: Giant 1-Tap Continue Stage Block + 3 Action Tiles */}
+                  <div className="lg:col-span-7 bg-purple-950/65 border-2 border-fuchsia-400/50 rounded-2xl p-4 flex flex-col justify-between gap-3">
+                    <button
+                      type="button"
+                      data-testid="continue-stage-btn"
+                      onClick={() =>
+                        startGameWithConfig(
+                          activeProfile.mode,
+                          activeProfile.skill,
+                          activeProfile.sealSize
+                        )
+                      }
+                      className="kid-block-card w-full py-4 sm:py-5 px-5 rounded-2xl bg-gradient-to-r from-pink-500 via-fuchsia-500 to-amber-400 text-slate-950 font-display font-black text-lg sm:text-2xl tracking-wide shadow-[0_0_35px_rgba(236,72,153,0.65)] hover:brightness-110 flex flex-col items-center justify-center gap-1 text-center cursor-pointer"
+                    >
+                      <div className="flex items-center justify-center gap-2.5">
+                        <Play className="w-6 h-6 sm:w-7 sm:h-7 fill-slate-950 shrink-0" />
+                        <span className="leading-snug">
+                          {t.welcomeBack.continueStageBtn(
+                            getStageNumber(activeProfile.skill, activeProfile.sealSize),
+                            t.skills[activeProfile.skill].name
+                          )}
                         </span>
                       </div>
-                      <h2 className="font-display font-black text-xl sm:text-3xl text-white leading-tight">
-                        {t.welcomeBack.greeting(activeProfile.name)}
-                      </h2>
-                      <p className="text-xs sm:text-sm text-pink-200 font-bold mt-0.5">
-                        {t.welcomeBack.playingAs(
-                          t.hunters[activeProfile.hunter].name,
-                          t.hunters[activeProfile.hunter].role
-                        )}{' '}
-                        • {progress.totalSolved}{' '}
-                        {lang === 'nl' ? 'zegels gekraakt' : 'seals cracked'}
-                      </p>
-                    </div>
-                  </div>
-
-                  <button
-                    type="button"
-                    data-testid="dashboard-switch-player-btn"
-                    onClick={() => {
-                      soundEngine.playTap();
-                      setShowProfileModal(true);
-                    }}
-                    className="w-full sm:w-auto px-3.5 py-2.5 rounded-xl bg-purple-900/80 hover:bg-purple-800 border border-pink-400/50 text-pink-100 font-display font-bold text-xs flex items-center justify-center gap-2 shadow transition-all shrink-0"
-                  >
-                    <Users className="w-4 h-4 text-amber-300 shrink-0" />
-                    <span>{t.welcomeBack.switchPlayerBtn}</span>
-                  </button>
-                </div>
-
-                {/* Primary 1-Tap Action: Continue Current/Next Stage Immediately! */}
-                <div className="bg-purple-950/60 border-2 border-fuchsia-400/40 rounded-2xl p-3.5 sm:p-5 space-y-2.5">
-                  <button
-                    type="button"
-                    data-testid="continue-stage-btn"
-                    onClick={() =>
-                      startGameWithConfig(
-                        activeProfile.mode,
-                        activeProfile.skill,
-                        activeProfile.sealSize
-                      )
-                    }
-                    className="w-full py-3.5 sm:py-4 px-4 rounded-xl bg-gradient-to-r from-pink-500 via-fuchsia-500 to-amber-400 text-slate-950 font-display font-black text-base sm:text-2xl tracking-wide shadow-[0_0_35px_rgba(236,72,153,0.65)] hover:brightness-110 active:scale-[0.99] transition-all flex flex-col items-center justify-center gap-1 text-center"
-                  >
-                    <div className="flex items-center justify-center gap-2">
-                      <Play className="w-5 h-5 sm:w-6 sm:h-6 fill-slate-950 shrink-0" />
-                      <span className="leading-snug">
-                        {t.welcomeBack.continueStageBtn(
-                          getStageNumber(activeProfile.skill, activeProfile.sealSize),
-                          t.skills[activeProfile.skill].name
-                        )}
+                      <span className="text-xs sm:text-sm font-extrabold text-slate-900/85">
+                        {t.modes[activeProfile.mode].title} • 🌸 {activeProfile.sealSize}
                       </span>
+                    </button>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                      <button
+                        type="button"
+                        data-testid="dashboard-try-power-btn"
+                        onClick={() => {
+                          soundEngine.playTap();
+                          setWizardStep(3);
+                        }}
+                        className="kid-block-card px-3.5 py-3 rounded-xl bg-gradient-to-r from-cyan-500/25 to-blue-600/25 hover:from-cyan-500/40 hover:to-blue-600/40 border-2 border-cyan-400/60 text-cyan-200 font-display font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 cursor-pointer"
+                      >
+                        <span>{t.welcomeBack.tryOtherPowerBtn}</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        data-testid="dashboard-change-mode-btn"
+                        onClick={() => {
+                          soundEngine.playTap();
+                          setWizardStep(2);
+                        }}
+                        className="kid-block-card px-3.5 py-3 rounded-xl bg-purple-900/75 hover:bg-purple-800 border-2 border-fuchsia-400/50 text-fuchsia-200 font-display font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 cursor-pointer"
+                      >
+                        <span>{t.welcomeBack.changeActivityBtn}</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        data-testid="dashboard-open-wizard-btn"
+                        onClick={() => {
+                          soundEngine.playTap();
+                          setIsCreatingNewProfile(false);
+                          setPlayerNameInput(activeProfile.name);
+                          setWizardStep(4);
+                        }}
+                        className="kid-block-card px-3.5 py-3 rounded-xl bg-purple-900/75 hover:bg-purple-800 border-2 border-amber-300/50 text-amber-200 font-display font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 cursor-pointer"
+                      >
+                        <span>{t.welcomeBack.customizeWizardBtn}</span>
+                      </button>
                     </div>
-                    <span className="text-xs sm:text-sm font-extrabold text-slate-900/85">
-                      {t.welcomeBack.continueStageSub(
-                        t.modes[activeProfile.mode].title,
-                        activeProfile.sealSize === 4
-                          ? t.wizard.complexity.s4.title
-                          : activeProfile.sealSize === 5
-                          ? t.wizard.complexity.s5.title
-                          : t.wizard.complexity.s6.title
-                      )}
-                    </span>
-                  </button>
-
-                  {/* Quick Jump Buttons: Try Another Math Power, Change Activity, or Full Wizard */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-0.5">
-                    <button
-                      type="button"
-                      data-testid="dashboard-try-power-btn"
-                      onClick={() => {
-                        soundEngine.playTap();
-                        setWizardStep(3);
-                      }}
-                      className="px-4 py-3 rounded-xl bg-gradient-to-r from-cyan-500/25 to-blue-600/25 hover:from-cyan-500/40 hover:to-blue-600/40 border border-cyan-400/60 text-cyan-200 font-display font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all"
-                    >
-                      <span>{t.welcomeBack.tryOtherPowerBtn}</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      data-testid="dashboard-change-mode-btn"
-                      onClick={() => {
-                        soundEngine.playTap();
-                        setWizardStep(2);
-                      }}
-                      className="px-4 py-3 rounded-xl bg-purple-900/70 hover:bg-purple-800 border border-fuchsia-400/50 text-fuchsia-200 font-display font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all"
-                    >
-                      <span>{t.welcomeBack.changeActivityBtn}</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      data-testid="dashboard-open-wizard-btn"
-                      onClick={() => {
-                        soundEngine.playTap();
-                        setIsCreatingNewProfile(false);
-                        setPlayerNameInput(activeProfile.name);
-                        setWizardStep(4);
-                      }}
-                      className="px-4 py-3 rounded-xl bg-purple-900/70 hover:bg-purple-800 border border-amber-300/40 text-amber-200 font-display font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all"
-                    >
-                      <span>{t.welcomeBack.customizeWizardBtn}</span>
-                    </button>
                   </div>
                 </div>
 
-                {/* ==================== IB PYP / GROEP 3–8 / YEAR 1–6 SELECTOR & MISSIONS ==================== */}
+                {/* ==================== BLOCK 2: FULL-PAGE 10-GAME MATH ARCADE PORTAL ==================== */}
+                <div
+                  data-testid="dashboard-tang-arcade-section"
+                  className="bg-gradient-to-br from-purple-950/85 via-fuchsia-950/60 to-indigo-950/85 border-2 border-pink-400/60 rounded-3xl p-4 sm:p-6 space-y-4 shadow-[0_0_30px_rgba(236,72,153,0.2)]"
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <span className="text-3xl sm:text-4xl animate-float-slow">🕹️</span>
+                      <div>
+                        <h3 className="font-display font-black text-xl sm:text-2xl text-amber-300 leading-tight">
+                          {lang === 'nl'
+                            ? 'Reken-Arcade • 10 Spellen'
+                            : 'Math Arcade • 10 Games'}
+                        </h3>
+                        <p className="text-xs sm:text-sm font-bold text-pink-200">
+                          {lang === 'nl'
+                            ? 'Kies een spel of open de hele Arcade-pagina!'
+                            : 'Tap any game block or open the full Arcade page!'}
+                        </p>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      data-testid="open-arcade-hub-hero-btn"
+                      onClick={() => {
+                        soundEngine.playCardOpen();
+                        setArcadeViewMode('hub');
+                        setShowTangArcade(true);
+                      }}
+                      className="kid-block-card px-5 py-3 rounded-2xl bg-gradient-to-r from-amber-400 via-pink-500 to-fuchsia-500 text-slate-950 font-display font-black text-sm sm:text-base shadow-[0_0_25px_rgba(251,191,36,0.5)] flex items-center justify-center gap-2 cursor-pointer shrink-0"
+                    >
+                      <span>🕹️</span>
+                      <span>
+                        {lang === 'nl'
+                          ? 'Open Alle 10 Spellen ➔'
+                          : 'Open All 10 Games ➔'}
+                      </span>
+                    </button>
+                  </div>
+
+                  {/* 10 Visual Arcade Game Blocks */}
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                    {ARCADE_GAMES_CATALOG.map((g) => (
+                      <button
+                        key={g.id}
+                        type="button"
+                        data-testid={`launch-tang-${g.id}`}
+                        onClick={() => {
+                          soundEngine.playCardOpen();
+                          setInitialTangGame(g.id);
+                          setArcadeViewMode('stage');
+                          setShowTangArcade(true);
+                        }}
+                        className={`kid-block-card p-3.5 rounded-2xl bg-gradient-to-b from-purple-900/85 to-indigo-950/90 border-2 ${g.cardBorder} text-left flex flex-col justify-between gap-2 cursor-pointer`}
+                      >
+                        <div className="flex items-center justify-between gap-1">
+                          <span className="text-3xl sm:text-4xl animate-float-slow">
+                            {g.emoji}
+                          </span>
+                          <span className="px-2 py-0.5 rounded-full bg-amber-400/20 border border-amber-300/40 text-[11px] font-black text-amber-300">
+                            ▶
+                          </span>
+                        </div>
+                        <div>
+                          <div className="font-display font-black text-sm sm:text-base text-white leading-snug">
+                            {lang === 'nl' ? g.titleNl : g.titleEn}
+                          </div>
+                          <div className="text-xs font-bold text-purple-200/90 mt-0.5 truncate">
+                            {lang === 'nl' ? g.subtitleNl : g.subtitleEn}
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* ==================== BLOCK 3: SCHOOL GROUP & 4 VISUAL MISSION BLOCKS ==================== */}
                 {(() => {
                   const activeGroupSpec = getCurriculumGroup(schoolGroup);
                   return (
                     <div
                       data-testid="dashboard-school-group-section"
-                      className="bg-purple-950/65 border-2 border-cyan-400/45 rounded-2xl p-3.5 sm:p-5 space-y-3"
+                      className="bg-purple-950/65 border-2 border-cyan-400/45 rounded-3xl p-4 sm:p-6 space-y-4"
                     >
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                        <div>
-                          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-400/20 border border-cyan-300/50 text-cyan-300 text-xs font-black uppercase">
-                            <span>🎓 IB PYP & Groep 3–8 / Year 1–6</span>
-                            <span>• {activeGroupSpec.ageRange} jr/yrs</span>
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                          <span className="text-3xl sm:text-4xl">
+                            {activeGroupSpec.mascotEmoji}
+                          </span>
+                          <div>
+                            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-400/20 border border-cyan-300/50 text-cyan-300 text-xs font-black uppercase">
+                              <span>🎓 {activeGroupSpec.ageRange} jr/yrs</span>
+                            </div>
+                            <h3 className="font-display font-black text-xl sm:text-2xl text-white">
+                              {activeGroupSpec.fullTitle[lang]}
+                            </h3>
                           </div>
-                          <h3 className="font-display font-black text-lg sm:text-xl text-white mt-0.5">
-                            {activeGroupSpec.mascotEmoji}{' '}
-                            {activeGroupSpec.fullTitle[lang]}
-                          </h3>
-                          <p className="text-xs sm:text-sm text-purple-200">
-                            {activeGroupSpec.ixlSummary[lang]}
-                          </p>
                         </div>
 
                         {/* 6 School Group Pills (Groep 3–8 / Year 1–6) */}
-                        <div className="flex flex-wrap items-center gap-1.5">
+                        <div className="flex flex-wrap items-center gap-2">
                           {CURRICULUM_GROUPS.map((grp) => {
                             const isSelected = grp.id === schoolGroup;
                             return (
@@ -1426,10 +1534,10 @@ export const App: React.FC = () => {
                                   soundEngine.playSelect();
                                   handleSelectSchoolGroup(grp.id);
                                 }}
-                                className={`px-3 py-1.5 rounded-xl font-display font-black text-xs sm:text-sm transition-all cursor-pointer ${
+                                className={`px-3.5 py-2 rounded-2xl font-display font-black text-xs sm:text-sm transition-all cursor-pointer ${
                                   isSelected
                                     ? `bg-gradient-to-r ${grp.accentGradient} text-slate-950 shadow-[0_0_15px_rgba(251,191,36,0.45)] scale-105`
-                                    : 'bg-purple-900/70 hover:bg-purple-800 text-purple-200 border border-purple-700/60'
+                                    : 'bg-purple-900/75 hover:bg-purple-800 text-purple-200 border border-purple-700/60'
                                 }`}
                               >
                                 {grp.mascotEmoji} {grp.shortLabel[lang]}
@@ -1439,20 +1547,20 @@ export const App: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* Concept Tags for Selected Group */}
-                      <div className="flex flex-wrap items-center gap-1.5">
+                      {/* Compact Concept Pills */}
+                      <div className="flex flex-wrap items-center gap-2">
                         {activeGroupSpec.conceptTags[lang].map((tag) => (
                           <span
                             key={tag}
-                            className="px-2.5 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-400/35 text-xs font-bold text-cyan-200"
+                            className="px-3 py-1 rounded-full bg-cyan-500/15 border border-cyan-400/35 text-xs sm:text-sm font-black text-cyan-200"
                           >
                             ✨ {tag}
                           </span>
                         ))}
                       </div>
 
-                      {/* 4 Mission Cards for Selected Group */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+                      {/* 4 Big Visual Mission Blocks (No Wall-of-Text!) */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                         {activeGroupSpec.missions.map((mission) => (
                           <button
                             key={mission.id}
@@ -1465,179 +1573,81 @@ export const App: React.FC = () => {
                                 mission.sealSize
                               )
                             }
-                            className="group text-left p-3.5 rounded-xl bg-gradient-to-br from-purple-900/80 to-indigo-950/80 hover:from-pink-600/35 hover:to-purple-800/80 border border-purple-600/60 hover:border-amber-300 transition-all flex flex-col justify-between gap-2 cursor-pointer"
+                            className="kid-block-card group text-left p-4 rounded-2xl bg-gradient-to-br from-purple-900/85 to-indigo-950/90 hover:from-pink-600/35 hover:to-purple-800/85 border-2 border-purple-600/60 hover:border-amber-300 flex flex-col justify-between gap-3 cursor-pointer"
                           >
-                            <div>
-                              <div className="flex items-center justify-between gap-1 mb-1">
-                                <span className="text-xl">{mission.badgeEmoji}</span>
-                                <span className="px-2 py-0.5 rounded-md bg-black/40 border border-amber-300/40 text-amber-300 font-black text-[11px]">
+                            <div className="space-y-1.5">
+                              <div className="flex items-center justify-between gap-2">
+                                <span className="text-3xl">{mission.badgeEmoji}</span>
+                                <span className="px-2.5 py-1 rounded-lg bg-black/40 border border-amber-300/40 text-amber-300 font-black text-xs">
                                   {mission.ixlSkillCode[lang]}
                                 </span>
                               </div>
-                              <div className="font-display font-black text-sm sm:text-base text-white group-hover:text-amber-200">
+                              <div className="font-display font-black text-base sm:text-lg text-white group-hover:text-amber-200 leading-snug">
                                 {mission.title[lang]}
                               </div>
-                              <p className="text-xs text-purple-200/90 mt-0.5 leading-snug">
-                                {mission.description[lang]}
-                              </p>
                             </div>
-                            <div className="text-xs font-black text-cyan-300 flex items-center justify-between pt-1 border-t border-purple-800/50">
-                              <span>{mission.sealSize}-Blad / Petals</span>
-                              <span>▶ ⚡ +1..8 💎</span>
+                            <div className="text-xs sm:text-sm font-black text-cyan-300 flex items-center justify-between pt-2 border-t border-purple-800/60">
+                              <span>🌸 {mission.sealSize}</span>
+                              <span className="text-amber-300">▶ +1..8 💎</span>
                             </div>
                           </button>
                         ))}
-                      </div>
-
-                      {/* Movie Transcript Quote from Selected Group */}
-                      <div className="px-3 py-1.5 rounded-xl bg-black/35 border border-amber-300/35 text-xs sm:text-sm italic text-amber-200">
-                        🎬 {activeGroupSpec.transcriptQuote[lang]}
                       </div>
                     </div>
                   );
                 })()}
 
-                {/* ==================== HUNTR/X REKEN-ARCADE (6 MINI-GAMES) ==================== */}
-                <div
-                  data-testid="dashboard-tang-arcade-section"
-                  className="bg-purple-950/60 border-2 border-pink-400/45 rounded-2xl p-3.5 sm:p-4 space-y-2.5"
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <div>
-                      <h3 className="font-display font-black text-base sm:text-lg text-amber-300">
-                        🎮{' '}
-                        {lang === 'nl'
-                          ? 'HUNTR/X Reken-Arcade (6 Mini-Games • Groeit automatisch mee!)'
-                          : 'HUNTR/X Math Arcade (6 Mini-Games • Auto-Scales by Level!)'}
-                      </h3>
-                      <p className="text-xs sm:text-sm text-purple-200">
-                        {lang === 'nl'
-                          ? 'Getallenlijn, Negatieve Getallen, Splitsen, Breuken, Procenten & Algebra — foutjes gaan direct naar je Dojo!'
-                          : 'Number Line, Negative Numbers, Splits, Fractions, Percentages & Algebra — mistakes go straight to your Dojo!'}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-                    {(
-                      [
-                        {
-                          id: 'sodaBubbles' as TangMiniGameId,
-                          emoji: '🫧',
-                          titleNl: 'Saja Soda-Pop Bubbels',
-                          titleEn: 'Saja Soda-Pop Bubbles',
-                          subNl: 'Getalparen, Factoren & Negatieve Bubbels',
-                          subEn: 'Number Bonds, Factors & Integer Bubbles',
-                        },
-                        {
-                          id: 'numberLine' as TangMiniGameId,
-                          emoji: '📏',
-                          titleNl: 'Honmoon Laser-Lijn',
-                          titleEn: 'Honmoon Laser Line',
-                          subNl: 'Getallenlijn: Sprongen, Midden & Over Nul',
-                          subEn: 'Number Line: Jumps, Midpoints & Across 0',
-                        },
-                        {
-                          id: 'subZero' as TangMiniGameId,
-                          emoji: '❄️',
-                          titleNl: 'Gwi-Ma Sub-Zero Portaal',
-                          titleEn: 'Gwi-Ma Sub-Zero Portal',
-                          subNl: 'Negatieve Getallen & Thermometer onder 0°',
-                          subEn: 'Negative Numbers & Sub-Zero Thermometer',
-                        },
-                        {
-                          id: 'missingRune' as TangMiniGameId,
-                          emoji: '⚔️',
-                          titleNl: 'Saingeom Geheime Rune',
-                          titleEn: 'Saingeom Missing Rune',
-                          subNl: 'Algebra, Kwadraten n² & Rekenvolgorde',
-                          subEn: 'Algebra, Squares n² & Order of Operations',
-                        },
-                        {
-                          id: 'breakApart' as TangMiniGameId,
-                          emoji: '🐯',
-                          titleNl: 'Derpy’s Splits-Beat',
-                          titleEn: 'Derpy’s Break-Apart Beat',
-                          subNl: 'Slim Splitsen via 10, 5× & Grote Deelsommen',
-                          subEn: 'Smart Split via 10, 5× & Big Division',
-                        },
-                        {
-                          id: 'powerLab' as TangMiniGameId,
-                          emoji: '🧪',
-                          titleNl: 'Mira’s Kristal-Lab',
-                          titleEn: 'Mira’s Crystal Lab',
-                          subNl: 'Breuken, Procenten %, Kommagetallen & Ratio’s',
-                          subEn: 'Fractions, Percentages %, Decimals & Ratios',
-                        },
-                      ] as const
-                    ).map((g) => (
-                      <button
-                        key={g.id}
-                        type="button"
-                        data-testid={`launch-tang-${g.id}`}
-                        onClick={() => {
-                          soundEngine.playCardOpen();
-                          setInitialTangGame(g.id);
-                          setShowTangArcade(true);
-                        }}
-                        className="p-3 rounded-xl bg-gradient-to-r from-fuchsia-900/70 via-purple-900/70 to-indigo-900/70 hover:from-pink-600/45 hover:to-amber-500/35 border border-pink-400/50 hover:border-amber-300 text-left transition-all flex items-center gap-3 cursor-pointer"
-                      >
-                        <span className="text-2xl sm:text-3xl shrink-0">{g.emoji}</span>
-                        <div className="min-w-0">
-                          <div className="font-display font-black text-sm sm:text-base text-white truncate">
-                            {lang === 'nl' ? g.titleNl : g.titleEn}
-                          </div>
-                          <div className="text-xs text-purple-200 leading-snug">
-                            {lang === 'nl' ? g.subNl : g.subEn}
-                          </div>
+                {/* ==================== BLOCK 4: BIG VISUAL PHOTOBOOK & DOJO TILES ==================== */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      soundEngine.playTap();
+                      setShowPhotocards(true);
+                    }}
+                    className="kid-block-card w-full p-4 rounded-2xl bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 text-slate-950 font-display font-black text-base sm:text-lg flex items-center justify-between gap-3 shadow-lg cursor-pointer"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-3xl">🃏</span>
+                      <div className="text-left">
+                        <div className="leading-tight">
+                          {lang === 'nl' ? '100 Fotokaarten Album' : '100 Photocard Album'}
                         </div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Quick Rewards & Dojo Bar (Balanced 2-Column Grid + Derpy Quote) */}
-                <div className="space-y-3 pt-1">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        soundEngine.playTap();
-                        setShowPhotocards(true);
-                      }}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-amber-400 text-slate-950 font-display font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow hover:brightness-105 transition-all"
-                    >
-                      <Gift className="w-4 h-4 shrink-0" />
-                      <span>
-                        {lang === 'nl'
-                          ? `Fotoboek (${progress.unlockedCards.length}/${PHOTOCARD_CATALOG.length} Kaarten)`
-                          : `Photobook (${progress.unlockedCards.length}/${PHOTOCARD_CATALOG.length} Cards)`}
-                      </span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        soundEngine.playTap();
-                        setShowDojo(true);
-                      }}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-cyan-400 text-slate-950 font-display font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow hover:brightness-105 transition-all"
-                    >
-                      <span>🥋</span>
-                      <span>
-                        {lang === 'nl'
-                          ? `Getallen-Dojo (${progress.trickyFacts.length} oefensommen)`
-                          : `Number Dojo (${progress.trickyFacts.length} review facts)`}
-                      </span>
-                    </button>
-                  </div>
-
-                  <div className="flex items-center justify-center sm:justify-start gap-2.5 bg-purple-950/40 border border-purple-700/40 rounded-xl px-3 py-2">
-                    <DerpyTigerMascot size={38} />
-                    <span className="text-xs text-purple-200 font-bold italic">
-                      {t.hunters[activeProfile.hunter].quote}
+                        <div className="text-xs font-extrabold text-slate-800">
+                          {progress.unlockedCards.length} / {PHOTOCARD_CATALOG.length}{' '}
+                          {lang === 'nl' ? 'verzameld' : 'collected'}
+                        </div>
+                      </div>
+                    </div>
+                    <span className="px-3 py-1.5 rounded-xl bg-slate-950/15 text-sm font-black">
+                      💎 {progress.gems}
                     </span>
-                  </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      soundEngine.playTap();
+                      setShowDojo(true);
+                    }}
+                    className="kid-block-card w-full p-4 rounded-2xl bg-gradient-to-r from-cyan-400 via-sky-300 to-cyan-400 text-slate-950 font-display font-black text-base sm:text-lg flex items-center justify-between gap-3 shadow-lg cursor-pointer"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-3xl">🥋</span>
+                      <div className="text-left">
+                        <div className="leading-tight">
+                          {lang === 'nl' ? 'HUNTR/X Getallen-Dojo' : 'HUNTR/X Number Dojo'}
+                        </div>
+                        <div className="text-xs font-extrabold text-slate-800">
+                          {progress.trickyFacts.length}{' '}
+                          {lang === 'nl' ? 'oefensommen klaar' : 'review facts ready'}
+                        </div>
+                      </div>
+                    </div>
+                    <span className="px-3 py-1.5 rounded-xl bg-slate-950/15 text-sm font-black">
+                      +1 💎
+                    </span>
+                  </button>
                 </div>
               </div>
             ) : (
@@ -2252,7 +2262,7 @@ export const App: React.FC = () => {
         )}
 
         {/* ==================== PLAYING SCREEN ==================== */}
-        {screen === 'playing' && (
+        {!showTangArcade && screen === 'playing' && (
           <div className="space-y-3.5 animate-fadeIn">
             {mode === 'versusBattle' ? (
               <VersusBattleBoard
@@ -2525,7 +2535,7 @@ export const App: React.FC = () => {
         )}
 
         {/* ==================== SUMMARY / ENCORE SCREEN ==================== */}
-        {screen === 'summary' && (
+        {!showTangArcade && screen === 'summary' && (
           <div className="max-w-2xl mx-auto bg-gradient-to-b from-[#250e4c] to-[#110626] border-2 border-amber-300/80 rounded-3xl p-6 sm:p-8 text-center shadow-[0_0_50px_rgba(251,191,36,0.3)] space-y-6 animate-fadeIn">
             <div className="flex justify-center items-center gap-3">
               <HunterAvatar hunter={hunter} size={78} />
@@ -2886,29 +2896,6 @@ export const App: React.FC = () => {
             unlockedCards: prev.unlockedCards.includes(cardId)
               ? prev.unlockedCards
               : [...prev.unlockedCards, cardId],
-          }));
-        }}
-      />
-
-      {/* HUNTR/X Math Arcade Modal */}
-      <TangArcadeModal
-        isOpen={showTangArcade}
-        onClose={() => setShowTangArcade(false)}
-        lang={lang}
-        schoolGroup={schoolGroup}
-        onChangeSchoolGroup={handleSelectSchoolGroup}
-        gems={progress.gems}
-        initialGame={initialTangGame}
-        onRecordMiss={recordArcadeMiss}
-        onOpenDojo={() => {
-          setShowTangArcade(false);
-          setShowDojo(true);
-        }}
-        onEarnReward={(gemsEarned, xpEarned) => {
-          updateProgress((prev) => ({
-            ...prev,
-            gems: prev.gems + gemsEarned,
-            xp: prev.xp + xpEarned,
           }));
         }}
       />
