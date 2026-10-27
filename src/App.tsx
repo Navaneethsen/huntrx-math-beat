@@ -2651,67 +2651,8 @@ export const App: React.FC = () => {
                       </button>
                     </div>
                   )}
-
-                {/* Equations Cracked Review List */}
-                {masteredFacts.length > 0 && (
-                  <div className="bg-purple-950/50 border border-fuchsia-500/30 rounded-2xl p-4 text-left">
-                    <div className="text-xs font-extrabold uppercase tracking-wider text-amber-300 mb-2">
-                      {t.equationsMasteredTitle}
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {masteredFacts.map((fact, idx) => (
-                        <span
-                          key={idx}
-                          title={fact.trick}
-                          className="px-3 py-1 rounded-xl bg-gradient-to-r from-purple-900 to-fuchsia-900 border border-amber-300/40 text-white font-display font-bold text-xs sm:text-sm"
-                        >
-                          ✨ {fact.equation}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </>
             )}
-
-            {/* Learning outcome: what was practiced and what to practice next */}
-            <div
-              data-testid="summary-learning-panel"
-              className="bg-cyan-950/40 border border-cyan-400/40 rounded-2xl p-4 text-left space-y-2"
-            >
-              <div className="text-xs font-extrabold uppercase tracking-wider text-cyan-300">
-                {t.learn.summaryLearningTitle}
-              </div>
-              <div className="flex flex-wrap gap-2 text-xs font-bold">
-                <span className="px-2.5 py-1 rounded-lg bg-emerald-500/15 border border-emerald-400/40 text-emerald-200">
-                  {t.accuracyLabel}: {sessionAccuracyText}
-                </span>
-                <span className="px-2.5 py-1 rounded-lg bg-amber-500/15 border border-amber-300/40 text-amber-200">
-                  🥋 {t.learn.reviewWaitingLabel}: {progress.trickyFacts.length}
-                </span>
-                {practicedStrategies.map((name) => (
-                  <span
-                    key={name}
-                    className="px-2.5 py-1 rounded-lg bg-purple-900/60 border border-purple-400/40 text-purple-100"
-                  >
-                    💡 {name}
-                  </span>
-                ))}
-              </div>
-              <div className="text-sm text-white">
-                <span className="font-black text-amber-300">{t.learn.nextFocusTitle}</span>{' '}
-                {nextFocusFact
-                  ? t.learn.nextFocusFact(
-                      `${nextFocusFact.aLabel} ${nextFocusFact.op} ${nextFocusFact.bLabel}`
-                    )
-                  : t.learn.nextFocusSkill(t.skills[skill].name)}
-              </div>
-              {mode !== 'versusBattle' && masteredFacts.length > 0 && (
-                <div className="text-[11px] text-purple-300/80">
-                  {t.avgSpeedLabel}: {avgSolveSeconds}s • {t.learn.speedNote}
-                </div>
-              )}
-            </div>
 
             {/* Action Buttons: Primary Auto-Advance Next Stage + Secondary Options */}
             {(() => {
@@ -2786,6 +2727,65 @@ export const App: React.FC = () => {
                 </div>
               );
             })()}
+
+            {/* Equations Cracked Review List */}
+            {!(mode === 'versusBattle' && versusResult) && masteredFacts.length > 0 && (
+              <div className="bg-purple-950/50 border border-fuchsia-500/30 rounded-2xl p-4 text-left">
+                <div className="text-xs font-extrabold uppercase tracking-wider text-amber-300 mb-2">
+                  {t.equationsMasteredTitle}
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {masteredFacts.map((fact, idx) => (
+                    <span
+                      key={idx}
+                      title={fact.trick}
+                      className="px-3 py-1 rounded-xl bg-gradient-to-r from-purple-900 to-fuchsia-900 border border-amber-300/40 text-white font-display font-bold text-xs sm:text-sm"
+                    >
+                      ✨ {fact.equation}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Learning outcome: what was practiced and what to practice next */}
+            <div
+              data-testid="summary-learning-panel"
+              className="bg-cyan-950/40 border border-cyan-400/40 rounded-2xl p-4 text-left space-y-2"
+            >
+              <div className="text-xs font-extrabold uppercase tracking-wider text-cyan-300">
+                {t.learn.summaryLearningTitle}
+              </div>
+              <div className="flex flex-wrap gap-2 text-xs font-bold">
+                <span className="px-2.5 py-1 rounded-lg bg-emerald-500/15 border border-emerald-400/40 text-emerald-200">
+                  {t.accuracyLabel}: {sessionAccuracyText}
+                </span>
+                <span className="px-2.5 py-1 rounded-lg bg-amber-500/15 border border-amber-300/40 text-amber-200">
+                  🥋 {t.learn.reviewWaitingLabel}: {progress.trickyFacts.length}
+                </span>
+                {practicedStrategies.map((name) => (
+                  <span
+                    key={name}
+                    className="px-2.5 py-1 rounded-lg bg-purple-900/60 border border-purple-400/40 text-purple-100"
+                  >
+                    💡 {name}
+                  </span>
+                ))}
+              </div>
+              <div className="text-sm text-white">
+                <span className="font-black text-amber-300">{t.learn.nextFocusTitle}</span>{' '}
+                {nextFocusFact
+                  ? t.learn.nextFocusFact(
+                      `${nextFocusFact.aLabel} ${nextFocusFact.op} ${nextFocusFact.bLabel}`
+                    )
+                  : t.learn.nextFocusSkill(t.skills[skill].name)}
+              </div>
+              {mode !== 'versusBattle' && masteredFacts.length > 0 && (
+                <div className="text-[11px] text-purple-300/80">
+                  {t.avgSpeedLabel}: {avgSolveSeconds}s • {t.learn.speedNote}
+                </div>
+              )}
+            </div>
           </div>
         )}
       </main>
