@@ -1513,7 +1513,10 @@ export const App: React.FC = () => {
                           </span>
                           <div>
                             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-400/20 border border-cyan-300/50 text-cyan-300 text-xs font-black uppercase">
-                              <span>🎓 {activeGroupSpec.ageRange} jr/yrs</span>
+                              <span>
+                                🎓 {activeGroupSpec.ageRange}{' '}
+                                {lang === 'nl' ? 'jr' : 'yrs'}
+                              </span>
                             </div>
                             <h3 className="font-display font-black text-xl sm:text-2xl text-white">
                               {activeGroupSpec.fullTitle[lang]}
@@ -1834,7 +1837,8 @@ export const App: React.FC = () => {
                                 {grp.shortLabel[lang]}
                               </div>
                               <div className="text-[10px] text-purple-200/80 font-semibold truncate">
-                                {grp.shortLabel[lang === 'nl' ? 'en' : 'nl']}
+                                {grp.fullTitle[lang].split('•')[1]?.trim() ||
+                                  grp.shortLabel[lang]}
                               </div>
                             </button>
                           );
@@ -2545,7 +2549,9 @@ export const App: React.FC = () => {
             {/* Level Up Celebration Banner */}
             {leveledUpBanner && (
               <div className="bg-gradient-to-r from-amber-400 via-yellow-300 to-pink-500 text-slate-950 rounded-2xl p-3 font-display font-black text-base sm:text-lg shadow-[0_0_30px_rgba(251,191,36,0.9)] animate-bounce">
-                🎉 LEVEL UP! Je bent nu Level {leveledUpBanner} ({levelInfo.title})!
+                {lang === 'nl'
+                  ? `🎉 LEVEL UP! Je bent nu Level ${leveledUpBanner} (${levelInfo.title})!`
+                  : `🎉 LEVEL UP! You are now Level ${leveledUpBanner} (${levelInfo.title})!`}
               </div>
             )}
 

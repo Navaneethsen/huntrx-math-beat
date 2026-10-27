@@ -9,6 +9,7 @@ import {
   recordReviewAnswer,
 } from '../engine/learningLoop';
 import { soundEngine } from '../audio/soundEngine';
+import { localizeFormulaLabel } from '../engine/tangGamesEngine';
 
 export const MASTERY_GEMS = 2;
 export const MASTERY_XP = 30;
@@ -338,7 +339,7 @@ export const NumberDojoModal: React.FC<NumberDojoModalProps> = ({
                 {shownFact.bLabel === '?' ? (
                   <>
                     <span>
-                      {shownFact.aLabel.replace(
+                      {localizeFormulaLabel(shownFact.aLabel, lang).replace(
                         '[ ? ]',
                         feedback ? shownFact.targetLabel : '[ ? ]'
                       )}
@@ -354,7 +355,7 @@ export const NumberDojoModal: React.FC<NumberDojoModalProps> = ({
                   </>
                 ) : (
                   <>
-                    <span>{shownFact.aLabel}</span>{' '}
+                    <span>{localizeFormulaLabel(shownFact.aLabel, lang)}</span>{' '}
                     <span className="text-amber-400">{shownFact.op}</span>{' '}
                     <span>{shownFact.bLabel}</span>{' '}
                     <span className="text-cyan-300">=</span>{' '}
@@ -378,7 +379,7 @@ export const NumberDojoModal: React.FC<NumberDojoModalProps> = ({
                     data-testid="dojo-choice-btn"
                     disabled={!!feedback}
                     onClick={() => handleChoiceTap(ch)}
-                    className={`py-4 rounded-2xl font-display font-black text-2xl sm:text-3xl border-2 transition ${
+                    className={`btn-3d-key py-4 rounded-2xl font-display font-black text-2xl sm:text-3xl border-2 transition ${
                       feedback && isAnswer
                         ? 'bg-emerald-900/80 border-emerald-400 text-emerald-100'
                         : feedback && picked

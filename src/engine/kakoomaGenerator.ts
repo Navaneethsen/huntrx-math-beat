@@ -227,7 +227,8 @@ export function generateSinglePuzzle(
   skill: SkillId,
   size: SealSize,
   forcedTarget?: number,
-  forcedFractionMeta?: FractionMeta
+  forcedFractionMeta?: FractionMeta,
+  minFractionOrb: number = 1
 ): KakoomaPuzzle {
   // For mixBoss without forcedTarget, mix between +, −, ×, and ÷!
   let operation: Operation = getSkillOperation(skill);
@@ -255,19 +256,22 @@ export function generateSinglePuzzle(
       const den = fractionData.denominator;
       const simplify = fractionData.simplify;
       const maxNum = maxFractionNumerator(fractionData);
+      const minNum = Math.max(1, minFractionOrb);
+      // A 6-orb subset of 1..12 cannot have 3 as its unique sum, so start at 4 when size === 6 and maxNum <= 12
+      const minTarget = Math.max(size === 6 && maxNum <= 12 ? 4 : 3, minNum * 2 + 1);
 
       if (forcedTarget !== undefined) {
         sumOrProd = forcedTarget;
       } else {
         const candidates: number[] = [];
-        for (let t = 3; t <= maxNum; t++) candidates.push(t);
-        sumOrProd = randomChoice(candidates);
+        for (let t = minTarget; t <= maxNum; t++) candidates.push(t);
+        sumOrProd = candidates.length > 0 ? randomChoice(candidates) : maxNum;
       }
 
       const possiblePairs: [number, number][] = [];
-      for (let x = 1; x < Math.ceil(sumOrProd / 2); x++) {
+      for (let x = minNum; x < Math.ceil(sumOrProd / 2); x++) {
         const y = sumOrProd - x;
-        if (x !== y && y >= 1) {
+        if (x !== y && y >= minNum) {
           // Pro practice prefers pairs where at least one fraction can be simplified.
           if (simplify && attempt < 220 && gcd(x, den) === 1 && gcd(y, den) === 1) {
             continue;
@@ -279,7 +283,7 @@ export function generateSinglePuzzle(
       if (possiblePairs.length === 0) continue;
       [a, b] = randomChoice(possiblePairs);
 
-      for (let d = 1; d <= maxNum; d++) {
+      for (let d = minNum; d <= maxNum; d++) {
         if (d !== a && d !== b && d !== sumOrProd) {
           distractorPool.push(d);
         }
@@ -515,6 +519,65 @@ export function generateSinglePuzzle(
     }
   }
 
+  // Deterministic bounded search for fraction skills so numerators never exceed maxFractionNumerator
+  if (isFrac && fractionData) {
+    const maxNum = maxFractionNumerator(fractionData);
+    const minNum = Math.max(1, minFractionOrb);
+    const targetCandidates: number[] =
+      forcedTarget !== undefined && forcedTarget >= 3 && forcedTarget <= maxNum
+        ? [forcedTarget]
+        : Array.from(
+            { length: Math.max(1, maxNum - Math.max(size === 6 && maxNum <= 12 ? 4 : 3, minNum * 2 + 1) + 1) },
+            (_, idx) => maxNum - idx
+          );
+
+    for (const t of targetCandidates) {
+      for (let x = minNum; x < Math.ceil(t / 2); x++) {
+        const y = t - x;
+        if (x === y || y < minNum) continue;
+        const pool: number[] = [];
+        for (let d = minNum; d <= maxNum; d++) {
+          if (d !== x && d !== y && d !== t) pool.push(d);
+        }
+
+        const needed = size - 3;
+        const findCombo = (startIdx: number, chosen: number[]): number[] | null => {
+          if (chosen.length === needed) {
+            const fullSet = [x, y, t, ...chosen];
+            const { validTargets } = analyzeKakoomaSet(fullSet, '+');
+            if (validTargets.size === 1 && validTargets.has(t)) {
+              return fullSet;
+            }
+            return null;
+          }
+          for (let i = startIdx; i <= pool.length - (needed - chosen.length); i++) {
+            const partial = [x, y, t, ...chosen, pool[i]];
+            const { validTargets } = analyzeKakoomaSet(partial, '+');
+            if (validTargets.size === 1 && validTargets.has(t)) {
+              const res = findCombo(i + 1, [...chosen, pool[i]]);
+              if (res) return res;
+            }
+          }
+          return null;
+        };
+
+        const solvedSet = findCombo(0, []);
+        if (solvedSet) {
+          const { validTargets } = analyzeKakoomaSet(solvedSet, '+');
+          return {
+            id: `puz-frac-det-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+            numbers: shuffleArray(solvedSet),
+            target: t,
+            pair: [x, y],
+            operation: '+',
+            allValidPairsForTarget: validTargets.get(t) || [[x, y]],
+            fractionData,
+          };
+        }
+      }
+    }
+  }
+
   // Mathematically guaranteed fallback that ALWAYS respects `forcedTarget`
   if (operation === '−') {
     const fbTarget = forcedTarget && forcedTarget >= 2 ? forcedTarget : 6;
@@ -642,13 +705,20 @@ export function generateChainPuzzle(skill: SkillId, size: SealSize): KakoomaChai
     // Proper simplified fractions cannot fill 6-orb outer seals for every center answer,
     // so pro chains cap their outer seals at 5 orbs.
     const outerSize: SealSize = fracSkill === 'fracPro' && size === 6 ? 5 : size;
+    const minCenterOrb = outerSize === 6 ? 4 : 3;
     for (let attempt = 0; attempt < 300; attempt++) {
       // The pool for the larger outer seal is always feasible for the smaller center seal too.
       const sharedMeta = pickFractionMeta(fracSkill, outerSize);
-      const candidateCenter = generateSinglePuzzle(skill, outerCount, undefined, sharedMeta);
+      const candidateCenter = generateSinglePuzzle(
+        skill,
+        outerCount,
+        undefined,
+        sharedMeta,
+        minCenterOrb
+      );
       if (
         isBoundedFractionPuzzle(candidateCenter) &&
-        candidateCenter.numbers.every((n) => n >= (outerSize === 6 ? 5 : 3))
+        candidateCenter.numbers.every((n) => n >= minCenterOrb)
       ) {
         const outerPuzzles = candidateCenter.numbers.map((targetNum) =>
           generateSinglePuzzle(skill, outerSize, targetNum, sharedMeta)

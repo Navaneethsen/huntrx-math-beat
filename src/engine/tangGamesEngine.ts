@@ -35,6 +35,7 @@ export interface NumberLineChallenge {
   jumpVal: number;
   mode: 'land' | 'jump' | 'midpoint';
   questionEquation: string;
+  questionEquationEn?: string;
   answer: number;
   choices: number[];
   conceptBadge: { nl: string; en: string };
@@ -82,6 +83,7 @@ export interface PowerLabChallenge {
   kind: 'powerLab';
   topicTag: { nl: string; en: string };
   visualFormula: string;
+  visualFormulaEn?: string;
   visualBar?: { filled: number; total: number; label: string };
   answer: number;
   choices: number[];
@@ -97,6 +99,7 @@ export interface StageGridChallenge {
   mode: 'array' | 'area' | 'perimeter' | 'missingSide' | 'volume';
   visualFormula: string;
   unitLabel: string;
+  unitLabelEn?: string;
   answer: number;
   choices: number[];
   conceptBadge: { nl: string; en: string };
@@ -530,6 +533,7 @@ export function generateNumberLineChallenge(
         jumpVal: mid - startVal,
         mode: 'midpoint',
         questionEquation: `Midden: ${startVal} ↔ ${endVal} = [ ? ]`,
+        questionEquationEn: `Midpoint: ${startVal} ↔ ${endVal} = [ ? ]`,
         answer: mid,
         choices: buildUniqueChoices(mid, [mid - 10, mid + 10, mid + 20, startVal + 10]),
         conceptBadge: { nl: 'Midden op 0–100 Lijn', en: 'Midpoint 0–100 Line' },
@@ -682,6 +686,7 @@ export function generateNumberLineChallenge(
       jumpVal: mid - startVal,
       mode: 'midpoint',
       questionEquation: `Midden: ${startVal} ↔ +${evenEnd} = [ ? ]`,
+      questionEquationEn: `Midpoint: ${startVal} ↔ +${evenEnd} = [ ? ]`,
       answer: mid,
       choices: buildUniqueChoices(mid, [-mid, mid - 5, mid + 5, mid + 10], true),
       conceptBadge: { nl: 'Sub-Zero Midden (−50 tot +50)', en: 'Sub-Zero Midpoint (−50 to +50)' },
@@ -1330,6 +1335,7 @@ export function generatePowerLabChallenge(
         kind: 'powerLab',
         topicTag: { nl: 'Dubbelen & Helften', en: 'Doubles & Halves' },
         visualFormula: `Dubbel ${n}  (${n} + ${n}) = [ ? ]`,
+        visualFormulaEn: `Double ${n}  (${n} + ${n}) = [ ? ]`,
         visualBar: { filled: n, total: ans, label: `${n} + ${n}` },
         answer: ans,
         choices: buildUniqueChoices(ans, [ans - 2, ans + 2, ans + 1, n + 2]),
@@ -1392,6 +1398,7 @@ export function generatePowerLabChallenge(
         kind: 'powerLab',
         topicTag: { nl: 'Halveren (½)', en: 'Halving (½)' },
         visualFormula: `½ van ${total} = [ ? ]`,
+        visualFormulaEn: `½ of ${total} = [ ? ]`,
         visualBar: { filled: 1, total: 2, label: '½ (1/2)' },
         answer: ans,
         choices: buildUniqueChoices(ans, [ans - 1, ans + 1, ans + 2, total - 2]),
@@ -1437,6 +1444,7 @@ export function generatePowerLabChallenge(
         kind: 'powerLab',
         topicTag: { nl: 'Stambreuken (1/n)', en: 'Unit Fractions (1/n)' },
         visualFormula: `1/${denom} van ${total} = [ ? ]`,
+        visualFormulaEn: `1/${denom} of ${total} = [ ? ]`,
         visualBar: { filled: 1, total: denom, label: `1/${denom}` },
         answer: ans,
         choices: buildUniqueChoices(ans, [ans - 1, ans + 1, ans + 2, denom]),
@@ -1457,6 +1465,7 @@ export function generatePowerLabChallenge(
         kind: 'powerLab',
         topicTag: { nl: 'Omtrek Podium', en: 'Stage Perimeter' },
         visualFormula: `Omtrek: ${w}m × ${h}m = [ ? ]m`,
+        visualFormulaEn: `Perimeter: ${w}m × ${h}m = [ ? ]m`,
         answer: ans,
         choices: buildUniqueChoices(ans, [w * h, w + h, ans - 2, ans + 4]),
         prompt: {
@@ -1486,6 +1495,7 @@ export function generatePowerLabChallenge(
       kind: 'powerLab',
       topicTag: { nl: 'Breuken van Getallen', en: 'Fractions of Amounts' },
       visualFormula: `${num}/${den} van ${total} = [ ? ]`,
+      visualFormulaEn: `${num}/${den} of ${total} = [ ? ]`,
       visualBar: { filled: num, total: den, label: `${num}/${den}` },
       answer: ans,
       choices: buildUniqueChoices(ans, [unit, ans + unit, ans - unit, total - unit]),
@@ -1518,6 +1528,7 @@ export function generatePowerLabChallenge(
         kind: 'powerLab',
         topicTag: { nl: 'Procenten & Breuken (%)', en: 'Percentages & Fractions (%)' },
         visualFormula: `${pick.pct}% van ${total} = [ ? ]`,
+        visualFormulaEn: `${pick.pct}% of ${total} = [ ? ]`,
         visualBar: { filled: pick.num, total: pick.den, label: `${pick.pct}%` },
         answer: ans,
         choices: buildUniqueChoices(ans, [unit, ans + unit, total - ans, ans + 2]),
@@ -1592,6 +1603,7 @@ export function generatePowerLabChallenge(
       kind: 'powerLab',
       topicTag: { nl: 'Procenten via 10%', en: 'Percentages via 10%' },
       visualFormula: `${pct}% van ${total} = [ ? ]`,
+      visualFormulaEn: `${pct}% of ${total} = [ ? ]`,
       visualBar: { filled: pct, total: 100, label: `${pct}%` },
       answer: ans,
       choices: buildUniqueChoices(ans, [ans - tens, ans + tens, total - ans, tens]),
@@ -1616,6 +1628,7 @@ export function generatePowerLabChallenge(
       kind: 'powerLab',
       topicTag: { nl: 'Gemiddelde (Statistiek)', en: 'Mean / Average (Data)' },
       visualFormula: `Gemiddelde (${n1}, ${n2}, ${n3}) = [ ? ]`,
+      visualFormulaEn: `Mean (${n1}, ${n2}, ${n3}) = [ ? ]`,
       answer: mean,
       choices: buildUniqueChoices(mean, [mean - 1, mean + 1, mean + 2, n2]),
       prompt: {
@@ -1657,6 +1670,7 @@ export function generateStageGridChallenge(
       mode: 'array',
       visualFormula: `${rows} × ${cols} = [ ? ]`,
       unitLabel: 'tegels',
+      unitLabelEn: 'tiles',
       answer: ans,
       choices: buildUniqueChoices(ans, [ans - 2, ans + 2, rows + cols, ans + 1]),
       conceptBadge: { nl: 'Tegel-Rooster', en: 'Tile Array' },
@@ -1682,6 +1696,7 @@ export function generateStageGridChallenge(
       mode: 'array',
       visualFormula: `${rows} × ${cols} = [ ? ]`,
       unitLabel: 'blokken',
+      unitLabelEn: 'blocks',
       answer: ans,
       choices: buildUniqueChoices(ans, [ans - rows, ans + rows, rows + cols, ans + 2]),
       conceptBadge: { nl: 'Keer-Rooster (×)', en: 'Array Grid (×)' },
@@ -1746,6 +1761,38 @@ export function generateStageGridChallenge(
   }
 
   if (group === 'g7') {
+    if (Math.random() < 0.5) {
+      const cols = randInt(2, 4);
+      const rows = randInt(2, 4);
+      const height3d = randInt(2, 3);
+      const ans = cols * rows * height3d;
+      return {
+        kind: 'stageGrid',
+        rows,
+        cols,
+        height3d,
+        mode: 'volume',
+        visualFormula: `${cols}m × ${rows}m × ${height3d}m = [ ? ] m³`,
+        unitLabel: 'm³',
+        answer: ans,
+        choices: buildUniqueChoices(ans, [
+          cols * rows,
+          ans + cols * rows,
+          ans - height3d,
+          cols + rows + height3d,
+        ]),
+        conceptBadge: { nl: '3D Blok-Inhoud (m³)', en: '3D Block Volume (m³)' },
+        prompt: {
+          nl: `Tel of bereken de 3D blokken: ${cols}m × ${rows}m × ${height3d}m!`,
+          en: `Count or calculate the 3D blocks: ${cols}m × ${rows}m × ${height3d}m!`,
+        },
+        coachTip: {
+          nl: `💡 Onderste laag = ${cols} × ${rows} = ${cols * rows} blokjes. Keer ${height3d} lagen = ${ans} m³!`,
+          en: `💡 Base layer = ${cols} × ${rows} = ${cols * rows} cubes. Times ${height3d} layers = ${ans} m³!`,
+        },
+      };
+    }
+
     const rows = randInt(4, 9);
     const cols = randInt(6, 12);
     const area = rows * cols;
@@ -2561,7 +2608,11 @@ export function challengeToTrickyFact(ch: TangChallenge): TrickyFactItem {
   // powerLab
   return {
     id: `arcade_lab_${ch.visualFormula.replace(/\s+/g, '')}_${ch.answer}`,
-    aLabel: ch.visualFormula.replace('= [ ? ]', '').replace('≈ [ ? ]', '').trim(),
+    aLabel: (ch.visualFormulaEn ?? ch.visualFormula)
+      .replace('= [ ? ]m', '')
+      .replace('= [ ? ]', '')
+      .replace('≈ [ ? ]', '')
+      .trim(),
     bLabel: '?',
     targetLabel: String(ch.answer),
     op: '+',
@@ -2569,4 +2620,25 @@ export function challengeToTrickyFact(ch: TangChallenge): TrickyFactItem {
     hintNl: ch.coachTip.nl,
     hintEn: ch.coachTip.en,
   };
+}
+
+/**
+ * Localizes any saved formula/equation label between Dutch and English
+ * (e.g., for Dojo review items saved in a previous language session).
+ */
+export function localizeFormulaLabel(label: string, lang: 'nl' | 'en'): string {
+  if (lang === 'en') {
+    return label
+      .replace(/\bGemiddelde\b/g, 'Mean')
+      .replace(/\bMidden:/g, 'Midpoint:')
+      .replace(/\bOmtrek:/g, 'Perimeter:')
+      .replace(/\bDubbel\b/g, 'Double')
+      .replace(/\bvan\b/g, 'of');
+  }
+  return label
+    .replace(/\bMean\b/g, 'Gemiddelde')
+    .replace(/\bMidpoint:/g, 'Midden:')
+    .replace(/\bPerimeter:/g, 'Omtrek:')
+    .replace(/\bDouble\b/g, 'Dubbel')
+    .replace(/\bof\b/g, 'van');
 }
