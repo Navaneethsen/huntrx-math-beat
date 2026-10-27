@@ -2900,7 +2900,7 @@ export const App: React.FC = () => {
 
       {/* ==================== PROMINENT GREG TANG (KAKOOMA®) & MUSIC CREDIT FOOTER ==================== */}
       <footer className="relative z-10 max-w-5xl mx-auto px-4 pb-6 pt-2">
-        {screen === 'playing' ? (
+        {screen === 'playing' || showClockQuest ? (
           <div className="text-center text-xs font-bold text-purple-300/70 flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
             <span>🙏 {t.gregTangCreditBadge} •</span>
             <a

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import confetti from 'canvas-confetti';
-import { ArrowLeft, Check, ChevronLeft, ChevronRight, Lock, Play, RotateCcw, Star } from 'lucide-react';
+import { ArrowLeft, Check, ChevronLeft, ChevronRight, Clock, Flame, Lock, Play, RotateCcw, Star } from 'lucide-react';
+import { translations } from '../i18n/translations';
 import type { Language } from '../i18n/translations';
 import { soundEngine } from '../audio/soundEngine';
 import { DerpyTigerMascot, HunterAvatar, HunterId, SajaDemonBoss } from './CharacterArt';
@@ -12,6 +13,7 @@ import {
   ClockTask,
   ClockTime,
   MAX_CLOCK_LEVEL,
+  analogHour,
   buildClockStageDeck,
   clockStars,
   explainDayTime,
@@ -66,6 +68,7 @@ interface Feedback {
 }
 
 const PHOTOCARD_PROMPT_GEMS = 50;
+const MAX_SLASH = 3;
 
 // ==================== Analog clock (SVG) ====================
 
@@ -340,12 +343,27 @@ export const ClockQuest: React.FC<ClockQuestProps> = ({
   const [feedback, setFeedback] = useState<Feedback | null>(null);
   const [setTime, setSetTime] = useState<ClockTime>({ h: 12, m: 0 });
   const [finalStars, setFinalStars] = useState<1 | 2 | 3>(1);
+  const [score, setScore] = useState(0);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [slashCharges, setSlashCharges] = useState(MAX_SLASH);
+  const [eliminated, setEliminated] = useState<number[]>([]);
+  const [hintLevel, setHintLevel] = useState<0 | 1 | 2>(0);
+  const [coachMessage, setCoachMessage] = useState('');
   const advanceTimer = useRef<number | null>(null);
+  const t = translations[lang];
 
   const level = getClockLevel(levelId);
   const chapter = getChapter(levelId);
   const fever = streak >= CLOCK_REWARDS.feverStreak;
   const task = phase === 'boss' ? bossTask : deck[qIndex] ?? null;
+  const inBattle = phase === 'play' || phase === 'boss';
+
+  // Same running stage timer as the other games; it pauses outside the questions.
+  useEffect(() => {
+    if (!inBattle) return;
+    const id = window.setInterval(() => setElapsedSeconds((s) => s + 1), 1000);
+    return () => window.clearInterval(id);
+  }, [inBattle]);
 
   useEffect(() => {
     const mood: ClockMood =
@@ -359,6 +377,12 @@ export const ClockQuest: React.FC<ClockQuestProps> = ({
     },
     []
   );
+
+  const resetHelpers = () => {
+    setEliminated([]);
+    setHintLevel(0);
+    setCoachMessage('');
+  };
 
   const resetSetClock = useCallback((t: ClockTask | null) => {
     if (!t || t.kind !== 'set') return;
@@ -387,6 +411,10 @@ export const ClockQuest: React.FC<ClockQuestProps> = ({
     setAttempts(0);
     setSessionGems(0);
     setSessionXp(0);
+    setScore(0);
+    setElapsedSeconds(0);
+    setSlashCharges(MAX_SLASH);
+    resetHelpers();
     setFeedback(null);
     resetSetClock(newDeck[0]);
     setPhase('play');
@@ -396,6 +424,7 @@ export const ClockQuest: React.FC<ClockQuestProps> = ({
     const kind = level.kinds[Math.floor(Math.random() * level.kinds.length)];
     const t = generateClockTask(levelId, kind, Math.random, CLOCK_EVENTS.length);
     setBossTask(t);
+    resetHelpers();
     resetSetClock(t);
   };
 
@@ -432,6 +461,7 @@ export const ClockQuest: React.FC<ClockQuestProps> = ({
       setPhase('bossIntro');
       return;
     }
+    resetHelpers();
     resetSetClock(deck[qIndex + 1]);
     setQIndex(qIndex + 1);
   };
@@ -451,11 +481,15 @@ export const ClockQuest: React.FC<ClockQuestProps> = ({
       const inFever = nextStreak >= CLOCK_REWARDS.feverStreak;
       const isBoss = phase === 'boss';
       const baseGems = isBoss ? CLOCK_REWARDS.bossHitGems : CLOCK_REWARDS.correctGems;
-      const gained = inFever ? baseGems * CLOCK_REWARDS.feverMultiplier : baseGems;
+      const fullGems = inFever ? baseGems * CLOCK_REWARDS.feverMultiplier : baseGems;
+      // Using Derpy's hint still earns gems, just a little less (like the speed gems in the stages).
+      const gained = hintLevel > 0 ? Math.max(1, fullGems - hintLevel) : fullGems;
       const xp = isBoss ? CLOCK_REWARDS.bossHitXp : CLOCK_REWARDS.correctXp;
       setStreak(nextStreak);
       setBestStreak((b) => Math.max(b, nextStreak));
       setCorrectCount((c) => c + 1);
+      setScore((sc) => sc + (isBoss ? 150 : 100) + nextStreak * 10);
+      if (nextStreak % 3 === 0) setSlashCharges((c) => Math.min(MAX_SLASH, c + 1));
       setSessionGems((g) => g + gained);
       setSessionXp((x) => x + xp);
       onEarnReward(gained, xp);
@@ -482,6 +516,53 @@ export const ClockQuest: React.FC<ClockQuestProps> = ({
         gems: 0,
       });
     }
+  };
+
+  const hintClue = (tk: ClockTask): string => {
+    const hourWord = (h: number) => String(analogHour(h));
+    switch (tk.kind) {
+      case 'set':
+        return nl
+          ? `Zet eerst de lange wijzer op ${tk.time.m === 0 ? 'de 12' : `${tk.time.m} minuten`}. Daarna de korte wijzer bij de ${hourWord(tk.time.h)}.`
+          : `First put the long hand on ${tk.time.m === 0 ? 'the 12' : `${tk.time.m} minutes`}. Then the short hand near ${hourWord(tk.time.h)}.`;
+      case 'duration':
+        return nl
+          ? 'Tel eerst hele uren vanaf de begintijd, daarna de losse minuten.'
+          : 'Count whole hours from the start time first, then the extra minutes.';
+      case 'dayTime':
+        return nl
+          ? 'Na 12 uur tel je 12 erbij: 3 uur \'s middags = 15:00.'
+          : 'After 12 noon you add 12: 3 in the afternoon = 15:00.';
+      default:
+        return nl
+          ? `Kijk eerst naar de lange wijzer (minuten). De korte wijzer staat bij de ${hourWord(tk.time.m >= 20 ? tk.time.h + 1 : tk.time.h)}.`
+          : `Look at the long hand first (minutes). The short hand is near ${hourWord(tk.time.m >= 20 ? tk.time.h + 1 : tk.time.h)}.`;
+    }
+  };
+
+  const handleHint = () => {
+    if (!task || feedback) return;
+    soundEngine.playHint();
+    const next: 1 | 2 = hintLevel < 1 ? 1 : 2;
+    setHintLevel(next);
+    setCoachMessage(next === 1 ? hintClue(task) : explanationFor(task));
+  };
+
+  const slashableIndices = task && task.kind !== 'set'
+    ? task.choices.map((_, i) => i).filter((i) => i !== task.correctIndex && !eliminated.includes(i))
+    : [];
+
+  const handleSlash = () => {
+    if (!task || feedback || slashCharges <= 0 || slashableIndices.length <= 1) return;
+    soundEngine.playHint();
+    const idx = slashableIndices[Math.floor(Math.random() * slashableIndices.length)];
+    setEliminated((prev) => [...prev, idx]);
+    setSlashCharges((c) => c - 1);
+    setCoachMessage(
+      nl
+        ? `⚔️ ${t.hunters[hunter].name} hakte een fout antwoord weg!`
+        : `⚔️ ${t.hunters[hunter].name} slashed away a wrong answer!`
+    );
   };
 
   const goNextRef = useRef(goNext);
@@ -755,9 +836,9 @@ export const ClockQuest: React.FC<ClockQuestProps> = ({
                   type="button"
                   data-testid="clock-choice"
                   data-choice-index={i}
-                  disabled={answered}
+                  disabled={answered || eliminated.includes(i)}
                   onClick={() => submitAnswer(i === t.correctIndex, i)}
-                  className={`rounded-2xl p-2 border-2 transition-all ${
+                  className={`rounded-2xl p-2 border-2 transition-all ${eliminated.includes(i) && !answered ? 'opacity-25 grayscale line-through' : ''} ${
                     state === 'correct'
                       ? 'border-emerald-300 bg-emerald-500/20'
                       : state === 'wrong'
@@ -780,9 +861,9 @@ export const ClockQuest: React.FC<ClockQuestProps> = ({
                   type="button"
                   data-testid="clock-choice"
                   data-choice-index={i}
-                  disabled={answered}
+                  disabled={answered || eliminated.includes(i)}
                   onClick={() => submitAnswer(i === t.correctIndex, i)}
-                  className={`kid-block-card px-3 py-3.5 rounded-2xl border-2 font-display font-black transition-all ${
+                  className={`kid-block-card px-3 py-3.5 rounded-2xl border-2 font-display font-black transition-all ${eliminated.includes(i) && !answered ? 'opacity-25 grayscale line-through' : ''} ${
                     t.kind === 'read' ? 'text-2xl font-mono tracking-wider' : 'text-base sm:text-lg'
                   } ${
                     state === 'correct'
@@ -836,45 +917,155 @@ export const ClockQuest: React.FC<ClockQuestProps> = ({
   const renderPlay = () => {
     if (!task) return null;
     const isBoss = phase === 'boss';
+    const chargePercent = isBoss
+      ? ((CLOCK_BOSS_HP - bossHp) / CLOCK_BOSS_HP) * 100
+      : deck.length
+      ? (qIndex / deck.length) * 100
+      : 0;
+    const bossHpPercent = isBoss ? (bossHp / CLOCK_BOSS_HP) * 100 : 100 - chargePercent;
     return (
-      <div
-        className={`max-w-2xl mx-auto rounded-3xl p-4 sm:p-6 border-2 space-y-4 transition-all ${
-          fever
-            ? 'bg-gradient-to-b from-amber-900/40 via-fuchsia-950/80 to-purple-950/90 border-amber-300 shadow-[0_0_40px_rgba(251,191,36,0.45)]'
-            : isBoss
-            ? 'bg-gradient-to-b from-rose-950/70 to-purple-950/90 border-rose-400/70'
-            : 'bg-purple-950/70 border-fuchsia-400/50'
-        }`}
-        data-testid="clock-play-card"
-      >
-        <div className="flex items-center justify-between gap-2 text-xs sm:text-sm font-black">
-          <span className="px-2.5 py-1 rounded-full bg-white/10 text-amber-200">
-            {chapter.emoji} Level {levelId}
-          </span>
-          {isBoss ? (
-            <div className="flex items-center gap-2">
-              <SajaDemonBoss hpPercent={(bossHp / CLOCK_BOSS_HP) * 100} hitFlash={bossFlash} />
-              <div className="w-24 sm:w-32 h-3 rounded-full bg-purple-900 border border-rose-400/60 overflow-hidden">
-                <div className="h-full bg-gradient-to-r from-rose-500 to-pink-400 transition-all duration-300" style={{ width: `${(bossHp / CLOCK_BOSS_HP) * 100}%` }} />
+      <div className="space-y-3.5">
+        {/* Top HUD bar, matching the other stages: idol + Honmoon charge, score, streak, timer, boss */}
+        <div
+          className="bg-purple-950/65 border border-fuchsia-500/35 rounded-3xl p-3 sm:p-4 flex flex-wrap items-center justify-between gap-3"
+          data-testid="clock-hud"
+        >
+          <div className="flex items-center gap-3">
+            <HunterAvatar hunter={hunter} size={52} animate={false} />
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="font-display font-black text-sm sm:text-base text-amber-300">{t.hunters[hunter].name}</span>
+                <span className="text-xs px-2 py-0.5 rounded-full bg-fuchsia-500/20 border border-fuchsia-400/40 text-fuchsia-200 font-bold">
+                  {chapter.emoji} Level {levelId} • {level.skill[lang]}
+                </span>
+              </div>
+              <div className="mt-1.5 flex items-center gap-2">
+                <span className="text-[11px] font-bold text-purple-200">{t.honmoonCharge}:</span>
+                <div className="w-28 sm:w-44 h-3 bg-purple-950 rounded-full overflow-hidden border border-purple-600/50 p-0.5">
+                  <div
+                    style={{ width: `${chargePercent}%` }}
+                    className="h-full rounded-full bg-gradient-to-r from-fuchsia-500 via-pink-400 to-amber-300 transition-all duration-300"
+                  />
+                </div>
               </div>
             </div>
-          ) : (
-            <div className="flex gap-1" data-testid="clock-progress-dots">
-              {deck.map((_, i) => (
-                <span
-                  key={i}
-                  className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full ${
-                    i < qIndex ? 'bg-amber-300' : i === qIndex ? 'bg-pink-400 animate-pulse' : 'bg-purple-700'
-                  }`}
-                />
-              ))}
+          </div>
+
+          <div className="flex items-center gap-3 sm:gap-5">
+            <div className="text-center">
+              <div className="text-[10px] font-bold uppercase text-purple-300">{t.scoreLabel}</div>
+              <div className="font-display font-black text-lg sm:text-2xl text-amber-300" data-testid="clock-score">{score}</div>
             </div>
-          )}
-          <span className={`px-2.5 py-1 rounded-full ${fever ? 'bg-amber-400 text-slate-950 animate-pulse' : 'bg-white/10 text-pink-200'}`}>
-            {fever ? '🔥 FEVER' : '⚡'} x{streak}
-          </span>
+            <div className="text-center">
+              <div className="text-[10px] font-bold uppercase text-purple-300">{t.streakLabel}</div>
+              <div
+                className={`font-display font-black text-lg sm:text-2xl flex items-center justify-center gap-0.5 ${
+                  fever ? 'text-amber-300 scale-110 animate-pulse' : 'text-pink-400'
+                }`}
+              >
+                <Flame className="w-4 h-4 fill-current" />
+                {streak}x
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="text-[10px] font-bold uppercase text-purple-300">{t.elapsedTime}</div>
+              <div className="font-display font-black text-lg sm:text-2xl flex items-center gap-1 text-cyan-300" data-testid="clock-timer">
+                <Clock className="w-4 h-4" />
+                {elapsedSeconds}s
+              </div>
+            </div>
+          </div>
+
+          <div className="hidden md:flex items-center gap-2.5 bg-purple-900/40 px-3 py-1.5 rounded-2xl border border-rose-500/30">
+            <div className="text-right">
+              <div className="text-xs font-extrabold text-rose-300">{chapter.bossName[lang]}</div>
+              <div className="text-[10px] text-purple-200">{isBoss ? `HP ${bossHp}/${CLOCK_BOSS_HP}` : nl ? 'Versla ze met klokkijken!' : 'Beat them by reading the clock!'}</div>
+            </div>
+            <SajaDemonBoss hpPercent={bossHpPercent} hitFlash={bossFlash} />
+          </div>
         </div>
-        {renderQuestion(task)}
+
+        {fever && (
+          <div className="bg-gradient-to-r from-amber-500/25 via-yellow-400/35 to-pink-500/25 border-2 border-amber-300 rounded-2xl py-1.5 px-4 flex items-center justify-center gap-3 font-display font-black text-xs sm:text-sm text-amber-200 shadow-[0_0_25px_rgba(251,191,36,0.45)]">
+            <span className="inline-block animate-lightstick text-lg">🪄</span>
+            <span>{t.goldenModeActive}</span>
+            <span className="inline-block animate-lightstick text-lg">🪄</span>
+          </div>
+        )}
+
+        <div
+          className={`max-w-2xl mx-auto rounded-3xl p-4 sm:p-6 border-2 space-y-4 transition-all ${
+            fever
+              ? 'bg-gradient-to-b from-amber-900/40 via-fuchsia-950/80 to-purple-950/90 border-amber-300 shadow-[0_0_40px_rgba(251,191,36,0.45)]'
+              : isBoss
+              ? 'bg-gradient-to-b from-rose-950/70 to-purple-950/90 border-rose-400/70'
+              : 'bg-purple-950/70 border-fuchsia-400/50'
+          }`}
+          data-testid="clock-play-card"
+        >
+          <div className="flex items-center justify-between gap-2 text-xs sm:text-sm font-black">
+            <span className="px-2.5 py-1 rounded-full bg-white/10 text-amber-200">
+              {isBoss ? `⚔️ BOSS` : `${Math.min(qIndex + 1, deck.length)}/${deck.length}`}
+            </span>
+            {isBoss ? (
+              <div className="flex items-center gap-2">
+                <div className="md:hidden">
+                  <SajaDemonBoss hpPercent={bossHpPercent} hitFlash={bossFlash} />
+                </div>
+                <div className="w-24 sm:w-32 h-3 rounded-full bg-purple-900 border border-rose-400/60 overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-rose-500 to-pink-400 transition-all duration-300" style={{ width: `${bossHpPercent}%` }} />
+                </div>
+              </div>
+            ) : (
+              <div className="flex gap-1" data-testid="clock-progress-dots">
+                {deck.map((_, i) => (
+                  <span
+                    key={i}
+                    className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full ${
+                      i < qIndex ? 'bg-amber-300' : i === qIndex ? 'bg-pink-400 animate-pulse' : 'bg-purple-700'
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+          {renderQuestion(task)}
+        </div>
+
+        {/* Bottom coaching bar with Derpy, like the other stages */}
+        <div className="max-w-3xl mx-auto bg-gradient-to-r from-sky-950/80 via-purple-950/85 to-indigo-950/80 border-2 border-sky-400/50 rounded-3xl p-3 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-2.5 shadow-lg">
+          <div className="flex items-center gap-3">
+            <DerpyTigerMascot size={46} excited={Boolean(feedback?.correct)} />
+            <p className="font-display font-bold text-sm sm:text-base text-sky-100 leading-snug" data-testid="clock-coach-message">
+              {coachMessage || t.derpyReady}
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-2 shrink-0">
+            <button
+              type="button"
+              data-testid="clock-slash-btn"
+              disabled={slashCharges <= 0 || slashableIndices.length <= 1 || Boolean(feedback)}
+              onClick={handleSlash}
+              className={`px-3.5 py-2 rounded-2xl font-display font-bold text-sm flex items-center gap-1.5 transition-all ${
+                slashCharges > 0 && slashableIndices.length > 1 && !feedback
+                  ? 'keep-white-text bg-gradient-to-r from-pink-500 to-fuchsia-600 text-white border border-pink-300 shadow-[0_0_16px_rgba(236,72,153,0.6)] hover:brightness-110 active:scale-95'
+                  : 'bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed'
+              }`}
+            >
+              <span>⚔️</span>
+              <span>{`Slash (${slashCharges})`}</span>
+            </button>
+            <button
+              type="button"
+              data-testid="clock-hint-btn"
+              disabled={Boolean(feedback)}
+              onClick={handleHint}
+              className="px-4 py-2 rounded-2xl bg-gradient-to-r from-amber-400 to-yellow-300 text-slate-950 font-display font-bold text-sm shadow-[0_0_18px_rgba(251,191,36,0.5)] hover:brightness-110 active:scale-95 transition-all disabled:opacity-50"
+            >
+              {t.derpyHintBtn}
+            </button>
+          </div>
+        </div>
       </div>
     );
   };
@@ -902,7 +1093,22 @@ export const ClockQuest: React.FC<ClockQuestProps> = ({
             <Star key={s} className={`w-10 h-10 ${s <= finalStars ? 'text-amber-300 fill-amber-300 animate-pop-in' : 'text-purple-700'}`} />
           ))}
         </div>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 gap-2" data-testid="clock-summary-stats">
+          <div className="rounded-xl bg-purple-900/60 border border-fuchsia-500/40 p-2.5">
+            <div className="text-xs text-purple-200 font-bold">{t.scoreLabel}</div>
+            <div className="font-display font-black text-xl text-amber-300">{score}</div>
+          </div>
+          <div className="rounded-xl bg-purple-900/60 border border-fuchsia-500/40 p-2.5">
+            <div className="text-xs text-purple-200 font-bold">{t.elapsedTime}</div>
+            <div className="font-display font-black text-xl text-cyan-300 flex items-center justify-center gap-1">
+              <Clock className="w-4 h-4" />
+              {elapsedSeconds}s
+            </div>
+          </div>
+          <div className="rounded-xl bg-purple-900/60 border border-fuchsia-500/40 p-2.5">
+            <div className="text-xs text-purple-200 font-bold">{t.avgSpeedLabel}</div>
+            <div className="font-display font-black text-xl text-fuchsia-300">{attempts ? Math.round(elapsedSeconds / attempts) : 0}s</div>
+          </div>
           <div className="rounded-xl bg-purple-900/60 border border-fuchsia-500/40 p-2.5">
             <div className="text-xs text-purple-200 font-bold">{nl ? 'Goed' : 'Correct'}</div>
             <div className="font-display font-black text-xl text-emerald-300">{accuracy}%</div>
