@@ -1,0 +1,1283 @@
+{
+  "generatedAt": "2026-10-26T21:53:00.779Z",
+  "totalCards": 100,
+  "totalReuse": 29,
+  "cards": [
+    {
+      "cardNumber": 1,
+      "id": "card_rumi_gold",
+      "titleEn": "Golden Leader Rumi",
+      "rarity": "golden",
+      "excitement": 98,
+      "cost": 850,
+      "localPath": "/images/kpop-cards/card_rumi_gold.webp",
+      "sourceFile": "Rumi_using_the_Saingeom_Sword_in_battle.png",
+      "bytes": 12884
+    },
+    {
+      "cardNumber": 2,
+      "id": "card_mira_dance",
+      "titleEn": "Neon Dancer Mira",
+      "rarity": "golden",
+      "excitement": 95,
+      "cost": 700,
+      "localPath": "/images/kpop-cards/card_mira_dance.webp",
+      "sourceFile": "Electricsummer_mira.jpg",
+      "bytes": 61622
+    },
+    {
+      "cardNumber": 3,
+      "id": "card_zoey_rap",
+      "titleEn": "Maknae Rapper Zoey",
+      "rarity": "golden",
+      "excitement": 96,
+      "cost": 750,
+      "localPath": "/images/kpop-cards/card_zoey_rap.webp",
+      "sourceFile": "Zoey_the_rapper_1.jpg",
+      "bytes": 28674
+    },
+    {
+      "cardNumber": 4,
+      "id": "card_derpy_tiger",
+      "titleEn": "Derpy the Blue Tiger",
+      "rarity": "common",
+      "excitement": 66,
+      "cost": 120,
+      "localPath": "/images/kpop-cards/card_derpy_tiger.webp",
+      "sourceFile": "Derpy_Portrait.jpeg",
+      "bytes": 22142
+    },
+    {
+      "cardNumber": 5,
+      "id": "card_sussie_magpie",
+      "titleEn": "Sussie the Six-Eyed Magpie",
+      "rarity": "rare",
+      "excitement": 73,
+      "cost": 180,
+      "localPath": "/images/kpop-cards/card_sussie_magpie.webp",
+      "sourceFile": "Derpy_and_Sussie.jpeg",
+      "bytes": 27416
+    },
+    {
+      "cardNumber": 6,
+      "id": "card_golden_honmoon",
+      "titleEn": "The Golden Honmoon",
+      "rarity": "golden",
+      "excitement": 97,
+      "cost": 800,
+      "localPath": "/images/kpop-cards/card_golden_honmoon.webp",
+      "sourceFile": "Hunters_Creating_the_Honmoon_(3).png",
+      "bytes": 14560
+    },
+    {
+      "cardNumber": 7,
+      "id": "card_jinu_redeemed",
+      "titleEn": "Jinu (Saja Boys Leader)",
+      "rarity": "epic",
+      "excitement": 87,
+      "cost": 410,
+      "localPath": "/images/kpop-cards/card_jinu_redeemed.webp",
+      "sourceFile": "Dreamy_Human_Jinu.jpg",
+      "bytes": 8226
+    },
+    {
+      "cardNumber": 8,
+      "id": "card_soda_pop",
+      "titleEn": "Soda Pop Spellbreaker",
+      "rarity": "rare",
+      "excitement": 83,
+      "cost": 290,
+      "localPath": "/images/kpop-cards/card_soda_pop.webp",
+      "sourceFile": "Abby,_Jinu_and_Baby_performing_Soda_Pop.jpg",
+      "bytes": 25102
+    },
+    {
+      "cardNumber": 9,
+      "id": "card_lightstick_vip",
+      "titleEn": "HUNTR/X VIP Lightstick",
+      "rarity": "epic",
+      "excitement": 85,
+      "cost": 370,
+      "localPath": "/images/kpop-cards/card_lightstick_vip.webp",
+      "sourceFile": "HUNTR-X_Light_stick.jpg",
+      "bytes": 13190
+    },
+    {
+      "cardNumber": 10,
+      "id": "card_saingeom_blade",
+      "titleEn": "Starlight Saingeom Sword",
+      "rarity": "epic",
+      "excitement": 90,
+      "cost": 480,
+      "localPath": "/images/kpop-cards/card_saingeom_blade.webp",
+      "sourceFile": "Saingeom_Sword_Appearance.png",
+      "bytes": 20108
+    },
+    {
+      "cardNumber": 11,
+      "id": "card_takedown_single",
+      "titleEn": "Platinum Hit: \"Takedown\"",
+      "rarity": "rare",
+      "excitement": 81,
+      "cost": 270,
+      "localPath": "/images/kpop-cards/card_takedown_single.webp",
+      "sourceFile": "Takedown_.jpg",
+      "bytes": 28488
+    },
+    {
+      "cardNumber": 12,
+      "id": "card_world_tour_trophy",
+      "titleEn": "World Tour Math Trophy",
+      "rarity": "golden",
+      "excitement": 100,
+      "cost": 950,
+      "localPath": "/images/kpop-cards/card_world_tour_trophy.webp",
+      "sourceFile": "Concluding_show_of_HUNTRIX’s_world_tour.png",
+      "bytes": 26098
+    },
+    {
+      "cardNumber": 13,
+      "id": "card_rumi_patterns",
+      "titleEn": "Rumi’s Glowing Patterns",
+      "rarity": "epic",
+      "excitement": 89,
+      "cost": 460,
+      "localPath": "/images/kpop-cards/card_rumi_patterns.webp",
+      "sourceFile": "Jinu_thinking_about_Rumi's_demon_patterns.jpg",
+      "bytes": 8134
+    },
+    {
+      "cardNumber": 14,
+      "id": "card_mira_rebel_heiress",
+      "titleEn": "Mira: The Rebel Heiress",
+      "rarity": "rare",
+      "excitement": 83,
+      "cost": 290,
+      "localPath": "/images/kpop-cards/card_mira_rebel_heiress.webp",
+      "sourceFile": "Intro_Mira_in_her_family_portrait.jpg",
+      "bytes": 23970
+    },
+    {
+      "cardNumber": 15,
+      "id": "card_zoey_burbank_skater",
+      "titleEn": "Zoey from Burbank",
+      "rarity": "common",
+      "excitement": 63,
+      "cost": 105,
+      "localPath": "/images/kpop-cards/card_zoey_burbank_skater.webp",
+      "sourceFile": "Zoey_autograph.jpeg",
+      "bytes": 49410
+    },
+    {
+      "cardNumber": 16,
+      "id": "card_trio_ramyeon_night",
+      "titleEn": "Midnight Ramyeon Feast",
+      "rarity": "common",
+      "excitement": 64,
+      "cost": 110,
+      "localPath": "/images/kpop-cards/card_trio_ramyeon_night.webp",
+      "sourceFile": "Miraeatingramyun.jpeg",
+      "bytes": 28518
+    },
+    {
+      "cardNumber": 17,
+      "id": "card_rumi_vocal_highnote",
+      "titleEn": "Rumi’s Golden High Note",
+      "rarity": "rare",
+      "excitement": 79,
+      "cost": 250,
+      "localPath": "/images/kpop-cards/card_rumi_vocal_highnote.webp",
+      "sourceFile": "Rumihighnote.jpeg",
+      "bytes": 35732
+    },
+    {
+      "cardNumber": 18,
+      "id": "card_chibi_rumi_wink",
+      "titleEn": "Chibi Rumi Fan Sticker",
+      "rarity": "common",
+      "excitement": 65,
+      "cost": 115,
+      "localPath": "/images/kpop-cards/card_chibi_rumi_wink.webp",
+      "sourceFile": "Crowd_Parting_For_Rumi.png",
+      "bytes": 11274
+    },
+    {
+      "cardNumber": 19,
+      "id": "card_chibi_mira_fierce",
+      "titleEn": "Chibi Mira Power Pose",
+      "rarity": "common",
+      "excitement": 67,
+      "cost": 125,
+      "localPath": "/images/kpop-cards/card_chibi_mira_fierce.webp",
+      "sourceFile": "Gear_up_Mira_with_battle_face.jpg",
+      "bytes": 17082
+    },
+    {
+      "cardNumber": 20,
+      "id": "card_chibi_zoey_peace",
+      "titleEn": "Chibi Zoey V-Sign",
+      "rarity": "common",
+      "excitement": 64,
+      "cost": 110,
+      "localPath": "/images/kpop-cards/card_chibi_zoey_peace.webp",
+      "sourceFile": "Mystery_and_Zoey_at_the_fan_event_together.jpg",
+      "bytes": 22466
+    },
+    {
+      "cardNumber": 21,
+      "id": "card_skydiving_entrance",
+      "titleEn": "Stadium Skydiving Entrance",
+      "rarity": "epic",
+      "excitement": 88,
+      "cost": 440,
+      "localPath": "/images/kpop-cards/card_skydiving_entrance.webp",
+      "sourceFile": "HUNTRIX_en_route_by_plane.png",
+      "bytes": 23698
+    },
+    {
+      "cardNumber": 22,
+      "id": "card_sunlight_sisters",
+      "titleEn": "The Sunlight Sisters",
+      "rarity": "golden",
+      "excitement": 100,
+      "cost": 950,
+      "localPath": "/images/kpop-cards/card_sunlight_sisters.webp",
+      "sourceFile": "Earlyconceptartforsunlightsisters.png",
+      "bytes": 30162
+    },
+    {
+      "cardNumber": 23,
+      "id": "card_rumi_mother_legacy",
+      "titleEn": "Rumi’s Mother: Legacy of Love",
+      "rarity": "golden",
+      "excitement": 97,
+      "cost": 800,
+      "localPath": "/images/kpop-cards/card_rumi_mother_legacy.webp",
+      "sourceFile": "Earlyconceptartforsunlightsisters1.png",
+      "bytes": 14234
+    },
+    {
+      "cardNumber": 24,
+      "id": "card_bathhouse_brawl",
+      "titleEn": "The Bathhouse Brawl (Jjimjilbang)",
+      "rarity": "rare",
+      "excitement": 77,
+      "cost": 220,
+      "localPath": "/images/kpop-cards/card_bathhouse_brawl.webp",
+      "sourceFile": "Mira_in_the_bathhouse.jpg",
+      "bytes": 12130
+    },
+    {
+      "cardNumber": 25,
+      "id": "card_penthouse_dorm",
+      "titleEn": "HUNTR/X Penthouse HQ",
+      "rarity": "common",
+      "excitement": 61,
+      "cost": 95,
+      "localPath": "/images/kpop-cards/card_penthouse_dorm.webp",
+      "sourceFile": "HUNTRX_Tower_Full.png",
+      "bytes": 19242
+    },
+    {
+      "cardNumber": 26,
+      "id": "card_dance_practice_mirror",
+      "titleEn": "Dance Studio Mirror Room",
+      "rarity": "common",
+      "excitement": 66,
+      "cost": 120,
+      "localPath": "/images/kpop-cards/card_dance_practice_mirror.webp",
+      "sourceFile": "Golden_practice_color_key.jpg",
+      "bytes": 24412
+    },
+    {
+      "cardNumber": 27,
+      "id": "card_zoey_lyric_notebook",
+      "titleEn": "Zoey’s Secret Rhyme Book",
+      "rarity": "rare",
+      "excitement": 79,
+      "cost": 250,
+      "localPath": "/images/kpop-cards/card_zoey_lyric_notebook.webp",
+      "sourceFile": "Zoey_with_her_anti-demon_notebooks.jpg",
+      "bytes": 26414
+    },
+    {
+      "cardNumber": 28,
+      "id": "card_new_coexistence_honmoon",
+      "titleEn": "The New Harmony Honmoon",
+      "rarity": "golden",
+      "excitement": 98,
+      "cost": 850,
+      "localPath": "/images/kpop-cards/card_new_coexistence_honmoon.webp",
+      "sourceFile": "Mingjuechen_newhonmoon-1.jpg",
+      "bytes": 31912
+    },
+    {
+      "cardNumber": 29,
+      "id": "card_saja_boys_debut",
+      "titleEn": "The Saja Boys (Rival Boyband)",
+      "rarity": "epic",
+      "excitement": 89,
+      "cost": 460,
+      "localPath": "/images/kpop-cards/card_saja_boys_debut.webp",
+      "sourceFile": "Saja_Boys_Rising_During_Your_Idol.png",
+      "bytes": 6372
+    },
+    {
+      "cardNumber": 30,
+      "id": "card_jinu_gat_hat",
+      "titleEn": "Jinu’s Joseon Hat (Gat)",
+      "rarity": "epic",
+      "excitement": 90,
+      "cost": 480,
+      "localPath": "/images/kpop-cards/card_jinu_gat_hat.webp",
+      "sourceFile": "Demon_Jinu_hears_Rumi_sing_as_she_enters_the_stadium.jpg",
+      "bytes": 7816
+    },
+    {
+      "cardNumber": 31,
+      "id": "card_romance_saja",
+      "titleEn": "Romance Saja",
+      "rarity": "epic",
+      "excitement": 92,
+      "cost": 520,
+      "localPath": "/images/kpop-cards/card_romance_saja.webp",
+      "sourceFile": "Romance_Saja_Portrait.png",
+      "bytes": 22650
+    },
+    {
+      "cardNumber": 32,
+      "id": "card_mystery_saja",
+      "titleEn": "Mystery Saja",
+      "rarity": "epic",
+      "excitement": 86,
+      "cost": 390,
+      "localPath": "/images/kpop-cards/card_mystery_saja.webp",
+      "sourceFile": "Mystery_Saja_Portrait.png",
+      "bytes": 26020
+    },
+    {
+      "cardNumber": 33,
+      "id": "card_abby_saja",
+      "titleEn": "Abby Saja (Power Demon)",
+      "rarity": "rare",
+      "excitement": 82,
+      "cost": 280,
+      "localPath": "/images/kpop-cards/card_abby_saja.webp",
+      "sourceFile": "Abby_Saja_Portrait.png",
+      "bytes": 20208
+    },
+    {
+      "cardNumber": 34,
+      "id": "card_baby_saja",
+      "titleEn": "Baby Saja (The Maknae Demon)",
+      "rarity": "rare",
+      "excitement": 83,
+      "cost": 290,
+      "localPath": "/images/kpop-cards/card_baby_saja.webp",
+      "sourceFile": "Baby_Saja_Portrait.png",
+      "bytes": 27764
+    },
+    {
+      "cardNumber": 35,
+      "id": "card_gwima_demon_king",
+      "titleEn": "Gwi-Ma: King of Demons",
+      "rarity": "golden",
+      "excitement": 99,
+      "cost": 900,
+      "localPath": "/images/kpop-cards/card_gwima_demon_king.webp",
+      "sourceFile": "Gwi-Ma.jpg",
+      "bytes": 11012
+    },
+    {
+      "cardNumber": 36,
+      "id": "card_jinu_bipa_lute",
+      "titleEn": "Jinu’s Ancient Lute",
+      "rarity": "rare",
+      "excitement": 74,
+      "cost": 190,
+      "localPath": "/images/kpop-cards/card_jinu_bipa_lute.webp",
+      "sourceFile": "Celinekim_rujinuwedding.jpg",
+      "bytes": 65854
+    },
+    {
+      "cardNumber": 37,
+      "id": "card_rooftop_conversation",
+      "titleEn": "Secret Rooftop Meeting",
+      "rarity": "epic",
+      "excitement": 89,
+      "cost": 460,
+      "localPath": "/images/kpop-cards/card_rooftop_conversation.webp",
+      "sourceFile": "Demon_Jinu_sees_Rumi_in_danger.jpg",
+      "bytes": 7736
+    },
+    {
+      "cardNumber": 38,
+      "id": "card_saja_hypno_mic",
+      "titleEn": "Saja Boys Hypno-Microphone",
+      "rarity": "common",
+      "excitement": 62,
+      "cost": 100,
+      "localPath": "/images/kpop-cards/card_saja_hypno_mic.webp",
+      "sourceFile": "Color_script_saja_boys_first_scene.webp",
+      "bytes": 4902
+    },
+    {
+      "cardNumber": 39,
+      "id": "card_flight_attendant_imp",
+      "titleEn": "Airplane Demon in Disguise",
+      "rarity": "common",
+      "excitement": 67,
+      "cost": 125,
+      "localPath": "/images/kpop-cards/card_flight_attendant_imp.webp",
+      "sourceFile": "Air_Hostess_Demon.png",
+      "bytes": 16528
+    },
+    {
+      "cardNumber": 40,
+      "id": "card_soda_pop_billboard",
+      "titleEn": "Soda Pop Neon Billboard",
+      "rarity": "common",
+      "excitement": 64,
+      "cost": 110,
+      "localPath": "/images/kpop-cards/card_soda_pop_billboard.webp",
+      "sourceFile": "Soda_pop_win_starryseoul.png",
+      "bytes": 20382
+    },
+    {
+      "cardNumber": 41,
+      "id": "card_jinu_soul_spark",
+      "titleEn": "Jinu’s Soul Spark",
+      "rarity": "golden",
+      "excitement": 99,
+      "cost": 900,
+      "localPath": "/images/kpop-cards/card_jinu_soul_spark.webp",
+      "sourceFile": "Abby,_Mira_and_Romance_saw_Jinu's_sacrifice.jpg",
+      "bytes": 15652
+    },
+    {
+      "cardNumber": 42,
+      "id": "card_mira_gokdo_polearm",
+      "titleEn": "Mira’s Gokdo Moon-Polearm",
+      "rarity": "epic",
+      "excitement": 86,
+      "cost": 390,
+      "localPath": "/images/kpop-cards/card_mira_gokdo_polearm.webp",
+      "sourceFile": "Gear_up_Mira_holding_up_her_weapon.jpg",
+      "bytes": 22618
+    },
+    {
+      "cardNumber": 43,
+      "id": "card_zoey_shinkal_blades",
+      "titleEn": "Zoey’s Shinkal Spirit-Blades",
+      "rarity": "epic",
+      "excitement": 91,
+      "cost": 500,
+      "localPath": "/images/kpop-cards/card_zoey_shinkal_blades.webp",
+      "sourceFile": "WISL_Zoey_summoning_her_weapon.jpg",
+      "bytes": 21740
+    },
+    {
+      "cardNumber": 44,
+      "id": "card_four_tiger_engraving",
+      "titleEn": "The Four-Tiger Engraving",
+      "rarity": "rare",
+      "excitement": 81,
+      "cost": 270,
+      "localPath": "/images/kpop-cards/card_four_tiger_engraving.webp",
+      "sourceFile": "Jinu_with_Rumi's_sword_at_his_throat.jpg",
+      "bytes": 10430
+    },
+    {
+      "cardNumber": 45,
+      "id": "card_honmoon_star_seal",
+      "titleEn": "Honmoon Star Seal",
+      "rarity": "rare",
+      "excitement": 77,
+      "cost": 220,
+      "localPath": "/images/kpop-cards/card_honmoon_star_seal.webp",
+      "sourceFile": "Honmoon_blocking_out_demons.jpg",
+      "bytes": 21824
+    },
+    {
+      "cardNumber": 46,
+      "id": "card_soundwave_shield",
+      "titleEn": "Harmonic Soundwave Shield",
+      "rarity": "common",
+      "excitement": 68,
+      "cost": 130,
+      "localPath": "/images/kpop-cards/card_soundwave_shield.webp",
+      "sourceFile": "HUNTRIX_after_they_swore_to_protect_the_Honmoon.png",
+      "bytes": 17080
+    },
+    {
+      "cardNumber": 47,
+      "id": "card_norigae_charm",
+      "titleEn": "Korean Norigae Lucky Tassel",
+      "rarity": "common",
+      "excitement": 72,
+      "cost": 150,
+      "localPath": "/images/kpop-cards/card_norigae_charm.webp",
+      "sourceFile": "KPop_Demon_Hunters_Official_Foster_Cover_-_Korean.png",
+      "bytes": 75706
+    },
+    {
+      "cardNumber": 48,
+      "id": "card_spirit_compass",
+      "titleEn": "Demon-Radar Compass",
+      "rarity": "rare",
+      "excitement": 80,
+      "cost": 260,
+      "localPath": "/images/kpop-cards/card_spirit_compass.webp",
+      "sourceFile": "Honmoon-drum-summon.jpeg",
+      "bytes": 22252
+    },
+    {
+      "cardNumber": 49,
+      "id": "card_golden_slash_combo",
+      "titleEn": "Golden Slash Super-Combo",
+      "rarity": "epic",
+      "excitement": 92,
+      "cost": 520,
+      "localPath": "/images/kpop-cards/card_golden_slash_combo.webp",
+      "sourceFile": "Crowd_Watching_Golden.png",
+      "bytes": 25296
+    },
+    {
+      "cardNumber": 50,
+      "id": "card_hunter_grimoire",
+      "titleEn": "Scroll of the First Hunters",
+      "rarity": "rare",
+      "excitement": 73,
+      "cost": 180,
+      "localPath": "/images/kpop-cards/card_hunter_grimoire.webp",
+      "sourceFile": "First_Hunters.png",
+      "bytes": 12512
+    },
+    {
+      "cardNumber": 51,
+      "id": "card_stage_earpiece",
+      "titleEn": "Glitter In-Ear Monitors",
+      "rarity": "common",
+      "excitement": 67,
+      "cost": 125,
+      "localPath": "/images/kpop-cards/card_stage_earpiece.webp",
+      "sourceFile": "Bobby_standing_next_to_the_broken_Honmoon.png",
+      "bytes": 22834
+    },
+    {
+      "cardNumber": 52,
+      "id": "card_grappling_ribbon",
+      "titleEn": "Neon Ribbon Grapple",
+      "rarity": "common",
+      "excitement": 68,
+      "cost": 130,
+      "localPath": "/images/kpop-cards/card_grappling_ribbon.webp",
+      "sourceFile": "Golden_win_starryseoul.png",
+      "bytes": 21010
+    },
+    {
+      "cardNumber": 53,
+      "id": "card_dual_harmony_blade",
+      "titleEn": "Awakened Sword of Light & Soul",
+      "rarity": "golden",
+      "excitement": 99,
+      "cost": 900,
+      "localPath": "/images/kpop-cards/card_dual_harmony_blade.webp",
+      "sourceFile": "Rumi's_Empowered_Sword.png",
+      "bytes": 15648
+    },
+    {
+      "cardNumber": 54,
+      "id": "card_song_how_its_done",
+      "titleEn": "Hit Single: \"How It’s Done\"",
+      "rarity": "epic",
+      "excitement": 89,
+      "cost": 460,
+      "localPath": "/images/kpop-cards/card_song_how_its_done.webp",
+      "sourceFile": "Huntrix_How_It's_Done_23.png",
+      "bytes": 18484
+    },
+    {
+      "cardNumber": 55,
+      "id": "card_song_golden_anthem",
+      "titleEn": "Global Anthem: \"Golden\"",
+      "rarity": "golden",
+      "excitement": 98,
+      "cost": 850,
+      "localPath": "/images/kpop-cards/card_song_golden_anthem.webp",
+      "sourceFile": "Golden_7_Vinyl_-_Republic_Records.png",
+      "bytes": 24716
+    },
+    {
+      "cardNumber": 56,
+      "id": "card_song_your_idol",
+      "titleEn": "Saja Boys Hit: \"Your Idol\"",
+      "rarity": "epic",
+      "excitement": 87,
+      "cost": 410,
+      "localPath": "/images/kpop-cards/card_song_your_idol.webp",
+      "sourceFile": "Saja_Boys_Finishing_Your_Idol.png",
+      "bytes": 13862
+    },
+    {
+      "cardNumber": 57,
+      "id": "card_song_free_duet",
+      "titleEn": "Emotional Duet: \"Free\"",
+      "rarity": "epic",
+      "excitement": 85,
+      "cost": 370,
+      "localPath": "/images/kpop-cards/card_song_free_duet.webp",
+      "sourceFile": "Jinu_is_listens_to_Rumi's_offer_of_freedom.jpg",
+      "bytes": 7380
+    },
+    {
+      "cardNumber": 58,
+      "id": "card_song_what_it_sounds_like",
+      "titleEn": "Finale Song: \"What It Sounds Like\"",
+      "rarity": "golden",
+      "excitement": 100,
+      "cost": 950,
+      "localPath": "/images/kpop-cards/card_song_what_it_sounds_like.webp",
+      "sourceFile": "Eunicho_finaleconcept.jpg",
+      "bytes": 109944
+    },
+    {
+      "cardNumber": 59,
+      "id": "card_twice_collab_vinyl",
+      "titleEn": "Special Edition: TWICE × Takedown",
+      "rarity": "rare",
+      "excitement": 81,
+      "cost": 270,
+      "localPath": "/images/kpop-cards/card_twice_collab_vinyl.webp",
+      "sourceFile": "Takedown_7_Vinyl_-_Republic_Records.png",
+      "bytes": 28348
+    },
+    {
+      "cardNumber": 60,
+      "id": "card_encore_confetti_blast",
+      "titleEn": "Golden Confetti Encore",
+      "rarity": "common",
+      "excitement": 64,
+      "cost": 110,
+      "localPath": "/images/kpop-cards/card_encore_confetti_blast.webp",
+      "sourceFile": "Golden_CD_Single_-_Republic_Records.png",
+      "bytes": 26778
+    },
+    {
+      "cardNumber": 61,
+      "id": "card_fanchant_megaphone",
+      "titleEn": "Official HUNTR/X Fan-Chant",
+      "rarity": "common",
+      "excitement": 63,
+      "cost": 105,
+      "localPath": "/images/kpop-cards/card_fanchant_megaphone.webp",
+      "sourceFile": "Rumi,_Mira,_and_Zoey_after_receiving_the_juice_toxins_from_Healer_Han.png",
+      "bytes": 16000
+    },
+    {
+      "cardNumber": 62,
+      "id": "card_soundcheck_pass",
+      "titleEn": "VIP Soundcheck Backstage Pass",
+      "rarity": "common",
+      "excitement": 67,
+      "cost": 125,
+      "localPath": "/images/kpop-cards/card_soundcheck_pass.webp",
+      "sourceFile": "Rujinu_concept_art_of_their_concert_confrontation.webp",
+      "bytes": 17200
+    },
+    {
+      "cardNumber": 63,
+      "id": "card_acoustic_campfire_harmony",
+      "titleEn": "Acoustic Harmony Session",
+      "rarity": "rare",
+      "excitement": 79,
+      "cost": 250,
+      "localPath": "/images/kpop-cards/card_acoustic_campfire_harmony.webp",
+      "sourceFile": "Abby,_Mystery_and_Baby_singing_Soda_Pop.jpg",
+      "bytes": 13416
+    },
+    {
+      "cardNumber": 64,
+      "id": "card_celine_mentor",
+      "titleEn": "Master Hunter Celine",
+      "rarity": "golden",
+      "excitement": 96,
+      "cost": 750,
+      "localPath": "/images/kpop-cards/card_celine_mentor.webp",
+      "sourceFile": "Celine-concept-and-model.png",
+      "bytes": 17064
+    },
+    {
+      "cardNumber": 65,
+      "id": "card_manager_bobby",
+      "titleEn": "Manager Bobby",
+      "rarity": "rare",
+      "excitement": 73,
+      "cost": 180,
+      "localPath": "/images/kpop-cards/card_manager_bobby.webp",
+      "sourceFile": "Bobby+Lee+02b.jpg",
+      "bytes": 49602
+    },
+    {
+      "cardNumber": 66,
+      "id": "card_healer_han",
+      "titleEn": "Healer Han",
+      "rarity": "rare",
+      "excitement": 76,
+      "cost": 210,
+      "localPath": "/images/kpop-cards/card_healer_han.webp",
+      "sourceFile": "Healer_Han_Portrait.png",
+      "bytes": 24472
+    },
+    {
+      "cardNumber": 67,
+      "id": "card_derpy_split_ten",
+      "titleEn": "Derpy’s Break-Apart Trick (Make 10!)",
+      "rarity": "epic",
+      "excitement": 89,
+      "cost": 460,
+      "localPath": "/images/kpop-cards/card_derpy_split_ten.webp",
+      "sourceFile": "Concept_Art_of_Derpy_and_Jinu.jpeg",
+      "bytes": 18314
+    },
+    {
+      "cardNumber": 68,
+      "id": "card_derpy_flowerpot",
+      "titleEn": "Derpy & the Tipped Flowerpot",
+      "rarity": "common",
+      "excitement": 62,
+      "cost": 100,
+      "localPath": "/images/kpop-cards/card_derpy_flowerpot.webp",
+      "sourceFile": "Derpy_and_Pot.webp",
+      "bytes": 6742
+    },
+    {
+      "cardNumber": 69,
+      "id": "card_sussie_hat_thief",
+      "titleEn": "Sussie the Hat Snatcher",
+      "rarity": "rare",
+      "excitement": 79,
+      "cost": 250,
+      "localPath": "/images/kpop-cards/card_sussie_hat_thief.webp",
+      "sourceFile": "Sussie_Portrait_temp.png",
+      "bytes": 24546
+    },
+    {
+      "cardNumber": 70,
+      "id": "card_derpy_sussie_besties",
+      "titleEn": "Derpy & Sussie: Best Friends Duo",
+      "rarity": "epic",
+      "excitement": 86,
+      "cost": 390,
+      "localPath": "/images/kpop-cards/card_derpy_sussie_besties.webp",
+      "sourceFile": "Derpy_and_Sussie_(2).jpeg",
+      "bytes": 25116
+    },
+    {
+      "cardNumber": 71,
+      "id": "card_celine_sanctuary_tree",
+      "titleEn": "Celine’s Sacred Sanctuary Tree",
+      "rarity": "rare",
+      "excitement": 78,
+      "cost": 240,
+      "localPath": "/images/kpop-cards/card_celine_sanctuary_tree.webp",
+      "sourceFile": "Celine_with_Rumi,_rejecting_Rumi's_classification_as_a_demon.png",
+      "bytes": 28040
+    },
+    {
+      "cardNumber": 72,
+      "id": "card_bobby_three_phones",
+      "titleEn": "Bobby’s Three Ringing Phones",
+      "rarity": "common",
+      "excitement": 60,
+      "cost": 90,
+      "localPath": "/images/kpop-cards/card_bobby_three_phones.webp",
+      "sourceFile": "Bobby,_Staring_At_His_Phone.png",
+      "bytes": 13924
+    },
+    {
+      "cardNumber": 73,
+      "id": "card_han_tonic_pouch",
+      "titleEn": "Dr. Han’s Golden Ginger Tonic",
+      "rarity": "common",
+      "excitement": 65,
+      "cost": 115,
+      "localPath": "/images/kpop-cards/card_han_tonic_pouch.webp",
+      "sourceFile": "Han_Clinic.png",
+      "bytes": 26064
+    },
+    {
+      "cardNumber": 74,
+      "id": "card_young_rumi_trainee",
+      "titleEn": "Little Rumi (Trainee Days)",
+      "rarity": "rare",
+      "excitement": 77,
+      "cost": 220,
+      "localPath": "/images/kpop-cards/card_young_rumi_trainee.webp",
+      "sourceFile": "Mingjuechen_young-rumi-magic.jpg",
+      "bytes": 26388
+    },
+    {
+      "cardNumber": 75,
+      "id": "card_loyal_fan_squad",
+      "titleEn": "The Loyal HUNTR/X Fandom",
+      "rarity": "common",
+      "excitement": 66,
+      "cost": 120,
+      "localPath": "/images/kpop-cards/card_loyal_fan_squad.webp",
+      "sourceFile": "HUNTR-X_Light_stick_colours_.jpg",
+      "bytes": 17526
+    },
+    {
+      "cardNumber": 76,
+      "id": "card_namsan_tower_beacon",
+      "titleEn": "Namsan Seoul Tower Beacon",
+      "rarity": "rare",
+      "excitement": 74,
+      "cost": 190,
+      "localPath": "/images/kpop-cards/card_namsan_tower_beacon.webp",
+      "sourceFile": "Namsantower.webp",
+      "bytes": 24730
+    },
+    {
+      "cardNumber": 77,
+      "id": "card_korean_gimbap_roll",
+      "titleEn": "Fresh Korean Gimbap Rolls",
+      "rarity": "common",
+      "excitement": 65,
+      "cost": 115,
+      "localPath": "/images/kpop-cards/card_korean_gimbap_roll.webp",
+      "sourceFile": "Bobby,_Rushing_Into_The_Room.png",
+      "bytes": 21104
+    },
+    {
+      "cardNumber": 78,
+      "id": "card_seoul_subway_chase",
+      "titleEn": "Seoul Subway Train Chase",
+      "rarity": "rare",
+      "excitement": 76,
+      "cost": 210,
+      "localPath": "/images/kpop-cards/card_seoul_subway_chase.webp",
+      "sourceFile": "Healer_Han_fake_picture_with_HUNTRIX.png",
+      "bytes": 25796
+    },
+    {
+      "cardNumber": 79,
+      "id": "card_jjimjilbang_sheep_towel",
+      "titleEn": "Bathhouse Sheep-Horn Towel",
+      "rarity": "common",
+      "excitement": 61,
+      "cost": 95,
+      "localPath": "/images/kpop-cards/card_jjimjilbang_sheep_towel.webp",
+      "sourceFile": "Rumi_in_a_bathhouse.jpg",
+      "bytes": 12050
+    },
+    {
+      "cardNumber": 80,
+      "id": "card_tteokbokki_streetfood",
+      "titleEn": "Spicy Street-Food Tteokbokki",
+      "rarity": "common",
+      "excitement": 65,
+      "cost": 115,
+      "localPath": "/images/kpop-cards/card_tteokbokki_streetfood.webp",
+      "sourceFile": "Bobby_after_hitting_the_camera_man.png",
+      "bytes": 10208
+    },
+    {
+      "cardNumber": 81,
+      "id": "card_han_river_fireworks",
+      "titleEn": "Han River Concert Fireworks",
+      "rarity": "rare",
+      "excitement": 77,
+      "cost": 220,
+      "localPath": "/images/kpop-cards/card_han_river_fireworks.webp",
+      "sourceFile": "Water_Crowd.png",
+      "bytes": 18696
+    },
+    {
+      "cardNumber": 82,
+      "id": "card_hongdae_busking_stage",
+      "titleEn": "Hongdae Street Busking",
+      "rarity": "common",
+      "excitement": 68,
+      "cost": 130,
+      "localPath": "/images/kpop-cards/card_hongdae_busking_stage.webp",
+      "sourceFile": "Demon_Abby_offers_his_hands_to_the_fans.jpg",
+      "bytes": 10728
+    },
+    {
+      "cardNumber": 83,
+      "id": "card_bingsu_ice_dessert",
+      "titleEn": "Strawberry Bingsu Shaved Ice",
+      "rarity": "common",
+      "excitement": 71,
+      "cost": 145,
+      "localPath": "/images/kpop-cards/card_bingsu_ice_dessert.webp",
+      "sourceFile": "Battle_makeup_and_nails_concept_art.jpg",
+      "bytes": 19176
+    },
+    {
+      "cardNumber": 84,
+      "id": "card_gyeongbokgung_rooftop",
+      "titleEn": "Ancient Palace Rooftops by Moonlight",
+      "rarity": "rare",
+      "excitement": 81,
+      "cost": 270,
+      "localPath": "/images/kpop-cards/card_gyeongbokgung_rooftop.webp",
+      "sourceFile": "Honmoon_from_Huntrix_tower_rooftop.png",
+      "bytes": 18078
+    },
+    {
+      "cardNumber": 85,
+      "id": "card_idol_tour_jet",
+      "titleEn": "HUNTR/X World Tour Private Jet",
+      "rarity": "rare",
+      "excitement": 76,
+      "cost": 210,
+      "localPath": "/images/kpop-cards/card_idol_tour_jet.webp",
+      "sourceFile": "Entering_Crowd_-_Your_Idol.png",
+      "bytes": 22350
+    },
+    {
+      "cardNumber": 86,
+      "id": "card_korean_finger_heart",
+      "titleEn": "K-Pop Finger Heart (Saranghae!)",
+      "rarity": "common",
+      "excitement": 65,
+      "cost": 115,
+      "localPath": "/images/kpop-cards/card_korean_finger_heart.webp",
+      "sourceFile": "Your_Idol_Crowd.png",
+      "bytes": 20510
+    },
+    {
+      "cardNumber": 87,
+      "id": "card_photocard_binder_gold",
+      "titleEn": "Holographic Photocard Binder",
+      "rarity": "rare",
+      "excitement": 79,
+      "cost": 250,
+      "localPath": "/images/kpop-cards/card_photocard_binder_gold.webp",
+      "sourceFile": "Bobby_Dancing_To_Zoey's_Part_During_Golden.png",
+      "bytes": 8394
+    },
+    {
+      "cardNumber": 88,
+      "id": "card_greg_tang_kakooma_star",
+      "titleEn": "The Kakooma® Number-Bond Star",
+      "rarity": "epic",
+      "excitement": 84,
+      "cost": 350,
+      "localPath": "/images/kpop-cards/card_greg_tang_kakooma_star.webp",
+      "sourceFile": "Celinesfxreelweapons.jpg",
+      "bytes": 9300
+    },
+    {
+      "cardNumber": 89,
+      "id": "card_tang_make_ten_bridge",
+      "titleEn": "The Make-a-Ten Bridge",
+      "rarity": "rare",
+      "excitement": 77,
+      "cost": 220,
+      "localPath": "/images/kpop-cards/card_tang_make_ten_bridge.webp",
+      "sourceFile": "Imgi_4_original_Bridget_Underwood_ManhwaMagicalGirls_WEB.png",
+      "bytes": 98766
+    },
+    {
+      "cardNumber": 90,
+      "id": "card_tang_double_double",
+      "titleEn": "Mira’s Double-Double Trick (×4)",
+      "rarity": "rare",
+      "excitement": 77,
+      "cost": 220,
+      "localPath": "/images/kpop-cards/card_tang_double_double.webp",
+      "sourceFile": "WISL_Mira_summons_her_weapon.jpg",
+      "bytes": 21896
+    },
+    {
+      "cardNumber": 91,
+      "id": "card_tang_half_ten_five",
+      "titleEn": "Zoey’s Times-Five Trick (Half of 10×)",
+      "rarity": "rare",
+      "excitement": 78,
+      "cost": 240,
+      "localPath": "/images/kpop-cards/card_tang_half_ten_five.webp",
+      "sourceFile": "Zoey_draws_her_weapons_from_the_Honmoon.png",
+      "bytes": 25404
+    },
+    {
+      "cardNumber": 92,
+      "id": "card_tang_nine_minus_one",
+      "titleEn": "Rumi’s Times-Nine Trick (10× Minus 1×)",
+      "rarity": "rare",
+      "excitement": 79,
+      "cost": 250,
+      "localPath": "/images/kpop-cards/card_tang_nine_minus_one.webp",
+      "sourceFile": "Mingjuechen_rumi-honmoon-defense.jpg",
+      "bytes": 32206
+    },
+    {
+      "cardNumber": 93,
+      "id": "card_tang_count_up_sub",
+      "titleEn": "Sussie’s Count-Up Subtraction Trick",
+      "rarity": "common",
+      "excitement": 63,
+      "cost": 105,
+      "localPath": "/images/kpop-cards/card_tang_count_up_sub.webp",
+      "sourceFile": "Sussie.png",
+      "bytes": 9846
+    },
+    {
+      "cardNumber": 94,
+      "id": "card_rumi_demon_wings_flare",
+      "titleEn": "Rumi’s Awakened Power Aura",
+      "rarity": "epic",
+      "excitement": 86,
+      "cost": 390,
+      "localPath": "/images/kpop-cards/card_rumi_demon_wings_flare.webp",
+      "sourceFile": "Simonbaek_rumi-powerup.jpg",
+      "bytes": 30434
+    },
+    {
+      "cardNumber": 95,
+      "id": "card_mira_high_kick_finish",
+      "titleEn": "Mira’s Tornado Dance Kick",
+      "rarity": "rare",
+      "excitement": 73,
+      "cost": 180,
+      "localPath": "/images/kpop-cards/card_mira_high_kick_finish.webp",
+      "sourceFile": "Gear_up_Mira_kicks_her_weapon.jpg",
+      "bytes": 12914
+    },
+    {
+      "cardNumber": 96,
+      "id": "card_zoey_double_time_flow",
+      "titleEn": "Zoey’s Double-Time Rap Flow",
+      "rarity": "rare",
+      "excitement": 77,
+      "cost": 220,
+      "localPath": "/images/kpop-cards/card_zoey_double_time_flow.webp",
+      "sourceFile": "Zoey_rapping_on_stage.jpg",
+      "bytes": 21802
+    },
+    {
+      "cardNumber": 97,
+      "id": "card_saja_boys_light_dark_mirror",
+      "titleEn": "HUNTR/X vs. Saja Boys: Arena Clash",
+      "rarity": "epic",
+      "excitement": 85,
+      "cost": 370,
+      "localPath": "/images/kpop-cards/card_saja_boys_light_dark_mirror.webp",
+      "sourceFile": "Huntrix_and_Saja_Boys_Mountain.jpeg",
+      "bytes": 30996
+    },
+    {
+      "cardNumber": 98,
+      "id": "card_derpy_cookie_jar",
+      "titleEn": "Derpy & the Honey Cookies (Yakgwa)",
+      "rarity": "common",
+      "excitement": 62,
+      "cost": 100,
+      "localPath": "/images/kpop-cards/card_derpy_cookie_jar.webp",
+      "sourceFile": "Derpy&Rumi1.png",
+      "bytes": 11928
+    },
+    {
+      "cardNumber": 99,
+      "id": "card_seoul_cherry_blossom_walk",
+      "titleEn": "Seoul Cherry Blossom Breeze",
+      "rarity": "common",
+      "excitement": 63,
+      "cost": 105,
+      "localPath": "/images/kpop-cards/card_seoul_cherry_blossom_walk.webp",
+      "sourceFile": "Jinu_after_he_shares_his_story_with_Rumi.jpg",
+      "bytes": 4354
+    },
+    {
+      "cardNumber": 100,
+      "id": "card_huntrx_eternal_legends",
+      "titleEn": "HUNTR/X: Eternal Legends (#100)",
+      "rarity": "golden",
+      "excitement": 94,
+      "cost": 650,
+      "localPath": "/images/kpop-cards/card_huntrx_eternal_legends.webp",
+      "sourceFile": "Celinekimhuntrixart.jpg",
+      "bytes": 86452
+    }
+  ],
+  "reusePool": [
+    {
+      "id": "reuse_2",
+      "localPath": "/images/kpop-cards/reuse/reuse_2_ABBY_DEMON_FORM_png.webp",
+      "sourceFile": "ABBY_DEMON_FORM.png",
+      "bytes": 25090
+    },
+    {
+      "id": "reuse_3",
+      "localPath": "/images/kpop-cards/reuse/reuse_3_Abby_s_demon_patterns_appear_on_his_arm_jpg.webp",
+      "sourceFile": "Abby's_demon_patterns_appear_on_his_arm.jpg",
+      "bytes": 15270
+    },
+    {
+      "id": "reuse_4",
+      "localPath": "/images/kpop-cards/reuse/reuse_4_Abby_png.webp",
+      "sourceFile": "Abby.png",
+      "bytes": 24058
+    },
+    {
+      "id": "reuse_5",
+      "localPath": "/images/kpop-cards/reuse/reuse_5_AbbySajaDemon_png.webp",
+      "sourceFile": "AbbySajaDemon.png",
+      "bytes": 12150
+    },
+    {
+      "id": "reuse_6",
+      "localPath": "/images/kpop-cards/reuse/reuse_6_Abby_Bib_Hot_Sauce_Challenge_png.webp",
+      "sourceFile": "Abby_Bib_Hot_Sauce_Challenge.png",
+      "bytes": 12828
+    },
+    {
+      "id": "reuse_7",
+      "localPath": "/images/kpop-cards/reuse/reuse_7_Abby_Hot_Sauce_Challenge_png.webp",
+      "sourceFile": "Abby_Hot_Sauce_Challenge.png",
+      "bytes": 16446
+    },
+    {
+      "id": "reuse_8",
+      "localPath": "/images/kpop-cards/reuse/reuse_8_Abby_Saja_webp.webp",
+      "sourceFile": "Abby_Saja.webp",
+      "bytes": 14306
+    },
+    {
+      "id": "reuse_9",
+      "localPath": "/images/kpop-cards/reuse/reuse_9_Abby_Saja_render_png.webp",
+      "sourceFile": "Abby_Saja_render.png",
+      "bytes": 15026
+    },
+    {
+      "id": "reuse_10",
+      "localPath": "/images/kpop-cards/reuse/reuse_10_Abby_and_Mystery_closeup_jpg.webp",
+      "sourceFile": "Abby_and_Mystery_closeup.jpg",
+      "bytes": 12312
+    },
+    {
+      "id": "reuse_11",
+      "localPath": "/images/kpop-cards/reuse/reuse_11_Abby_flexing_closeup_jpg.webp",
+      "sourceFile": "Abby_flexing_closeup.jpg",
+      "bytes": 10954
+    },
+    {
+      "id": "reuse_12",
+      "localPath": "/images/kpop-cards/reuse/reuse_12_Abby_singing_Soda_Pop_jpg.webp",
+      "sourceFile": "Abby_singing_Soda_Pop.jpg",
+      "bytes": 24146
+    },
+    {
+      "id": "reuse_13",
+      "localPath": "/images/kpop-cards/reuse/reuse_13_Abby_singing_Soda_Pop_2_jpg.webp",
+      "sourceFile": "Abby_singing_Soda_Pop_2.jpg",
+      "bytes": 19152
+    },
+    {
+      "id": "reuse_14",
+      "localPath": "/images/kpop-cards/reuse/reuse_14_Abbyportrait_jpeg.webp",
+      "sourceFile": "Abbyportrait.jpeg",
+      "bytes": 28108
+    },
+    {
+      "id": "reuse_15",
+      "localPath": "/images/kpop-cards/reuse/reuse_15_Amithompson_rumi_jpg.webp",
+      "sourceFile": "Amithompson_rumi.jpg",
+      "bytes": 21778
+    },
+    {
+      "id": "reuse_16",
+      "localPath": "/images/kpop-cards/reuse/reuse_16_Are_you_okay__Rumi_png.webp",
+      "sourceFile": "Are_you_okay,_Rumi.png",
+      "bytes": 12668
+    },
+    {
+      "id": "reuse_17",
+      "localPath": "/images/kpop-cards/reuse/reuse_17_Art_by_Arsonist_Abby__Elaries_art_png.webp",
+      "sourceFile": "Art_by_Arsonist_Abby_(Elaries_art).png",
+      "bytes": 29596
+    },
+    {
+      "id": "reuse_18",
+      "localPath": "/images/kpop-cards/reuse/reuse_18_Art_by_Zoey_Zimps_jpg.webp",
+      "sourceFile": "Art_by_Zoey_Zimps.jpg",
+      "bytes": 36754
+    },
+    {
+      "id": "reuse_19",
+      "localPath": "/images/kpop-cards/reuse/reuse_19_Baby_Saja_Soda_Pop_2_webp.webp",
+      "sourceFile": "Baby_Saja_Soda_Pop_2.webp",
+      "bytes": 8492
+    },
+    {
+      "id": "reuse_20",
+      "localPath": "/images/kpop-cards/reuse/reuse_20_Baby_Saja_Toomba_Sauce_-_Nongshim_jpg.webp",
+      "sourceFile": "Baby_Saja_Toomba_Sauce_-_Nongshim.jpg",
+      "bytes": 18578
+    },
+    {
+      "id": "reuse_21",
+      "localPath": "/images/kpop-cards/reuse/reuse_21_Baby_Saja_concept_art_-_Celine_DaHyeu_Kim_1_png.webp",
+      "sourceFile": "Baby_Saja_concept_art_-_Celine_DaHyeu_Kim_1.png",
+      "bytes": 43014
+    },
+    {
+      "id": "reuse_22",
+      "localPath": "/images/kpop-cards/reuse/reuse_22_Baby_Saja_concept_art_-_Celine_DaHyeu_Kim_2_png.webp",
+      "sourceFile": "Baby_Saja_concept_art_-_Celine_DaHyeu_Kim_2.png",
+      "bytes": 32204
+    },
+    {
+      "id": "reuse_23",
+      "localPath": "/images/kpop-cards/reuse/reuse_23_Baby_Saja_concept_art_-_Celine_DaHyeu_Kim_3_png.webp",
+      "sourceFile": "Baby_Saja_concept_art_-_Celine_DaHyeu_Kim_3.png",
+      "bytes": 24248
+    },
+    {
+      "id": "reuse_24",
+      "localPath": "/images/kpop-cards/reuse/reuse_24_Baby_Saja_drinks_hot_sauce_png.webp",
+      "sourceFile": "Baby_Saja_drinks_hot_sauce.png",
+      "bytes": 15776
+    },
+    {
+      "id": "reuse_25",
+      "localPath": "/images/kpop-cards/reuse/reuse_25_Baby_Saja_takes_the_lead_of_Soda_Pop_jpg.webp",
+      "sourceFile": "Baby_Saja_takes_the_lead_of_Soda_Pop.jpg",
+      "bytes": 31218
+    },
+    {
+      "id": "reuse_26",
+      "localPath": "/images/kpop-cards/reuse/reuse_26_Baby_Saja_wins_the_competition_png.webp",
+      "sourceFile": "Baby_Saja_wins_the_competition.png",
+      "bytes": 16730
+    },
+    {
+      "id": "reuse_27",
+      "localPath": "/images/kpop-cards/reuse/reuse_27_Baby_Slayy_During_Your_Idol_png.webp",
+      "sourceFile": "Baby_Slayy_During_Your_Idol.png",
+      "bytes": 8412
+    },
+    {
+      "id": "reuse_28",
+      "localPath": "/images/kpop-cards/reuse/reuse_28_Baby_and_Mystery_drop_their_nice_guy_act_jpg.webp",
+      "sourceFile": "Baby_and_Mystery_drop_their_nice_guy_act.jpg",
+      "bytes": 16430
+    },
+    {
+      "id": "reuse_29",
+      "localPath": "/images/kpop-cards/reuse/reuse_29_Baby_aurafarm_png.webp",
+      "sourceFile": "Baby_aurafarm.png",
+      "bytes": 9574
+    },
+    {
+      "id": "reuse_30",
+      "localPath": "/images/kpop-cards/reuse/reuse_30_Baby_crawls_behind_zoey_png.webp",
+      "sourceFile": "Baby_crawls_behind_zoey.png",
+      "bytes": 14792
+    }
+  ]
+}
