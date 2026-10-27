@@ -1,6 +1,8 @@
 {
   "name": "huntrx-math-beat",
   "compatibility_date": "2026-01-01",
+  "previews": {},
+  "preview_urls": true,
   "assets": {
     "directory": "./dist"
   }
