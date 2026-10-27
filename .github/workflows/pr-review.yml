@@ -1,0 +1,267 @@
+name: Pull Request Checks (Title, Rules, Design, Colour & Spelling)
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  models: read
+
+jobs:
+  # ==========================================================================
+  # CHECK 1: Fast PR Title, Description, Branch & Basic Hygiene Rules
+  # ==========================================================================
+  pr-basic-rules:
+    name: 📋 1. PR Title, Description & Basic Rules
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate PR Title, Description & Forbidden Files
+        if: github.event_name == 'pull_request'
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          node << 'EOF'
+          import { execSync } from 'node:child_process';
+
+          const title = (process.env.PR_TITLE || '').trim();
+          const body = (process.env.PR_BODY || '').replace(/<!--[\s\S]*?-->/g, '').trim();
+          const baseRef = process.env.BASE_REF || 'main';
+          const errors = [];
+
+          console.log(`Checking PR Title: "${title}"`);
+
+          // Rule 1: Title length (10–100 chars)
+          if (title.length < 10 || title.length > 100) {
+            errors.push(`PR Title must be between 10 and 100 characters (got ${title.length}).`);
+          }
+
+          // Rule 2: Not a generic one-word placeholder
+          if (/^(wip|fix|update|updates|test|testing|changes|patch|temp|commit|pr|minor)$/i.test(title)) {
+            errors.push(`PR Title "${title}" is too generic. Describe the actual change.`);
+          }
+
+          // Rule 3: Starts with capital letter or Conventional Commit prefix
+          const validStart =
+            /^[A-Z]/.test(title) ||
+            /^(feat|fix|style|ui|design|refactor|perf|test|docs|chore|ci|build)(\([a-z0-9-]+\))?:\s+\S+/i.test(title);
+          if (!validStart) {
+            errors.push('PR Title must start with an uppercase letter (e.g. "Show Next Stage...") or conventional prefix (e.g. "feat: ...", "ui: ...").');
+          }
+
+          // Rule 4: No trailing period in title
+          if (title.endsWith('.')) {
+            errors.push('PR Title should not end with a period.');
+          }
+
+          // Rule 5: Meaningful PR Description
+          if (body.length < 15) {
+            errors.push('PR Description is empty or too short (minimum 15 characters explaining what & why).');
+          }
+
+          // Rule 6: No forbidden files in PR diff (.env, .DS_Store, node_modules)
+          try {
+            const changed = execSync(`git diff --name-only origin/${baseRef}...HEAD`, { encoding: 'utf8' })
+              .split('\n')
+              .map(s => s.trim())
+              .filter(Boolean);
+            const forbidden = changed.filter(f =>
+              f === '.DS_Store' ||
+              f.endsWith('/.DS_Store') ||
+              f === '.env' ||
+              f.startsWith('.env.') ||
+              f.startsWith('node_modules/')
+            );
+            if (forbidden.length > 0) {
+              errors.push(`Forbidden file(s) committed in PR: ${forbidden.join(', ')}`);
+            }
+          } catch {
+            // Ignore git diff error on shallow/unfetched refs
+          }
+
+          if (errors.length > 0) {
+            console.error('❌ PR Basic Rules Check Failed:');
+            for (const err of errors) console.error(`  - ${err}`);
+            process.exit(1);
+          }
+
+          console.log('✅ PR Title, Description, and Basic File Hygiene rules passed!');
+          EOF
+
+  # ==========================================================================
+  # CHECK 2: Build, TypeScript & Pedagogical Engine Unit Tests
+  # ==========================================================================
+  build-and-tests:
+    name: 🧪 2. Build, TypeScript & Unit Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript & Vite Production Build
+        run: npm run build
+
+      - name: Run All 50 Unit & Engine Tests
+        run: npm test
+
+  # ==========================================================================
+  # CHECK 3: Design System, Colour Grading, I18n, Spelling & PR Comment
+  # ==========================================================================
+  design-colour-spelling-review:
+    name: 🎨 3. Design, Colour Grading, I18n & Spelling Review
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository with full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Run 7-Pillar Automated PR Review Audit
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          GITHUB_BASE_REF: ${{ github.base_ref }}
+        run: node scripts/pr-review-audit.mjs --report pr-review-report.md
+
+      - name: AI Diff Review (UI Layout, Colour Grading & Spelling via GitHub Models)
+        if: github.event_name == 'pull_request' && always()
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          node << 'EOF'
+          import fs from 'node:fs';
+          import { execSync } from 'node:child_process';
+
+          const token = process.env.GITHUB_TOKEN;
+          const baseRef = process.env.BASE_REF || 'main';
+          if (!token) process.exit(0);
+
+          let diff = '';
+          try {
+            diff = execSync(`git diff origin/${baseRef}...HEAD -- src/ index.html tailwind.config.js`, {
+              encoding: 'utf8',
+              maxBuffer: 1024 * 1024 * 4,
+            }).slice(0, 18000);
+          } catch {
+            process.exit(0);
+          }
+
+          if (!diff.trim()) process.exit(0);
+
+          const systemPrompt = [
+            'You are the Lead Design System, Colour Grading & Code Reviewer for HUNTR/X: Honmoon Beat (a bilingual EN/NL K-Pop kids math game).',
+            'Review the PR git diff and provide a concise markdown section covering:',
+            '1. **UI & Design Layout**: How the UI hierarchy/layout changes and whether it fits compact/mobile screens cleanly.',
+            '2. **Colour Grading & Visual Style**: Check that translucent 3D glass/soap-bubble hues (pink, cyan, amber, violet), thermometer rgba gradients, dark-neon base (#090414), and .theme-light pastel rules are respected without opaque white/grey regressions.',
+            '3. **Translations (EN/NL) & Spelling**: Flag any typos, grammar issues, or untranslated Dutch/English strings.',
+            '4. **Verdict**: Whether the change is required/recommended.'
+          ].join('\n');
+
+          try {
+            const res = await fetch('https://models.inference.ai.azure.com/chat/completions', {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                model: 'gpt-4o-mini',
+                temperature: 0.2,
+                messages: [
+                  { role: 'system', content: systemPrompt },
+                  { role: 'user', content: `Review this PR diff:\n\n\`\`\`diff\n${diff}\n\`\`\`` },
+                ],
+              }),
+            });
+
+            if (res.ok) {
+              const data = await res.json();
+              const aiReview = data.choices?.[0]?.message?.content?.trim();
+              if (aiReview) {
+                fs.appendFileSync(
+                  'pr-review-report.md',
+                  `\n### 🤖 AI Diff Review (UI Layout, Colour Grading & Spelling)\n\n${aiReview}\n`,
+                  'utf8'
+                );
+              }
+            }
+          } catch {
+            // Skip gracefully if GitHub Models endpoint is unavailable
+          }
+          EOF
+
+      - name: Publish Report to GitHub Step Summary
+        if: always()
+        run: |
+          if [ -f pr-review-report.md ]; then
+            cat pr-review-report.md >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Post / Update Sticky Review Comment on Pull Request
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            if (!fs.existsSync('pr-review-report.md')) return;
+            const marker = '<!-- huntrx-automated-pr-review -->';
+            const body = `${marker}\n${fs.readFileSync('pr-review-report.md', 'utf8')}`;
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const existing = comments.find(c => c.body && c.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
