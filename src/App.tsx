@@ -1475,13 +1475,13 @@ export const App: React.FC = () => {
                           setArcadeViewMode('stage');
                           setShowTangArcade(true);
                         }}
-                        className={`kid-block-card p-3.5 rounded-2xl bg-gradient-to-b from-purple-900/85 to-indigo-950/90 border-2 ${g.cardBorder} text-left flex flex-col justify-between gap-2 cursor-pointer`}
+                        className={`kid-block-card pad-3d-step p-3.5 rounded-2xl bg-white/12 hover:bg-white/22 backdrop-blur-md border ${g.cardBorder} text-left flex flex-col justify-between gap-2 cursor-pointer`}
                       >
                         <div className="flex items-center justify-between gap-1">
                           <span className="text-3xl sm:text-4xl animate-float-slow">
                             {g.emoji}
                           </span>
-                          <span className="px-2 py-0.5 rounded-full bg-amber-400/20 border border-amber-300/40 text-[11px] font-black text-amber-300">
+                          <span className="px-2 py-0.5 rounded-full bg-white/15 border border-white/50 text-[11px] font-black text-white">
                             ▶
                           </span>
                         </div>
@@ -1489,7 +1489,7 @@ export const App: React.FC = () => {
                           <div className="font-display font-black text-sm sm:text-base text-white leading-snug">
                             {lang === 'nl' ? g.titleNl : g.titleEn}
                           </div>
-                          <div className="text-xs font-bold text-purple-200/90 mt-0.5 truncate">
+                          <div className="text-xs font-bold text-sky-100/90 mt-0.5 truncate">
                             {lang === 'nl' ? g.subtitleNl : g.subtitleEn}
                           </div>
                         </div>

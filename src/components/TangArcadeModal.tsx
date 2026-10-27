@@ -56,8 +56,8 @@ export const ARCADE_GAMES_CATALOG: ArcadeGameMeta[] = [
     titleEn: 'Soda-Pop Bubbles',
     subtitleNl: 'Getalparen (+ & ×)',
     subtitleEn: 'Number Pairs (+ & ×)',
-    badgeGradient: 'from-pink-500 to-rose-500',
-    cardBorder: 'border-pink-400/60 hover:border-amber-300',
+    badgeGradient: 'from-pink-400/45 via-rose-400/35 to-sky-300/45 border border-pink-200/75',
+    cardBorder: 'border-pink-300/55 hover:border-pink-200',
   },
   {
     id: 'numberLine',
@@ -67,8 +67,8 @@ export const ARCADE_GAMES_CATALOG: ArcadeGameMeta[] = [
     titleEn: 'Laser Number Line',
     subtitleNl: 'Sprongen & Over 0',
     subtitleEn: 'Jumps & Across 0',
-    badgeGradient: 'from-cyan-400 to-blue-600',
-    cardBorder: 'border-cyan-400/60 hover:border-amber-300',
+    badgeGradient: 'from-cyan-400/45 via-sky-400/35 to-blue-500/45 border border-cyan-200/75',
+    cardBorder: 'border-cyan-300/55 hover:border-cyan-200',
   },
   {
     id: 'subZero',
@@ -78,8 +78,8 @@ export const ARCADE_GAMES_CATALOG: ArcadeGameMeta[] = [
     titleEn: 'Sub-Zero Portal',
     subtitleNl: 'Onder 0°C',
     subtitleEn: 'Below 0°C',
-    badgeGradient: 'from-sky-400 to-indigo-600',
-    cardBorder: 'border-sky-400/60 hover:border-amber-300',
+    badgeGradient: 'from-sky-400/45 via-cyan-300/35 to-rose-400/45 border border-sky-200/75',
+    cardBorder: 'border-sky-300/55 hover:border-sky-200',
   },
   {
     id: 'missingRune',
@@ -89,8 +89,8 @@ export const ARCADE_GAMES_CATALOG: ArcadeGameMeta[] = [
     titleEn: 'Missing Rune',
     subtitleNl: 'Algebra & n²',
     subtitleEn: 'Algebra & n²',
-    badgeGradient: 'from-amber-400 to-orange-500',
-    cardBorder: 'border-amber-400/60 hover:border-amber-300',
+    badgeGradient: 'from-amber-400/45 via-yellow-300/35 to-orange-400/45 border border-amber-200/75',
+    cardBorder: 'border-amber-300/55 hover:border-amber-200',
   },
   {
     id: 'breakApart',
@@ -100,8 +100,8 @@ export const ARCADE_GAMES_CATALOG: ArcadeGameMeta[] = [
     titleEn: 'Derpy Split-Beat',
     subtitleNl: 'Slim Splitsen',
     subtitleEn: 'Smart Split',
-    badgeGradient: 'from-emerald-400 to-teal-600',
-    cardBorder: 'border-emerald-400/60 hover:border-amber-300',
+    badgeGradient: 'from-emerald-400/45 via-teal-400/35 to-cyan-400/45 border border-emerald-200/75',
+    cardBorder: 'border-emerald-300/55 hover:border-emerald-200',
   },
   {
     id: 'powerLab',
@@ -111,8 +111,8 @@ export const ARCADE_GAMES_CATALOG: ArcadeGameMeta[] = [
     titleEn: 'Mira Crystal Lab',
     subtitleNl: 'Breuken & %',
     subtitleEn: 'Fractions & %',
-    badgeGradient: 'from-fuchsia-500 to-purple-600',
-    cardBorder: 'border-fuchsia-400/60 hover:border-amber-300',
+    badgeGradient: 'from-fuchsia-400/45 via-pink-400/35 to-purple-500/45 border border-fuchsia-200/75',
+    cardBorder: 'border-fuchsia-300/55 hover:border-fuchsia-200',
   },
   {
     id: 'stageGrid',
@@ -122,8 +122,8 @@ export const ARCADE_GAMES_CATALOG: ArcadeGameMeta[] = [
     titleEn: 'Zoey Stage Grid',
     subtitleNl: 'Oppervlakte & 3D',
     subtitleEn: 'Area & 3D Blocks',
-    badgeGradient: 'from-violet-500 to-purple-700',
-    cardBorder: 'border-violet-400/60 hover:border-amber-300',
+    badgeGradient: 'from-violet-400/45 via-purple-400/35 to-cyan-400/45 border border-violet-200/75',
+    cardBorder: 'border-violet-300/55 hover:border-violet-200',
   },
   {
     id: 'soulScale',
@@ -133,8 +133,8 @@ export const ARCADE_GAMES_CATALOG: ArcadeGameMeta[] = [
     titleEn: 'Jinu Soul Scale',
     subtitleNl: 'Weegschaal Balans',
     subtitleEn: 'Balance Scale',
-    badgeGradient: 'from-amber-300 to-pink-500',
-    cardBorder: 'border-amber-300/60 hover:border-amber-300',
+    badgeGradient: 'from-amber-300/45 via-pink-400/35 to-cyan-400/45 border border-amber-200/75',
+    cardBorder: 'border-amber-300/55 hover:border-amber-200',
   },
   {
     id: 'rhythmPattern',
@@ -144,8 +144,8 @@ export const ARCADE_GAMES_CATALOG: ArcadeGameMeta[] = [
     titleEn: 'Rumi Rhythm Track',
     subtitleNl: 'Getallen-Patronen',
     subtitleEn: 'Number Patterns',
-    badgeGradient: 'from-rose-500 to-amber-500',
-    cardBorder: 'border-rose-400/60 hover:border-amber-300',
+    badgeGradient: 'from-rose-400/45 via-pink-400/35 to-amber-400/45 border border-rose-200/75',
+    cardBorder: 'border-rose-300/55 hover:border-rose-200',
   },
   {
     id: 'targetTrio',
@@ -155,8 +155,8 @@ export const ARCADE_GAMES_CATALOG: ArcadeGameMeta[] = [
     titleEn: 'Sussie Target Trio',
     subtitleNl: '3-Kaarten & Hoeken',
     subtitleEn: '3-Cards & Angles',
-    badgeGradient: 'from-teal-400 to-cyan-600',
-    cardBorder: 'border-teal-400/60 hover:border-amber-300',
+    badgeGradient: 'from-teal-400/45 via-cyan-400/35 to-sky-400/45 border border-teal-200/75',
+    cardBorder: 'border-teal-300/55 hover:border-teal-200',
   },
 ];
 
@@ -522,12 +522,12 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
       )}
 
       {/* Clean School Group Bar (Big Tactile Pills, Minimal Text) */}
-      <div className="flex flex-wrap items-center justify-between gap-2 px-3.5 py-2.5 rounded-2xl bg-purple-950/60 border border-purple-800/60">
+      <div className="flex flex-wrap items-center justify-between gap-2 px-3.5 py-2.5 rounded-2xl bg-purple-950/45 backdrop-blur-md border border-purple-400/50">
         <div className="flex items-center gap-2">
-          <span className="text-sm sm:text-base font-display font-black text-amber-300">
+          <span className="text-sm sm:text-base font-display font-black text-amber-200">
             🎓 {currentGroupProfile.shortLabel[lang]}
           </span>
-          <span className="px-2.5 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-400/40 text-xs font-black text-cyan-200">
+          <span className="px-2.5 py-0.5 rounded-full bg-pink-500/30 border border-pink-300/65 text-xs font-black text-pink-100">
             {currentGroupProfile.ageRange} {lang === 'nl' ? 'jr' : 'yrs'}
           </span>
         </div>
@@ -544,10 +544,10 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                   soundEngine.playSelect();
                   onChangeSchoolGroup(grp.id);
                 }}
-                className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-display font-black transition-all cursor-pointer ${
+                className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-display font-black transition-all cursor-pointer border ${
                   active
-                    ? 'bg-gradient-to-r from-amber-400 to-pink-500 text-slate-950 shadow scale-105'
-                    : 'bg-purple-900/60 text-purple-200 hover:bg-purple-800'
+                    ? 'bg-gradient-to-r from-amber-400/65 via-pink-500/60 to-purple-500/65 text-white border-amber-200 shadow-[0_0_14px_rgba(244,114,182,0.45)] scale-105'
+                    : 'bg-purple-900/40 border-purple-400/45 text-purple-100 hover:bg-purple-800/55'
                 }`}
               >
                 {grp.mascotEmoji} {grp.shortLabel[lang]}
@@ -596,10 +596,10 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                     soundEngine.playTap();
                     setCategoryFilter(cat.id);
                   }}
-                  className={`px-4 py-2 rounded-2xl font-display font-black text-xs sm:text-sm transition-all cursor-pointer border-2 ${
+                  className={`px-4 py-2 rounded-2xl font-display font-black text-xs sm:text-sm transition-all cursor-pointer border ${
                     active
-                      ? 'bg-gradient-to-r from-cyan-400 to-pink-500 text-slate-950 border-white shadow-md scale-[1.02]'
-                      : 'bg-purple-950/70 border-purple-700/60 text-purple-200 hover:border-pink-400/60'
+                      ? 'bg-gradient-to-r from-cyan-400/65 to-blue-500/65 text-white border-cyan-200 shadow-[0_0_16px_rgba(34,211,238,0.4)] scale-[1.02]'
+                      : 'bg-purple-900/40 border-purple-400/45 text-purple-100 hover:bg-purple-800/55'
                   }`}
                 >
                   {lang === 'nl' ? cat.nl : cat.en}
@@ -608,7 +608,7 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
             })}
           </div>
 
-          {/* 10 Attractive Visual Game Blocks */}
+          {/* 10 Translucent Colored Game Blocks */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
             {filteredCatalog.map((game) => {
               const isSelected = activeGame === game.id;
@@ -622,17 +622,17 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                     setActiveGame(game.id);
                     setViewMode('stage');
                   }}
-                  className={`kid-block-card p-4 rounded-3xl bg-gradient-to-b from-purple-900/75 via-indigo-950/80 to-slate-950/90 border-2 ${
-                    isSelected ? 'border-amber-300 ring-2 ring-amber-300/40' : game.cardBorder
-                  } text-left flex flex-col justify-between gap-3 cursor-pointer shadow-lg`}
+                  className={`kid-block-card pad-3d-step p-4 rounded-3xl bg-gradient-to-br from-purple-900/45 via-indigo-950/45 to-slate-900/50 hover:from-purple-800/55 hover:to-indigo-900/55 backdrop-blur-md border ${
+                    isSelected ? 'border-amber-300 ring-2 ring-amber-300/50' : game.cardBorder
+                  } text-left flex flex-col justify-between gap-3 cursor-pointer`}
                 >
                   <div className="flex items-center justify-between gap-2">
                     <div
-                      className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${game.badgeGradient} flex items-center justify-center text-3xl shadow-md animate-float-slow`}
+                      className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${game.badgeGradient} flex items-center justify-center text-3xl shadow-sm animate-float-slow`}
                     >
                       {game.emoji}
                     </div>
-                    <span className="px-2.5 py-1 rounded-full bg-amber-400/20 border border-amber-300/50 text-amber-200 font-display font-black text-xs flex items-center gap-1">
+                    <span className="px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-400/65 to-pink-500/65 border border-amber-200/85 text-white font-display font-black text-xs flex items-center gap-1">
                       <Play className="w-3 h-3 fill-current" />
                       <span>{lang === 'nl' ? 'SPEEL' : 'PLAY'}</span>
                     </span>
@@ -642,7 +642,7 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                     <div className="font-display font-black text-lg text-white leading-snug">
                       {lang === 'nl' ? game.titleNl : game.titleEn}
                     </div>
-                    <div className="inline-block mt-1 px-2.5 py-0.5 rounded-lg bg-white/10 text-cyan-200 font-bold text-xs">
+                    <div className="inline-block mt-1 px-2.5 py-0.5 rounded-lg bg-purple-950/55 border border-purple-400/40 text-purple-100 font-bold text-xs">
                       {lang === 'nl' ? game.subtitleNl : game.subtitleEn}
                     </div>
                   </div>
@@ -668,10 +668,10 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                   setActiveGame(tab.id);
                   setViewMode('stage');
                 }}
-                className={`p-2 sm:p-2.5 rounded-2xl border-2 text-left transition-all flex items-center gap-2 cursor-pointer ${
+                className={`p-2 sm:p-2.5 rounded-2xl border text-left transition-all flex items-center gap-2 cursor-pointer backdrop-blur-md ${
                   active
-                    ? 'bg-gradient-to-r from-pink-500/45 via-purple-600/45 to-cyan-500/45 border-amber-300 shadow-[0_0_18px_rgba(251,191,36,0.35)] scale-[1.02]'
-                    : 'bg-purple-950/55 border-purple-800/50 hover:border-purple-500/60 opacity-85 hover:opacity-100'
+                    ? `bg-gradient-to-r ${tab.badgeGradient} border-amber-200 shadow-[0_0_16px_rgba(244,114,182,0.4)] scale-[1.02]`
+                    : `bg-gradient-to-br ${tab.badgeGradient} opacity-75 hover:opacity-100`
                 }`}
               >
                 <span className="text-xl sm:text-2xl shrink-0">{tab.emoji}</span>
@@ -679,7 +679,7 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                   <div className="font-display font-black text-xs sm:text-sm text-white truncate">
                     {lang === 'nl' ? tab.titleNl : tab.titleEn}
                   </div>
-                  <div className="text-[10px] sm:text-xs text-cyan-200 font-bold truncate">
+                  <div className="text-[10px] sm:text-xs text-purple-100 font-bold truncate">
                     {lang === 'nl' ? tab.subtitleNl : tab.subtitleEn}
                   </div>
                 </div>
@@ -692,23 +692,23 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
       {/* ==================== VIEW B: ACTIVE MINI-GAME STAGE ==================== */}
       {viewMode === 'stage' && (
         <div
-          className={`p-4 sm:p-6 rounded-3xl border-2 transition-all ${
+          className={`p-4 sm:p-6 rounded-3xl border backdrop-blur-md transition-all ${
             feedback === 'correct'
-              ? 'bg-emerald-950/60 border-emerald-400 shadow-[0_0_35px_rgba(52,211,153,0.45)]'
+              ? 'bg-emerald-500/20 border-emerald-300 shadow-[0_0_30px_rgba(52,211,153,0.35)]'
               : feedback === 'wrong'
-                ? 'bg-rose-950/60 border-rose-400'
-                : 'bg-purple-950/55 border-purple-700/70'
+                ? 'bg-rose-500/20 border-rose-300'
+                : 'bg-gradient-to-b from-purple-950/45 via-indigo-950/40 to-slate-950/45 border-purple-400/50'
           }`}
         >
           {/* Concept Chip & Next Level Progress */}
           <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
             <span
               data-testid="arcade-concept-badge"
-              className="px-3.5 py-1 rounded-full bg-amber-400/20 border border-amber-300/60 text-amber-200 text-xs sm:text-sm font-black"
+              className="px-3.5 py-1 rounded-full bg-fuchsia-500/30 border border-pink-300/70 text-pink-100 text-xs sm:text-sm font-black"
             >
               ✨ {conceptBadgeText}
             </span>
-            <span className="text-xs sm:text-sm font-black text-cyan-300">
+            <span className="text-xs sm:text-sm font-black text-amber-300">
               <Trophy className="w-4 h-4 inline mr-1" />
               {nextGroup
                 ? lang === 'nl'
@@ -723,13 +723,13 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
           {/* GAME 1: SAJA SODA-POP BUBBLES */}
           {challenge.kind === 'sodaBubbles' && (
             <div className="flex flex-col items-center text-center">
-              <div className="text-lg sm:text-2xl font-display font-black text-cyan-200 mb-3">
+              <div className="text-lg sm:text-2xl font-display font-black text-pink-100 mb-3">
                 {challenge.prompt[lang]}
               </div>
 
-              <div className="pad-3d-step my-2 px-9 py-4 rounded-3xl bg-gradient-to-r from-amber-400 via-pink-500 to-fuchsia-600 text-slate-950 font-display font-black text-4xl sm:text-6xl shadow-[0_0_30px_rgba(251,191,36,0.65)] flex items-center gap-3 animate-pulse-glow">
+              <div className="pad-3d-step my-2 px-9 py-4 rounded-3xl bg-gradient-to-r from-amber-400/45 via-pink-500/45 to-cyan-400/45 backdrop-blur-md border border-pink-200/80 text-white font-display font-black text-4xl sm:text-6xl shadow-[0_8px_24px_rgba(244,114,182,0.28)] flex items-center gap-3">
                 <span>🎯 {challenge.target}</span>
-                <span className="text-xl sm:text-3xl px-3.5 py-1 rounded-full bg-black/25 text-white">
+                <span className="text-xl sm:text-3xl px-3.5 py-1 rounded-full bg-purple-950/50 border border-amber-300/70 text-amber-200">
                   {challenge.op}
                 </span>
               </div>
@@ -749,41 +749,41 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                   return (
                     <div
                       data-testid="tang-bubble-burst-answer"
-                      className="pad-3d-step my-2.5 px-7 py-3 rounded-3xl bg-gradient-to-r from-emerald-400 via-amber-300 to-cyan-400 border-3 border-white text-slate-950 font-display font-black text-2xl sm:text-4xl shadow-[0_0_35px_rgba(52,211,153,0.9)] flex items-center gap-2.5 animate-target-burst"
+                      className="my-2.5 px-7 py-2.5 rounded-full bg-gradient-to-r from-emerald-400/50 via-cyan-400/50 to-pink-400/50 backdrop-blur-md border-2 border-amber-200 text-white font-display font-black text-2xl sm:text-4xl shadow-[0_0_30px_rgba(103,232,249,0.75)] flex items-center gap-2.5 animate-target-burst"
                     >
-                      <span>💥</span>
+                      <span>🫧</span>
                       <span>
                         {firstBub.value} {challenge.op} {secondBub.value} ={' '}
                         {challenge.target}!
                       </span>
-                      <span>🎉</span>
+                      <span>✨</span>
                     </div>
                   );
                 }
 
                 return (
-                  <div className="my-2 px-5 py-2 rounded-2xl bg-slate-950/85 border border-cyan-400/50 flex items-center gap-2.5 font-display font-black text-xl sm:text-2xl">
+                  <div className="my-2 px-5 py-1.5 rounded-full bg-purple-950/50 backdrop-blur-sm border border-purple-400/50 flex items-center gap-2.5 font-display font-black text-xl sm:text-2xl">
                     <span
-                      className={`px-3.5 py-1 rounded-xl border-2 transition-all ${
+                      className={`px-3.5 py-0.5 rounded-full border transition-all ${
                         firstBub
-                          ? 'bg-amber-400 text-slate-950 border-white scale-110 shadow-[0_0_12px_rgba(251,191,36,0.7)]'
-                          : 'bg-purple-950/80 text-cyan-300 border-cyan-400/50'
+                          ? 'bg-cyan-400/45 text-white border-cyan-200 scale-110 shadow-[0_0_14px_rgba(103,232,249,0.65)]'
+                          : 'bg-purple-900/40 text-cyan-200/80 border-purple-400/40'
                       }`}
                     >
                       {firstBub ? firstBub.value : '?'}
                     </span>
-                    <span className="text-pink-400">{challenge.op}</span>
+                    <span className="text-pink-300">{challenge.op}</span>
                     <span
-                      className={`px-3.5 py-1 rounded-xl border-2 transition-all ${
+                      className={`px-3.5 py-0.5 rounded-full border transition-all ${
                         secondBub
-                          ? 'bg-amber-400 text-slate-950 border-white scale-110 shadow-[0_0_12px_rgba(251,191,36,0.7)]'
-                          : 'bg-purple-950/80 text-cyan-300 border-cyan-400/50'
+                          ? 'bg-pink-400/45 text-white border-pink-200 scale-110 shadow-[0_0_14px_rgba(244,114,182,0.65)]'
+                          : 'bg-purple-900/40 text-cyan-200/80 border-purple-400/40'
                       }`}
                     >
                       {secondBub ? secondBub.value : '?'}
                     </span>
-                    <span className="text-amber-300">=</span>
-                    <span className="text-white">{challenge.target}</span>
+                    <span className="text-purple-200">=</span>
+                    <span className="text-amber-300">{challenge.target}</span>
                   </div>
                 );
               })()}
@@ -793,39 +793,42 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                   const isSelected = selectedBubbleIds.includes(bub.id);
                   const isBursting = isSelected && feedback === 'correct';
                   return (
-                    <button
+                    <div
                       key={bub.id}
-                      type="button"
-                      data-testid={`tang-bubble-${bub.id}`}
-                      data-value={bub.value}
-                      aria-pressed={isSelected}
-                      onClick={() => handleBubbleTap(bub.id)}
-                      className={`keep-dark-card sphere-3d-bubble h-24 sm:h-28 rounded-full bg-gradient-to-br font-display font-black text-3xl sm:text-4xl text-white flex flex-col items-center justify-center cursor-pointer ${
-                        isBursting
-                          ? 'sphere-3d-bubble-burst from-emerald-400 via-amber-300 to-cyan-400 border-4 border-white z-20'
-                          : isSelected
-                            ? 'sphere-3d-bubble-selected from-amber-500 via-pink-500 to-fuchsia-600 border-4 border-yellow-200 z-10'
-                            : `${bub.color} border-2 border-white/75 hover:scale-110 animate-float-slow`
-                      }`}
+                      className="relative flex items-center justify-center h-24 sm:h-28"
                     >
+                      {/* Popped sparkle number left behind as the soap bubble bursts */}
                       {isBursting && (
-                        <span className="absolute -top-3 -right-2 text-xl sm:text-2xl animate-bounce pointer-events-none">
-                          💥
-                        </span>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none animate-pop-in z-20">
+                          <span className="font-display font-black text-3xl sm:text-4xl text-amber-200 drop-shadow-[0_0_12px_rgba(251,191,36,0.9)]">
+                            ✨{bub.value}✨
+                          </span>
+                        </div>
                       )}
-                      <span className="drop-shadow-[0_2px_3px_rgba(0,0,0,0.45)]">
-                        {isBursting ? `✨${bub.value}✨` : bub.value}
-                      </span>
-                      <span className="text-[11px] font-extrabold opacity-95">
-                        {isBursting
-                          ? '💥 POP!'
-                          : isSelected
-                            ? lang === 'nl'
-                              ? '✓ GROOT!'
-                              : '✓ BIG!'
-                            : '🫧 SODA'}
-                      </span>
-                    </button>
+
+                      <button
+                        type="button"
+                        data-testid={`tang-bubble-${bub.id}`}
+                        data-value={bub.value}
+                        aria-pressed={isSelected}
+                        onClick={() => handleBubbleTap(bub.id)}
+                        className={`real-soap-bubble real-soap-bubble-${bub.color} w-24 h-24 sm:w-28 sm:h-28 rounded-full font-display font-black text-3xl sm:text-4xl text-white flex items-center justify-center cursor-pointer ${
+                          isBursting
+                            ? 'real-soap-bubble-burst z-20'
+                            : isSelected
+                              ? 'real-soap-bubble-selected z-10'
+                              : 'hover:scale-105 animate-float-slow'
+                        }`}
+                      >
+                        <span
+                          className={`drop-shadow-[0_2px_6px_rgba(15,23,42,0.55)] ${
+                            isSelected ? 'scale-110 text-white' : ''
+                          }`}
+                        >
+                          {bub.value}
+                        </span>
+                      </button>
+                    </div>
                   );
                 })}
               </div>
@@ -835,13 +838,13 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
           {/* GAME 2: HONMOON LASER-LIJN (INTERACTIVE NUMBER LINE) */}
           {challenge.kind === 'numberLine' && (
             <div className="flex flex-col items-center text-center">
-              <div className="text-lg sm:text-2xl font-display font-black text-cyan-200 mb-2">
+              <div className="text-lg sm:text-2xl font-display font-black text-cyan-100 mb-2">
                 {challenge.prompt[lang]}
               </div>
 
               <div
                 data-testid="tang-numberline-equation"
-                className="pad-3d-step my-2 px-7 py-3 rounded-3xl bg-slate-950/90 border-2 border-cyan-400 font-display font-black text-3xl sm:text-5xl text-white shadow-[0_0_25px_rgba(34,211,238,0.4)]"
+                className="pad-3d-step my-2 px-7 py-3 rounded-3xl bg-gradient-to-r from-cyan-500/30 via-blue-500/25 to-indigo-500/30 backdrop-blur-md border border-cyan-200/75 font-display font-black text-3xl sm:text-5xl text-white shadow-[0_8px_24px_rgba(56,189,248,0.22)]"
               >
                 📏{' '}
                 {lang === 'nl'
@@ -849,7 +852,7 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                   : (challenge.questionEquationEn ?? challenge.questionEquation)}
               </div>
 
-              <div className="w-full max-w-2xl my-3 p-3 sm:p-4 rounded-2xl bg-slate-950/85 border border-cyan-500/40">
+              <div className="w-full max-w-2xl my-3 p-3 sm:p-4 rounded-2xl bg-slate-900/45 backdrop-blur-md border border-cyan-300/45">
                 {(() => {
                   const range = Math.max(1, challenge.max - challenge.min);
                   const toX = (val: number) =>
@@ -873,39 +876,30 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                           x2="100%"
                           y2="0%"
                         >
-                          <stop offset="0%" stopColor="#38bdf8" />
-                          <stop offset="50%" stopColor="#f472b6" />
-                          <stop offset="100%" stopColor="#fbbf24" />
+                          <stop offset="0%" stopColor="rgba(56, 189, 248, 0.85)" />
+                          <stop offset="50%" stopColor="rgba(251, 191, 36, 0.9)" />
+                          <stop offset="100%" stopColor="rgba(244, 114, 182, 0.85)" />
                         </linearGradient>
                         <radialGradient id="orbPink3D" cx="35%" cy="30%" r="70%">
-                          <stop offset="0%" stopColor="#fbcfe8" />
-                          <stop offset="45%" stopColor="#ec4899" />
-                          <stop offset="100%" stopColor="#831843" />
+                          <stop offset="0%" stopColor="#ffffff" />
+                          <stop offset="45%" stopColor="rgba(249, 168, 212, 0.9)" />
+                          <stop offset="100%" stopColor="rgba(236, 72, 153, 0.85)" />
                         </radialGradient>
                         <radialGradient id="orbGold3D" cx="35%" cy="30%" r="70%">
-                          <stop offset="0%" stopColor="#fef9c3" />
-                          <stop offset="45%" stopColor="#fbbf24" />
-                          <stop offset="100%" stopColor="#92400e" />
+                          <stop offset="0%" stopColor="#ffffff" />
+                          <stop offset="50%" stopColor="rgba(253, 230, 138, 0.92)" />
+                          <stop offset="100%" stopColor="rgba(245, 158, 11, 0.88)" />
                         </radialGradient>
                       </defs>
 
-                      {/* 3D Track Shadow + Main Laser Rail */}
-                      <line
-                        x1="35"
-                        y1="92"
-                        x2="565"
-                        y2="92"
-                        stroke="#020617"
-                        strokeWidth="8"
-                        strokeLinecap="round"
-                      />
+                      {/* Translucent Colored Laser Rail */}
                       <line
                         x1="35"
                         y1="88"
                         x2="565"
                         y2="88"
                         stroke="url(#honmoonLineGrad)"
-                        strokeWidth="7"
+                        strokeWidth="6"
                         strokeLinecap="round"
                       />
 
@@ -917,7 +911,7 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                             x2={zeroX}
                             y2="112"
                             stroke="#fbbf24"
-                            strokeWidth="3.5"
+                            strokeWidth="3"
                             strokeDasharray="4 2"
                           />
                           <text
@@ -944,11 +938,11 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                               x2={x}
                               y2={isZero ? 102 : 97}
                               stroke={
-                                t < 0
-                                  ? '#38bdf8'
-                                  : isZero
-                                    ? '#fbbf24'
-                                    : '#f472b6'
+                                isZero
+                                  ? '#fbbf24'
+                                  : t < 0
+                                    ? '#7dd3fc'
+                                    : '#f9a8d4'
                               }
                               strokeWidth={isZero ? 3.5 : 2.5}
                             />
@@ -957,10 +951,10 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                               y="122"
                               textAnchor="middle"
                               fill={
-                                t < 0
-                                  ? '#7dd3fc'
-                                  : isZero
-                                    ? '#fde047'
+                                isZero
+                                  ? '#fde68a'
+                                  : t < 0
+                                    ? '#bae6fd'
                                     : '#fbcfe8'
                               }
                               fontSize="14"
@@ -975,9 +969,9 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                       <path
                         d={`M ${startX} 84 Q ${midX} 14 ${endX} 84`}
                         fill="none"
-                        stroke="#22d3ee"
-                        strokeWidth="4"
-                        strokeDasharray="8 4"
+                        stroke="rgba(103, 232, 249, 0.9)"
+                        strokeWidth="3.5"
+                        strokeDasharray="7 4"
                       />
 
                       <rect
@@ -986,15 +980,15 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                         width="72"
                         height="26"
                         rx="12"
-                        fill="#0f172a"
-                        stroke="#22d3ee"
-                        strokeWidth="2"
+                        fill="rgba(14, 116, 144, 0.65)"
+                        stroke="rgba(165, 243, 252, 0.9)"
+                        strokeWidth="1.6"
                       />
                       <text
                         x={midX}
                         y="26"
                         textAnchor="middle"
-                        fill="#67e8f9"
+                        fill="#ecfeff"
                         fontSize="15"
                         fontWeight="900"
                       >
@@ -1007,34 +1001,34 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                               : `${challenge.jumpVal}`}
                       </text>
 
-                      {/* 3D Start Sphere */}
+                      {/* 3D Start Rose-Glass Sphere */}
                       <circle
                         cx={startX}
                         cy="88"
                         r="12"
                         fill="url(#orbPink3D)"
                         stroke="#ffffff"
-                        strokeWidth="2.5"
+                        strokeWidth="2"
                       />
                       <text
                         x={startX}
                         y="68"
                         textAnchor="middle"
-                        fill="#f9a8d4"
+                        fill="#fdf2f8"
                         fontSize="14"
                         fontWeight="900"
                       >
                         {challenge.startVal}
                       </text>
 
-                      {/* 3D Target/End Sphere */}
+                      {/* 3D Target/End Golden-Glass Sphere */}
                       <circle
                         cx={endX}
                         cy="88"
                         r="14"
                         fill="url(#orbGold3D)"
                         stroke="#ffffff"
-                        strokeWidth="2.5"
+                        strokeWidth="2"
                       />
                       <text
                         x={endX}
@@ -1059,7 +1053,7 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                     data-testid={`tang-choice-${c}`}
                     data-correct={c === challenge.answer ? 'true' : 'false'}
                     onClick={() => handleChoiceTap(c)}
-                    className="keep-dark-card btn-3d-key py-4 sm:py-5 rounded-2xl bg-gradient-to-br from-cyan-600 via-blue-600 to-purple-700 hover:from-amber-400 hover:to-cyan-400 hover:text-slate-950 border-2 border-white/80 font-display font-black text-3xl sm:text-4xl text-white transition-all hover:scale-105 cursor-pointer"
+                    className="keep-dark-card btn-3d-key py-4 sm:py-5 rounded-2xl bg-gradient-to-b from-cyan-400/35 to-blue-600/35 hover:from-cyan-400/50 hover:to-blue-500/50 border border-cyan-200/70 font-display font-black text-3xl sm:text-4xl text-white transition-all hover:scale-105 cursor-pointer"
                   >
                     {c}
                   </button>
@@ -1071,26 +1065,26 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
           {/* GAME 3: GWI-MA SUB-ZERO PORTAAL */}
           {challenge.kind === 'subZero' && (
             <div className="flex flex-col items-center text-center">
-              <div className="text-lg sm:text-2xl font-display font-black text-cyan-200 mb-2">
+              <div className="text-lg sm:text-2xl font-display font-black text-sky-100 mb-2">
                 {challenge.prompt[lang]}
               </div>
 
               <div
                 data-testid="tang-subzero-equation"
-                className="pad-3d-step my-2 px-7 py-3.5 rounded-3xl bg-slate-950/90 border-2 border-sky-400 font-display font-black text-3xl sm:text-5xl text-white shadow-[0_0_30px_rgba(56,189,248,0.45)]"
+                className="pad-3d-step my-2 px-7 py-3.5 rounded-3xl bg-gradient-to-r from-sky-500/35 via-indigo-500/30 to-rose-500/35 backdrop-blur-md border border-sky-200/75 font-display font-black text-3xl sm:text-5xl text-white shadow-[0_8px_24px_rgba(56,189,248,0.22)]"
               >
                 ❄️ {challenge.equationDisplay}
               </div>
 
-              <div className="w-full max-w-xl my-3 p-4 rounded-2xl bg-slate-950/90 border border-sky-500/40">
+              <div className="w-full max-w-xl my-3 p-4 rounded-2xl bg-slate-900/45 backdrop-blur-md border border-sky-300/45">
                 <div className="flex items-center justify-between text-xs sm:text-sm font-black mb-2.5">
-                  <span className="text-sky-300">
+                  <span className="text-cyan-300">
                     ❄️ SUB-ZERO ({challenge.scaleMin}°)
                   </span>
-                  <span className="text-amber-300 px-2.5 py-0.5 rounded-full bg-amber-400/20 border border-amber-300/40">
+                  <span className="text-amber-200 px-2.5 py-0.5 rounded-full bg-amber-400/25 border border-amber-300/65">
                     {lang === 'nl' ? '0° GRENS' : '0° ZERO'}
                   </span>
-                  <span className="text-pink-300">
+                  <span className="text-rose-300">
                     🔥 +{challenge.scaleMax}°
                   </span>
                 </div>
@@ -1110,29 +1104,37 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
 
                   return (
                     <div className="flex items-center">
-                      {/* 3D Thermometer Frost Bulb */}
-                      <div className="sphere-3d-bubble w-11 h-11 rounded-full bg-gradient-to-br from-cyan-300 via-sky-500 to-blue-900 border-2 border-white/80 -mr-2.5 z-20 flex items-center justify-center text-sm shadow-lg">
+                      {/* 3D Realistic Translucent Ice-Blue Glass Thermometer Bulb */}
+                      <div className="sphere-3d-bubble w-11 h-11 rounded-full bg-gradient-to-br from-cyan-300/70 via-sky-500/60 to-blue-700/70 border border-cyan-100/85 -mr-2.5 z-20 flex items-center justify-center text-sm shadow-[0_0_16px_rgba(56,189,248,0.45)]">
                         ❄️
                       </div>
 
-                      {/* 3D Cylindrical Glass Tube */}
-                      <div className="tube-3d-glass relative flex-1 h-11 rounded-full bg-gradient-to-r from-sky-950 via-slate-900 to-rose-950 border-2 border-sky-400/70 overflow-visible flex items-center">
-                        {/* 3D Mercury / Plasma Fill up to currentTemp */}
+                      {/* 3D Clear Cylindrical Glass Tube with Cool-to-Warm Tint */}
+                      <div className="tube-3d-glass relative flex-1 h-11 rounded-full bg-gradient-to-r from-sky-500/20 via-slate-900/40 to-rose-500/25 border border-white/65 overflow-visible flex items-center">
+                        {/* Realistic Translucent Thermometer Liquid Column (Icy Blue -> Warm Rose) */}
                         <div
                           style={{ width: `${curPct}%` }}
-                          className="h-full rounded-l-full bg-gradient-to-r from-cyan-400 via-sky-400 to-pink-500 opacity-75 transition-all"
+                          className={`h-full rounded-l-full transition-all ${
+                            challenge.currentTemp < 0
+                              ? 'bg-gradient-to-r from-cyan-400/75 via-sky-400/70 to-teal-300/75'
+                              : 'bg-gradient-to-r from-cyan-400/75 via-amber-300/70 to-rose-500/80'
+                          }`}
                         />
 
-                        {/* 0° Golden Divider Ring */}
+                        {/* 0° Golden-Glass Divider Ring */}
                         <div
                           style={{ left: `${zeroPct}%` }}
-                          className="absolute -top-1 -bottom-1 w-1.5 rounded-full bg-amber-300 shadow-[0_0_10px_rgba(251,191,36,0.9)] z-10"
+                          className="absolute -top-1 -bottom-1 w-1.5 rounded-full bg-amber-300/90 shadow-[0_0_10px_rgba(251,191,36,0.85)] z-10"
                         />
 
-                        {/* 3D Raised Temperature Puck */}
+                        {/* 3D Translucent Glass Temperature Puck */}
                         <div
                           style={{ left: `${curPct}%` }}
-                          className="pad-3d-step absolute -translate-x-1/2 px-3.5 py-1 rounded-full bg-gradient-to-b from-cyan-300 to-sky-500 text-slate-950 font-display font-black text-sm sm:text-base border-2 border-white z-20"
+                          className={`pad-3d-step absolute -translate-x-1/2 px-3.5 py-1 rounded-full font-display font-black text-sm sm:text-base border border-white z-20 ${
+                            challenge.currentTemp < 0
+                              ? 'bg-cyan-300/85 text-slate-950 shadow-[0_4px_14px_rgba(56,189,248,0.5)]'
+                              : 'bg-rose-400/85 text-white shadow-[0_4px_14px_rgba(244,63,94,0.5)]'
+                          }`}
                         >
                           {challenge.currentTemp}°
                         </div>
@@ -1143,22 +1145,25 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 w-full max-w-xl mt-2">
-                {challenge.choices.map((c) => (
-                  <button
-                    key={c}
-                    type="button"
-                    data-testid={`tang-choice-${c}`}
-                    data-correct={c === challenge.answer ? 'true' : 'false'}
-                    onClick={() => handleChoiceTap(c)}
-                    className={`keep-dark-card btn-3d-key py-4 sm:py-5 rounded-2xl border-2 border-white/80 font-display font-black text-3xl sm:text-4xl text-white transition-all hover:scale-105 cursor-pointer ${
-                      c < 0
-                        ? 'bg-gradient-to-br from-sky-600 via-blue-700 to-indigo-800 hover:from-sky-400 hover:to-cyan-300 hover:text-slate-950'
-                        : 'bg-gradient-to-br from-pink-600 via-fuchsia-600 to-purple-700 hover:from-amber-400 hover:to-pink-500 hover:text-slate-950'
-                    }`}
-                  >
-                    {c}
-                  </button>
-                ))}
+                {challenge.choices.map((c) => {
+                  const isNeg = String(c).trim().startsWith('-');
+                  return (
+                    <button
+                      key={c}
+                      type="button"
+                      data-testid={`tang-choice-${c}`}
+                      data-correct={c === challenge.answer ? 'true' : 'false'}
+                      onClick={() => handleChoiceTap(c)}
+                      className={`keep-dark-card btn-3d-key py-4 sm:py-5 rounded-2xl font-display font-black text-3xl sm:text-4xl text-white transition-all hover:scale-105 cursor-pointer border ${
+                        isNeg
+                          ? 'bg-gradient-to-b from-sky-400/35 to-blue-600/40 hover:from-sky-400/50 hover:to-blue-500/55 border-sky-200/75'
+                          : 'bg-gradient-to-b from-rose-400/35 to-amber-500/35 hover:from-rose-400/50 hover:to-amber-500/50 border-rose-200/75'
+                      }`}
+                    >
+                      {c}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -1166,13 +1171,13 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
           {/* GAME 4: SAINGEOM MISSING RUNE */}
           {challenge.kind === 'missingRune' && (
             <div className="flex flex-col items-center text-center">
-              <div className="text-lg sm:text-2xl font-display font-black text-amber-200 mb-2">
+              <div className="text-lg sm:text-2xl font-display font-black text-amber-100 mb-2">
                 {challenge.prompt[lang]}
               </div>
 
               <div
                 data-testid="tang-missing-equation"
-                className="pad-3d-step my-3 px-8 py-5 rounded-3xl bg-slate-950/90 border-2 border-amber-400 font-display font-black text-3xl sm:text-5xl text-white shadow-[0_0_25px_rgba(251,191,36,0.35)] animate-pulse-glow"
+                className="pad-3d-step my-3 px-8 py-5 rounded-3xl bg-gradient-to-r from-amber-400/35 via-orange-500/30 to-rose-500/35 backdrop-blur-md border border-amber-200/75 font-display font-black text-3xl sm:text-5xl text-white shadow-[0_8px_24px_rgba(251,191,36,0.22)]"
               >
                 ⚔️ {challenge.equationDisplay}
               </div>
@@ -1185,7 +1190,7 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                     data-testid={`tang-choice-${c}`}
                     data-correct={c === challenge.answer ? 'true' : 'false'}
                     onClick={() => handleChoiceTap(c)}
-                    className="keep-dark-card btn-3d-key py-4 sm:py-5 rounded-2xl bg-gradient-to-br from-purple-700 via-fuchsia-600 to-pink-600 hover:from-amber-400 hover:to-pink-500 hover:text-slate-950 border-2 border-white/80 font-display font-black text-3xl sm:text-4xl text-white transition-all hover:scale-105 cursor-pointer"
+                    className="keep-dark-card btn-3d-key py-4 sm:py-5 rounded-2xl bg-gradient-to-b from-amber-400/35 to-orange-600/35 hover:from-amber-400/50 hover:to-orange-500/50 border border-amber-200/75 font-display font-black text-3xl sm:text-4xl text-white transition-all hover:scale-105 cursor-pointer"
                   >
                     {c}
                   </button>
@@ -1197,17 +1202,17 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
           {/* GAME 5: DERPY'S BREAK-APART BEAT */}
           {challenge.kind === 'breakApart' && (
             <div className="flex flex-col items-center text-center">
-              <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-amber-400/20 border-2 border-amber-300/60 text-amber-200 text-xl sm:text-2xl font-display font-black mb-2">
+              <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-emerald-400/25 border border-emerald-200/70 text-emerald-100 text-xl sm:text-2xl font-display font-black mb-2">
                 <span>🐯 {challenge.fullEquation}</span>
               </div>
 
-              <div className="text-base sm:text-xl font-bold text-purple-100 max-w-xl mb-2">
+              <div className="text-base sm:text-xl font-bold text-emerald-100 max-w-xl mb-2">
                 {challenge.stepPrompt[lang]}
               </div>
 
               <div
                 data-testid="tang-breakapart-bridge"
-                className="pad-3d-step my-2 px-7 py-4 rounded-3xl bg-slate-950/90 border-2 border-cyan-400 font-display font-black text-2xl sm:text-4xl text-cyan-200 shadow-[0_0_25px_rgba(34,211,238,0.35)]"
+                className="pad-3d-step my-2 px-7 py-4 rounded-3xl bg-gradient-to-r from-emerald-400/35 via-teal-500/30 to-cyan-500/35 backdrop-blur-md border border-emerald-200/75 font-display font-black text-2xl sm:text-4xl text-white shadow-[0_8px_24px_rgba(16,185,129,0.22)]"
               >
                 {challenge.bridgeDisplay}
               </div>
@@ -1220,7 +1225,7 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                     data-testid={`tang-choice-${c}`}
                     data-correct={c === challenge.answer ? 'true' : 'false'}
                     onClick={() => handleChoiceTap(c)}
-                    className="keep-dark-card btn-3d-key py-4 sm:py-5 rounded-2xl bg-gradient-to-br from-cyan-600 via-blue-600 to-indigo-700 hover:from-amber-400 hover:to-cyan-400 hover:text-slate-950 border-2 border-white/80 font-display font-black text-3xl sm:text-4xl text-white transition-all hover:scale-105 cursor-pointer"
+                    className="keep-dark-card btn-3d-key py-4 sm:py-5 rounded-2xl bg-gradient-to-b from-emerald-400/35 to-teal-600/35 hover:from-emerald-400/50 hover:to-teal-500/50 border border-emerald-200/75 font-display font-black text-3xl sm:text-4xl text-white transition-all hover:scale-105 cursor-pointer"
                   >
                     {c}
                   </button>
@@ -1232,13 +1237,13 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
           {/* GAME 6: MIRA'S KRISTAL-LAB */}
           {challenge.kind === 'powerLab' && (
             <div className="flex flex-col items-center text-center">
-              <div className="text-lg sm:text-2xl font-display font-black text-pink-200 mb-2">
+              <div className="text-lg sm:text-2xl font-display font-black text-pink-100 mb-2">
                 {challenge.prompt[lang]}
               </div>
 
               <div
                 data-testid="tang-powerlab-formula"
-                className="pad-3d-step my-3 px-7 py-5 rounded-3xl bg-slate-950/90 border-2 border-pink-400 font-display font-black text-3xl sm:text-5xl text-white shadow-[0_0_28px_rgba(244,114,182,0.4)]"
+                className="pad-3d-step my-3 px-7 py-5 rounded-3xl bg-gradient-to-r from-fuchsia-500/35 via-purple-500/30 to-pink-500/35 backdrop-blur-md border border-pink-200/75 font-display font-black text-3xl sm:text-5xl text-white shadow-[0_8px_24px_rgba(236,72,153,0.22)]"
               >
                 🧪{' '}
                 {lang === 'nl'
@@ -1247,21 +1252,21 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
               </div>
 
               {challenge.visualBar && (
-                <div className="w-full max-w-md my-2 p-3.5 rounded-2xl bg-slate-950/85 border border-pink-400/40">
+                <div className="w-full max-w-md my-2 p-3.5 rounded-2xl bg-slate-900/45 backdrop-blur-md border border-pink-300/45">
                   <div className="flex justify-between text-xs font-black text-pink-200 mb-2">
                     <span>
                       {lang === 'nl'
                         ? '⚡ 3D KRISTAL-CILINDER'
                         : '⚡ 3D CRYSTAL CYLINDER'}
                     </span>
-                    <span className="text-amber-300">
+                    <span className="text-amber-200">
                       {challenge.visualBar.label}
                     </span>
                   </div>
 
-                  {/* 3D Cylindrical Crystal Tube (Segmented blocks for fractions/ratios, smooth 3D tube for %) */}
+                  {/* 3D Cylindrical Clear Glass Tube with Translucent Glowing Crystal/Potion Liquid */}
                   {challenge.visualBar.total <= 12 ? (
-                    <div className="tube-3d-glass h-9 w-full rounded-full bg-purple-950/95 border-2 border-pink-400/70 p-1 flex items-center gap-1 overflow-hidden">
+                    <div className="tube-3d-glass h-9 w-full rounded-full bg-slate-950/45 border border-white/65 p-1 flex items-center gap-1 overflow-hidden">
                       {Array.from({
                         length: Math.max(1, challenge.visualBar.total),
                       }).map((_, segIdx) => {
@@ -1271,15 +1276,15 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                             key={segIdx}
                             className={`h-full flex-1 first:rounded-l-full last:rounded-r-full rounded-sm transition-all ${
                               isFilled
-                                ? 'bg-gradient-to-b from-amber-300 via-pink-500 to-fuchsia-700 border-t border-white/80 shadow-[0_0_10px_rgba(244,114,182,0.6)]'
-                                : 'bg-slate-900/75 border border-purple-800/40'
+                                ? 'bg-gradient-to-b from-amber-300/80 via-pink-500/70 to-cyan-400/75 border-t border-white shadow-[0_0_10px_rgba(244,114,182,0.55)]'
+                                : 'bg-white/5 border border-white/20'
                             }`}
                           />
                         );
                       })}
                     </div>
                   ) : (
-                    <div className="tube-3d-glass h-9 w-full rounded-full bg-purple-950/95 overflow-hidden border-2 border-pink-400/70 p-1">
+                    <div className="tube-3d-glass h-9 w-full rounded-full bg-slate-950/45 overflow-hidden border border-white/65 p-1">
                       <div
                         style={{
                           width: `${Math.min(
@@ -1291,7 +1296,7 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                             )
                           )}%`,
                         }}
-                        className="h-full rounded-full bg-gradient-to-b from-amber-300 via-pink-500 to-cyan-500 border-t border-white/80 transition-all"
+                        className="h-full rounded-full bg-gradient-to-r from-amber-300/80 via-pink-500/75 to-cyan-400/80 border-t border-white transition-all"
                       />
                     </div>
                   )}
@@ -1306,7 +1311,7 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                     data-testid={`tang-choice-${c}`}
                     data-correct={c === challenge.answer ? 'true' : 'false'}
                     onClick={() => handleChoiceTap(c)}
-                    className="keep-dark-card btn-3d-key py-4 sm:py-5 rounded-2xl bg-gradient-to-br from-pink-600 via-purple-600 to-indigo-700 hover:from-amber-400 hover:to-pink-400 hover:text-slate-950 border-2 border-white/80 font-display font-black text-3xl sm:text-4xl text-white transition-all hover:scale-105 cursor-pointer"
+                    className="keep-dark-card btn-3d-key py-4 sm:py-5 rounded-2xl bg-gradient-to-b from-fuchsia-400/35 to-purple-600/35 hover:from-fuchsia-400/50 hover:to-purple-500/50 border border-pink-200/75 font-display font-black text-3xl sm:text-4xl text-white transition-all hover:scale-105 cursor-pointer"
                   >
                     {c}
                   </button>
@@ -1318,18 +1323,18 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
           {/* GAME 7: ZOEY'S STAGE GRID (ARRAYS, AREA, PERIMETER & 3D VOLUME) */}
           {challenge.kind === 'stageGrid' && (
             <div className="flex flex-col items-center text-center">
-              <div className="text-lg sm:text-2xl font-display font-black text-violet-200 mb-2">
+              <div className="text-lg sm:text-2xl font-display font-black text-violet-100 mb-2">
                 {challenge.prompt[lang]}
               </div>
 
               <div
                 data-testid="tang-stagegrid-formula"
-                className="pad-3d-step my-2 px-7 py-3.5 rounded-3xl bg-slate-950/90 border-2 border-violet-400 font-display font-black text-3xl sm:text-5xl text-white shadow-[0_0_25px_rgba(167,139,250,0.4)]"
+                className="pad-3d-step my-2 px-7 py-3.5 rounded-3xl bg-gradient-to-r from-violet-500/35 via-indigo-500/30 to-cyan-500/35 backdrop-blur-md border border-violet-200/75 font-display font-black text-3xl sm:text-5xl text-white shadow-[0_8px_24px_rgba(139,92,246,0.22)]"
               >
                 🍱 {challenge.visualFormula}
               </div>
 
-              {/* 3D Interactive Rotatable Stage Volume OR 3D Extruded Stage Block Deck */}
+              {/* 3D Interactive Rotatable Stage Volume OR 3D Translucent Colored Crystal Stage Block Deck */}
               {challenge.mode === 'volume' || challenge.height3d ? (
                 <StageVolume3D
                   cols={challenge.cols}
@@ -1338,8 +1343,8 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                   lang={lang}
                 />
               ) : (
-                <div className="pad-3d-step my-3 p-4 rounded-3xl bg-slate-950/90 border-2 border-violet-400/60 flex flex-col items-center gap-2.5">
-                  <div className="flex items-center gap-2 text-xs sm:text-sm font-display font-black text-amber-300">
+                <div className="pad-3d-step my-3 p-4 rounded-3xl bg-slate-900/45 backdrop-blur-md border border-violet-300/50 flex flex-col items-center gap-2.5">
+                  <div className="flex items-center gap-2 text-xs sm:text-sm font-display font-black text-amber-200">
                     {challenge.mode === 'array' ? (
                       <span>
                         ↔ {challenge.cols} × ↕ {challenge.rows}{' '}
@@ -1349,24 +1354,26 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                       </span>
                     ) : (
                       <>
-                        <span>
+                        <span className="text-pink-200">
                           ↔{' '}
                           {challenge.mode === 'missingSide'
                             ? '? m'
                             : `${challenge.cols}m`}
                         </span>
-                        <span>×</span>
-                        <span>↕ {challenge.rows}m</span>
+                        <span className="text-white/60">×</span>
+                        <span className="text-cyan-200">
+                          ↕ {challenge.rows}m
+                        </span>
                       </>
                     )}
                   </div>
 
-                  {/* 3D Stage Platform Base with 3D Extruded Stage Cubes */}
+                  {/* Translucent Colored Crystal Cubes on Glass Stage Platform */}
                   <div
                     style={{
                       gridTemplateColumns: `repeat(${Math.min(12, challenge.cols)}, minmax(0, 1fr))`,
                     }}
-                    className="grid gap-2 p-3 rounded-2xl bg-gradient-to-b from-purple-900/90 to-indigo-950 border-t-2 border-violet-300/50 border-b-[7px] border-violet-950 shadow-[0_6px_0_rgba(30,10,60,0.95)]"
+                    className="grid gap-2 p-3 rounded-2xl bg-violet-950/40 border border-violet-300/45 shadow-[inset_0_2px_6px_rgba(255,255,255,0.25)]"
                   >
                     {Array.from({
                       length:
@@ -1375,7 +1382,7 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                     }).map((_, idx) => (
                       <div
                         key={idx}
-                        className="block-3d-tile w-7 h-7 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-amber-300 via-pink-500 to-fuchsia-600 animate-pop-in"
+                        className="block-3d-tile w-7 h-7 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-cyan-300/65 via-pink-400/55 to-violet-500/65 animate-pop-in"
                       />
                     ))}
                   </div>
@@ -1390,7 +1397,7 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                     data-testid={`tang-choice-${c}`}
                     data-correct={c === challenge.answer ? 'true' : 'false'}
                     onClick={() => handleChoiceTap(c)}
-                    className="keep-dark-card btn-3d-key py-4 sm:py-5 rounded-2xl bg-gradient-to-br from-violet-600 via-purple-600 to-fuchsia-600 hover:from-amber-400 hover:to-pink-400 hover:text-slate-950 border-2 border-white/80 font-display font-black text-3xl sm:text-4xl text-white transition-all hover:scale-105 cursor-pointer"
+                    className="keep-dark-card btn-3d-key py-4 sm:py-5 rounded-2xl bg-gradient-to-b from-violet-400/35 to-indigo-600/35 hover:from-violet-400/50 hover:to-indigo-500/50 border border-violet-200/75 font-display font-black text-3xl sm:text-4xl text-white transition-all hover:scale-105 cursor-pointer"
                   >
                     {c}
                   </button>
@@ -1402,21 +1409,21 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
           {/* GAME 8: JINU'S SOUL SCALE (3D VISUAL PAN BALANCE) */}
           {challenge.kind === 'soulScale' && (
             <div className="flex flex-col items-center text-center">
-              <div className="text-lg sm:text-2xl font-display font-black text-amber-200 mb-2">
+              <div className="text-lg sm:text-2xl font-display font-black text-amber-100 mb-2">
                 {challenge.prompt[lang]}
               </div>
 
               <div
                 data-testid="tang-soulscale-equation"
-                className="pad-3d-step my-2 px-7 py-3.5 rounded-3xl bg-slate-950/90 border-2 border-amber-400 font-display font-black text-3xl sm:text-5xl text-white shadow-[0_0_25px_rgba(251,191,36,0.4)]"
+                className="pad-3d-step my-2 px-7 py-3.5 rounded-3xl bg-gradient-to-r from-amber-400/35 via-yellow-500/25 to-cyan-400/35 backdrop-blur-md border border-amber-200/75 font-display font-black text-3xl sm:text-5xl text-white shadow-[0_8px_24px_rgba(251,191,36,0.22)]"
               >
                 ⚖️ {challenge.equationDisplay}
               </div>
 
-              {/* 3D Tactile Pan Balance Scale */}
-              <div className="w-full max-w-xl my-3 p-4 sm:p-5 rounded-3xl bg-slate-950/90 border border-amber-400/40 flex flex-col items-center">
+              {/* 3D Translucent Colored Glass & Golden-Brass Pan Balance Scale */}
+              <div className="w-full max-w-xl my-3 p-4 sm:p-5 rounded-3xl bg-slate-900/45 backdrop-blur-md border border-amber-300/45 flex flex-col items-center">
                 <div className="w-full flex flex-col items-center animate-tilt-balance">
-                  {/* Left & Right Pans with 3D Weight Blocks */}
+                  {/* Left & Right Pans with 3D Translucent Sapphire & Rose-Gold Weight Blocks */}
                   <div className="w-full flex items-end justify-between gap-4 sm:gap-8 px-1 sm:px-4">
                     {/* Left Pan */}
                     <div className="flex-1 flex flex-col items-center">
@@ -1424,16 +1431,16 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                         {challenge.leftItems.map((item, idx) => (
                           <div key={idx} className="flex flex-col items-center">
                             <div className="w-5 h-1.5 rounded-t-full border-t-2 border-x-2 border-cyan-200/80" />
-                            <div className="keep-dark-card scale-3d-weight px-4 py-2.5 rounded-xl bg-gradient-to-b from-cyan-400 via-sky-500 to-blue-700 font-display font-black text-xl sm:text-2xl text-white">
+                            <div className="keep-dark-card scale-3d-weight px-4 py-2.5 rounded-xl bg-gradient-to-b from-cyan-300/55 via-sky-500/45 to-blue-600/55 border border-cyan-100/85 font-display font-black text-xl sm:text-2xl text-white">
                               {item}
                             </div>
                           </div>
                         ))}
                       </div>
-                      {/* 3D Dish Pan Rim */}
-                      <div className="w-full h-4 rounded-b-2xl bg-gradient-to-b from-cyan-300 via-teal-400 to-cyan-700 border-t-2 border-white/80 border-b-4 border-cyan-950 shadow-md" />
+                      {/* 3D Translucent Cyan-Glass Dish Pan Rim */}
+                      <div className="w-full h-3.5 rounded-b-2xl bg-gradient-to-b from-cyan-200/65 via-cyan-400/45 to-blue-500/45 border-t border-white/90 border-b-2 border-cyan-200/60 shadow-sm" />
                       {/* Pan Support Pillar */}
-                      <div className="w-2.5 h-3 bg-gradient-to-r from-amber-300 via-yellow-100 to-amber-500" />
+                      <div className="w-2 h-3 bg-gradient-to-r from-amber-300/60 via-amber-100/90 to-amber-400/60" />
                     </div>
 
                     {/* Right Pan */}
@@ -1446,15 +1453,15 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                               <div
                                 className={`w-5 h-1.5 rounded-t-full border-t-2 border-x-2 ${
                                   isMystery
-                                    ? 'border-yellow-200'
+                                    ? 'border-amber-200/90'
                                     : 'border-pink-200/80'
                                 }`}
                               />
                               <div
                                 className={`keep-dark-card scale-3d-weight px-4 py-2.5 rounded-xl font-display font-black text-xl sm:text-2xl ${
                                   isMystery
-                                    ? 'bg-gradient-to-b from-amber-300 via-amber-400 to-pink-500 text-slate-950 animate-pulse-glow'
-                                    : 'bg-gradient-to-b from-pink-400 via-fuchsia-500 to-purple-700 text-white'
+                                    ? 'bg-gradient-to-b from-amber-300/70 via-amber-400/55 to-pink-500/60 text-white border border-amber-100 shadow-[0_0_20px_rgba(251,191,36,0.45)]'
+                                    : 'bg-gradient-to-b from-pink-300/55 via-fuchsia-500/45 to-purple-600/55 text-white border border-pink-100/85'
                                 }`}
                               >
                                 {item}
@@ -1463,45 +1470,45 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                           );
                         })}
                       </div>
-                      {/* 3D Dish Pan Rim */}
-                      <div className="w-full h-4 rounded-b-2xl bg-gradient-to-b from-pink-300 via-fuchsia-400 to-purple-800 border-t-2 border-white/80 border-b-4 border-purple-950 shadow-md" />
+                      {/* 3D Translucent Rose-Glass Dish Pan Rim */}
+                      <div className="w-full h-3.5 rounded-b-2xl bg-gradient-to-b from-pink-200/65 via-pink-400/45 to-purple-500/45 border-t border-white/90 border-b-2 border-pink-200/60 shadow-sm" />
                       {/* Pan Support Pillar */}
-                      <div className="w-2.5 h-3 bg-gradient-to-r from-amber-300 via-yellow-100 to-amber-500" />
+                      <div className="w-2 h-3 bg-gradient-to-r from-amber-300/60 via-amber-100/90 to-amber-400/60" />
                     </div>
                   </div>
 
-                  {/* 3D Metallic Crossbar Beam */}
-                  <div className="w-11/12 h-3.5 rounded-full bg-gradient-to-b from-amber-200 via-amber-400 to-amber-700 border-t border-white/80 border-b-4 border-amber-950 shadow-lg flex items-center justify-center">
-                    <div className="w-4 h-4 rounded-full bg-amber-300 border-2 border-white shadow" />
+                  {/* 3D Translucent Golden-Amber Crossbar Beam */}
+                  <div className="w-11/12 h-3 rounded-full bg-gradient-to-b from-amber-200/80 via-amber-400/65 to-amber-600/65 border-t border-white/95 border-b border-amber-200/60 shadow-md flex items-center justify-center">
+                    <div className="w-3.5 h-3.5 rounded-full bg-amber-100 border border-amber-400 shadow-sm" />
                   </div>
                 </div>
 
-                {/* 3D Faceted Golden Fulcrum Pyramid & Base */}
+                {/* 3D Faceted Amber-Crystal Fulcrum Prism & Base */}
                 <svg viewBox="0 0 80 34" className="w-20 h-9 -mt-0.5 overflow-visible">
-                  {/* Left lit facet */}
+                  {/* Left sunlit amber-crystal facet */}
                   <polygon
                     points="40,2 14,28 40,28"
-                    fill="#fbbf24"
-                    stroke="#fef08a"
-                    strokeWidth="1"
+                    fill="rgba(253, 230, 138, 0.75)"
+                    stroke="rgba(255, 255, 255, 0.9)"
+                    strokeWidth="1.2"
                   />
-                  {/* Right shaded facet */}
+                  {/* Right shaded amber-crystal facet */}
                   <polygon
                     points="40,2 66,28 40,28"
-                    fill="#d97706"
-                    stroke="#fef08a"
-                    strokeWidth="1"
+                    fill="rgba(245, 158, 11, 0.62)"
+                    stroke="rgba(255, 255, 255, 0.85)"
+                    strokeWidth="1.2"
                   />
-                  {/* 3D Plinth Base */}
+                  {/* 3D Amber-Crystal Plinth Base */}
                   <rect
                     x="8"
                     y="27"
                     width="64"
                     height="6"
                     rx="3"
-                    fill="#92400e"
-                    stroke="#fbbf24"
-                    strokeWidth="1"
+                    fill="rgba(251, 191, 36, 0.7)"
+                    stroke="rgba(255, 255, 255, 0.9)"
+                    strokeWidth="1.2"
                   />
                 </svg>
               </div>
@@ -1514,7 +1521,7 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                     data-testid={`tang-choice-${c}`}
                     data-correct={c === challenge.answer ? 'true' : 'false'}
                     onClick={() => handleChoiceTap(c)}
-                    className="keep-dark-card btn-3d-key py-4 sm:py-5 rounded-2xl bg-gradient-to-br from-amber-500 via-pink-500 to-purple-700 hover:from-amber-300 hover:to-pink-400 hover:text-slate-950 border-2 border-white/80 font-display font-black text-3xl sm:text-4xl text-white transition-all hover:scale-105 cursor-pointer"
+                    className="keep-dark-card btn-3d-key py-4 sm:py-5 rounded-2xl bg-gradient-to-b from-amber-400/35 to-yellow-600/35 hover:from-amber-400/50 hover:to-yellow-500/50 border border-amber-200/75 font-display font-black text-3xl sm:text-4xl text-white transition-all hover:scale-105 cursor-pointer"
                   >
                     {c}
                   </button>
@@ -1526,28 +1533,28 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
           {/* GAME 9: RUMI'S RHYTHM PATTERN (STEPPING-STONE SEQUENCES) */}
           {challenge.kind === 'rhythmPattern' && (
             <div className="flex flex-col items-center text-center">
-              <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-rose-500/25 border border-rose-300/60 text-rose-200 font-display font-black text-sm sm:text-base mb-2">
+              <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-rose-400/25 border border-rose-200/70 text-rose-100 font-display font-black text-sm sm:text-base mb-2">
                 <span>🎵 {challenge.ruleBadge[lang]}</span>
               </div>
 
-              <div className="text-lg sm:text-2xl font-display font-black text-amber-200 mb-3">
+              <div className="text-lg sm:text-2xl font-display font-black text-rose-100 mb-3">
                 {challenge.prompt[lang]}
               </div>
 
-              {/* 3D Stepping-Stone Rhythm Pads */}
+              {/* 3D Translucent Colored Glass Stepping-Stone Rhythm Pads */}
               <div
                 data-testid="tang-rhythm-sequence"
-                className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 my-3 p-4 rounded-3xl bg-slate-950/90 border-2 border-rose-400/60"
+                className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 my-3 p-4 rounded-3xl bg-slate-900/45 backdrop-blur-md border border-rose-300/45"
               >
                 {challenge.sequence.map((val, idx) => {
                   const isMissing = val === '?';
                   return (
                     <React.Fragment key={idx}>
                       <div
-                        className={`keep-dark-card pad-3d-step min-w-[68px] sm:min-w-[84px] h-20 sm:h-24 px-4 rounded-3xl border-2 flex items-center justify-center font-display font-black text-3xl sm:text-4xl ${
+                        className={`keep-dark-card pad-3d-step min-w-[68px] sm:min-w-[84px] h-20 sm:h-24 px-4 rounded-3xl flex items-center justify-center font-display font-black text-3xl sm:text-4xl ${
                           isMissing
-                            ? 'bg-gradient-to-br from-amber-400 to-pink-500 text-slate-950 border-white animate-pulse-glow'
-                            : 'bg-gradient-to-br from-purple-700 to-indigo-900 text-white border-pink-400/70'
+                            ? 'bg-gradient-to-b from-amber-300/65 via-pink-500/55 to-rose-500/60 text-white border-2 border-amber-100 shadow-[0_0_20px_rgba(251,191,36,0.45)]'
+                            : 'bg-gradient-to-b from-purple-400/35 to-indigo-600/35 text-white border border-purple-200/70'
                         }`}
                       >
                         {val}
@@ -1570,7 +1577,7 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                     data-testid={`tang-choice-${c}`}
                     data-correct={c === challenge.answer ? 'true' : 'false'}
                     onClick={() => handleChoiceTap(c)}
-                    className="keep-dark-card btn-3d-key py-4 sm:py-5 rounded-2xl bg-gradient-to-br from-rose-600 via-pink-600 to-purple-700 hover:from-amber-400 hover:to-pink-400 hover:text-slate-950 border-2 border-white/80 font-display font-black text-3xl sm:text-4xl text-white transition-all hover:scale-105 cursor-pointer"
+                    className="keep-dark-card btn-3d-key py-4 sm:py-5 rounded-2xl bg-gradient-to-b from-rose-400/35 to-purple-600/35 hover:from-rose-400/50 hover:to-purple-500/50 border border-rose-200/75 font-display font-black text-3xl sm:text-4xl text-white transition-all hover:scale-105 cursor-pointer"
                   >
                     {c}
                   </button>
@@ -1582,34 +1589,34 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
           {/* GAME 10: SUSSIE'S TARGET TRIO (3-CARD COMBO & ANGLES) */}
           {challenge.kind === 'targetTrio' && (
             <div className="flex flex-col items-center text-center">
-              <div className="text-lg sm:text-2xl font-display font-black text-teal-200 mb-3">
+              <div className="text-lg sm:text-2xl font-display font-black text-teal-100 mb-3">
                 {challenge.prompt[lang]}
               </div>
 
-              {/* 3D Holographic Power Slabs + Target Bullseye */}
+              {/* 3D Translucent Colored Glass Slabs + Target Bullseye */}
               <div
                 data-testid="tang-targettrio-cards"
-                className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-4 my-3 p-4 rounded-3xl bg-slate-950/90 border-2 border-teal-400/60"
+                className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-4 my-3 p-4 rounded-3xl bg-slate-900/45 backdrop-blur-md border border-teal-300/45"
               >
                 {challenge.cards.map((cardText, idx) => {
                   const isMissing = cardText.includes('?');
                   return (
                     <React.Fragment key={idx}>
                       <div
-                        className={`keep-dark-card pad-3d-step w-20 sm:w-24 h-24 sm:h-28 rounded-2xl border-2 flex items-center justify-center font-display font-black text-2xl sm:text-4xl ${
+                        className={`keep-dark-card pad-3d-step w-20 sm:w-24 h-24 sm:h-28 rounded-2xl flex items-center justify-center font-display font-black text-2xl sm:text-4xl ${
                           isMissing
-                            ? 'bg-gradient-to-br from-amber-400 to-pink-500 text-slate-950 border-white animate-pulse-glow'
-                            : 'bg-gradient-to-br from-teal-500 to-blue-700 text-white border-cyan-200/80 animate-float-slow'
+                            ? 'bg-gradient-to-b from-amber-300/65 via-pink-500/55 to-rose-500/60 text-white border-2 border-amber-100 shadow-[0_0_20px_rgba(251,191,36,0.45)]'
+                            : 'bg-gradient-to-b from-teal-400/35 to-cyan-600/35 text-white border border-teal-200/75 animate-float-slow'
                         }`}
                       >
                         {cardText}
                       </div>
                       {idx < 2 ? (
-                        <span className="font-display font-black text-2xl sm:text-3xl text-cyan-300">
+                        <span className="font-display font-black text-2xl sm:text-3xl text-cyan-200">
                           +
                         </span>
                       ) : (
-                        <span className="font-display font-black text-2xl sm:text-3xl text-amber-300">
+                        <span className="font-display font-black text-2xl sm:text-3xl text-amber-200">
                           =
                         </span>
                       )}
@@ -1617,7 +1624,7 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                   );
                 })}
 
-                <div className="keep-dark-card pad-3d-step px-6 h-24 sm:h-28 rounded-3xl bg-gradient-to-r from-amber-400 via-pink-500 to-fuchsia-600 border-2 border-white flex items-center justify-center font-display font-black text-3xl sm:text-5xl text-slate-950 shadow-[0_0_25px_rgba(251,191,36,0.5)]">
+                <div className="keep-dark-card pad-3d-step px-6 h-24 sm:h-28 rounded-3xl bg-gradient-to-br from-amber-400/55 via-pink-500/50 to-purple-600/55 border border-amber-200/85 flex items-center justify-center font-display font-black text-3xl sm:text-5xl text-white shadow-[0_8px_24px_rgba(244,114,182,0.28)]">
                   🎯 {challenge.targetDisplay}
                 </div>
               </div>
@@ -1630,7 +1637,7 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                     data-testid={`tang-choice-${c}`}
                     data-correct={c === challenge.answer ? 'true' : 'false'}
                     onClick={() => handleChoiceTap(c)}
-                    className="keep-dark-card btn-3d-key py-4 sm:py-5 rounded-2xl bg-gradient-to-br from-teal-600 via-cyan-600 to-blue-700 hover:from-amber-400 hover:to-cyan-300 hover:text-slate-950 border-2 border-white/80 font-display font-black text-3xl sm:text-4xl text-white transition-all hover:scale-105 cursor-pointer"
+                    className="keep-dark-card btn-3d-key py-4 sm:py-5 rounded-2xl bg-gradient-to-b from-teal-400/35 to-cyan-600/35 hover:from-teal-400/50 hover:to-cyan-500/50 border border-teal-200/75 font-display font-black text-3xl sm:text-4xl text-white transition-all hover:scale-105 cursor-pointer"
                   >
                     {c}
                   </button>

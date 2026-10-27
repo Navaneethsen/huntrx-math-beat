@@ -13,6 +13,7 @@ import {
   generateTargetTrioChallenge,
   generateTangChallenge,
   challengeToTrickyFact,
+  localizeFormulaLabel,
 } from '../src/engine/tangGamesEngine.ts';
 
 const GROUPS = ['g3', 'g4', 'g5', 'g6', 'g7', 'g8'];
@@ -191,6 +192,78 @@ test('generateTangChallenge dispatches all 10 K-Pop Demon Hunters Arcade games a
       assert.equal(fact.choices.length, 4);
       assert.ok(fact.choices.includes(fact.targetLabel));
       assert.ok(fact.hintNl.length > 5 && fact.hintEn.length > 5);
+    }
+  }
+});
+
+test('English localization across all 10 Arcade games and g3–g8 contains zero Dutch formula words', () => {
+  const dutchWordPattern = /\b(Gemiddelde|Midden|Dubbel|Omtrek|tegels|blokken|van)\b/i;
+  for (const gameId of GAMES) {
+    for (const group of GROUPS) {
+      for (let i = 0; i < 20; i++) {
+        const ch = generateTangChallenge(gameId, group, 2);
+        if (ch.kind === 'powerLab') {
+          const enFormula = ch.visualFormulaEn ?? ch.visualFormula;
+          assert.ok(
+            !dutchWordPattern.test(enFormula),
+            `Dutch word leaked in English PowerLab formula (${group}): ${enFormula}`
+          );
+        }
+        if (ch.kind === 'numberLine') {
+          const enEq = ch.questionEquationEn ?? ch.questionEquation;
+          assert.ok(
+            !dutchWordPattern.test(enEq),
+            `Dutch word leaked in English NumberLine equation (${group}): ${enEq}`
+          );
+        }
+        if (ch.kind === 'stageGrid') {
+          const enUnit = ch.unitLabelEn ?? ch.unitLabel;
+          assert.ok(
+            !dutchWordPattern.test(enUnit),
+            `Dutch word leaked in English StageGrid unit (${group}): ${enUnit}`
+          );
+        }
+        const fact = challengeToTrickyFact(ch);
+        const enDojoLabel = localizeFormulaLabel(fact.aLabel, 'en');
+        assert.ok(
+          !dutchWordPattern.test(enDojoLabel),
+          `Dutch word leaked in English Dojo label (${gameId}, ${group}): ${enDojoLabel}`
+        );
+      }
+    }
+  }
+  assert.equal(
+    localizeFormulaLabel('Gemiddelde (8, 6, 19)', 'en'),
+    'Mean (8, 6, 19)'
+  );
+  assert.equal(
+    localizeFormulaLabel('Mean (8, 6, 19)', 'nl'),
+    'Gemiddelde (8, 6, 19)'
+  );
+});
+
+test('Consecutive challenges across all 10 Arcade games and g3–g8 are non-repeating and varied', () => {
+  for (const gameId of GAMES) {
+    for (const group of GROUPS) {
+      const seenLabels = [];
+      for (let i = 0; i < 12; i++) {
+        const ch = generateTangChallenge(gameId, group, i % 5);
+        const fact = challengeToTrickyFact(ch);
+        const signature = `${fact.aLabel}|${fact.targetLabel}`;
+        if (seenLabels.length > 0) {
+          assert.notEqual(
+            signature,
+            seenLabels[seenLabels.length - 1],
+            `Back-to-back repeat detected in ${gameId} (${group}): ${signature}`
+          );
+        }
+        seenLabels.push(signature);
+      }
+      const uniqueCount = new Set(seenLabels).size;
+      assert.ok(
+        uniqueCount >= 10,
+        `Expected at least 10 unique questions out of 12 in ${gameId} (${group}), got ${uniqueCount}`
+      );
     }
   }
 });

@@ -219,11 +219,48 @@ function isBoundedFractionPuzzle(puzzle: KakoomaPuzzle): boolean {
   return puzzle.numbers.every((n) => n >= 1 && n <= max);
 }
 
+const recentSinglePuzzleSigs = new Map<string, string[]>();
+const recentChainCenterSigs = new Map<string, string[]>();
+const MAX_RECENT_PUZZLES = 18;
+
+function getSinglePuzzleSignature(p: KakoomaPuzzle): string {
+  const pairSorted = [...p.pair].sort((x, y) => x - y).join(',');
+  const den = p.fractionData?.denominator ?? 1;
+  return `${p.operation}:${p.target}:[${pairSorted}]/${den}`;
+}
+
 /**
  * Generates a single Kakooma puzzle with a guaranteed UNIQUE relationship triple.
  * Optionally forces the target number to equal `forcedTarget` (used for building multi-seal chains).
  */
 export function generateSinglePuzzle(
+  skill: SkillId,
+  size: SealSize,
+  forcedTarget?: number,
+  forcedFractionMeta?: FractionMeta,
+  minFractionOrb: number = 1
+): KakoomaPuzzle {
+  if (forcedTarget === undefined) {
+    const key = `${skill}:${size}`;
+    const sigHistory = recentSinglePuzzleSigs.get(key) ?? [];
+    let chosen = generateSinglePuzzleCore(skill, size, forcedTarget, forcedFractionMeta, minFractionOrb);
+    for (let retry = 0; retry < 16; retry++) {
+      const sig = getSinglePuzzleSignature(chosen);
+      const lastSig = sigHistory[sigHistory.length - 1];
+      const recentWindow = retry < 8 ? sigHistory : sigHistory.slice(-4);
+      if (sig !== lastSig && !recentWindow.includes(sig)) {
+        break;
+      }
+      chosen = generateSinglePuzzleCore(skill, size, forcedTarget, forcedFractionMeta, minFractionOrb);
+    }
+    const nextHistory = [...sigHistory, getSinglePuzzleSignature(chosen)].slice(-MAX_RECENT_PUZZLES);
+    recentSinglePuzzleSigs.set(key, nextHistory);
+    return chosen;
+  }
+  return generateSinglePuzzleCore(skill, size, forcedTarget, forcedFractionMeta, minFractionOrb);
+}
+
+function generateSinglePuzzleCore(
   skill: SkillId,
   size: SealSize,
   forcedTarget?: number,
@@ -696,6 +733,23 @@ function testSetOrCurrent(s: number[]): number[] {
  * Generates a Multi-Seal Chain Puzzle (4 or 5 outer puzzles whose answers form the Center Master Puzzle).
  */
 export function generateChainPuzzle(skill: SkillId, size: SealSize): KakoomaChainPuzzle {
+  const key = `${skill}:${size}`;
+  const sigHistory = recentChainCenterSigs.get(key) ?? [];
+  let chosen = generateChainPuzzleCore(skill, size);
+  for (let retry = 0; retry < 10; retry++) {
+    const sig = getSinglePuzzleSignature(chosen.centerPuzzle);
+    const lastSig = sigHistory[sigHistory.length - 1];
+    if (sig !== lastSig && !sigHistory.slice(-6).includes(sig)) {
+      break;
+    }
+    chosen = generateChainPuzzleCore(skill, size);
+  }
+  const nextHistory = [...sigHistory, getSinglePuzzleSignature(chosen.centerPuzzle)].slice(-14);
+  recentChainCenterSigs.set(key, nextHistory);
+  return chosen;
+}
+
+function generateChainPuzzleCore(skill: SkillId, size: SealSize): KakoomaChainPuzzle {
   const outerCount: SealSize = size === 6 ? 5 : 4;
   const op = getSkillOperation(skill);
 

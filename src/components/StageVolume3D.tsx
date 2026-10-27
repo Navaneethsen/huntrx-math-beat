@@ -26,51 +26,57 @@ interface ProjectedFace {
   stroke: string;
 }
 
+// Realistic, semi-transparent colored glass / crystal layer palettes preserving original vibrant hues
 const LAYER_PALETTES = [
   {
-    top: '#f472b6', // pink-400
-    topInner: '#fbcfe8',
-    left: '#db2777', // pink-600
-    leftInner: '#f472b6',
-    right: '#9d174d', // pink-800
-    rightInner: '#be185d',
-    bottom: '#831843',
+    // Translucent Cyan / Sapphire Glass
+    top: 'rgba(56, 189, 248, 0.76)',
+    topInner: 'rgba(125, 211, 252, 0.65)',
+    left: 'rgba(14, 165, 233, 0.68)',
+    leftInner: 'rgba(56, 189, 248, 0.55)',
+    right: 'rgba(2, 132, 199, 0.62)',
+    rightInner: 'rgba(14, 165, 233, 0.5)',
+    bottom: 'rgba(3, 105, 161, 0.58)',
   },
   {
-    top: '#38bdf8', // sky-400
-    topInner: '#bae6fd',
-    left: '#0284c7', // sky-600
-    leftInner: '#38bdf8',
-    right: '#075985', // sky-800
-    rightInner: '#0369a1',
-    bottom: '#0c4a6e',
+    // Translucent Rose-Pink Glass
+    top: 'rgba(244, 114, 182, 0.76)',
+    topInner: 'rgba(249, 168, 212, 0.65)',
+    left: 'rgba(236, 72, 153, 0.68)',
+    leftInner: 'rgba(244, 114, 182, 0.55)',
+    right: 'rgba(219, 39, 119, 0.62)',
+    rightInner: 'rgba(236, 72, 153, 0.5)',
+    bottom: 'rgba(157, 23, 77, 0.58)',
   },
   {
-    top: '#fbbf24', // amber-400
-    topInner: '#fde68a',
-    left: '#d97706', // amber-600
-    leftInner: '#fbbf24',
-    right: '#92400e', // amber-800
-    rightInner: '#b45309',
-    bottom: '#78350f',
+    // Translucent Amber-Gold Glass
+    top: 'rgba(251, 191, 36, 0.76)',
+    topInner: 'rgba(253, 224, 71, 0.65)',
+    left: 'rgba(245, 158, 11, 0.68)',
+    leftInner: 'rgba(251, 191, 36, 0.55)',
+    right: 'rgba(217, 119, 6, 0.62)',
+    rightInner: 'rgba(245, 158, 11, 0.5)',
+    bottom: 'rgba(180, 83, 9, 0.58)',
   },
   {
-    top: '#a78bfa', // violet-400
-    topInner: '#ddd6fe',
-    left: '#7c3aed', // violet-600
-    leftInner: '#a78bfa',
-    right: '#5b21b6', // violet-800
-    rightInner: '#6d28d9',
-    bottom: '#4c1d95',
+    // Translucent Amethyst-Violet Glass
+    top: 'rgba(167, 139, 250, 0.76)',
+    topInner: 'rgba(196, 181, 253, 0.65)',
+    left: 'rgba(139, 92, 246, 0.68)',
+    leftInner: 'rgba(167, 139, 250, 0.55)',
+    right: 'rgba(124, 58, 237, 0.62)',
+    rightInner: 'rgba(139, 92, 246, 0.5)',
+    bottom: 'rgba(91, 33, 182, 0.58)',
   },
   {
-    top: '#34d399', // emerald-400
-    topInner: '#a7f3d0',
-    left: '#059669', // emerald-600
-    leftInner: '#34d399',
-    right: '#065f46', // emerald-800
-    rightInner: '#047857',
-    bottom: '#064e3b',
+    // Translucent Emerald-Jade Glass
+    top: 'rgba(52, 211, 153, 0.76)',
+    topInner: 'rgba(110, 231, 183, 0.65)',
+    left: 'rgba(16, 185, 129, 0.68)',
+    leftInner: 'rgba(52, 211, 153, 0.55)',
+    right: 'rgba(5, 150, 105, 0.62)',
+    rightInner: 'rgba(16, 185, 129, 0.5)',
+    bottom: 'rgba(4, 120, 87, 0.58)',
   },
 ];
 
@@ -250,6 +256,7 @@ export const StageVolume3D: React.FC<StageVolume3DProps> = ({
 
   for (const iy of yIndices) {
     const palette = LAYER_PALETTES[iy % LAYER_PALETTES.length];
+    const crystalStroke = 'rgba(255, 255, 255, 0.8)';
     const y0 = yOffset + iy * (1 + layerGap);
     const y1 = y0 + 1;
 
@@ -278,7 +285,7 @@ export const StageVolume3D: React.FC<StageVolume3DProps> = ({
             depth: outer.depth,
             fill: palette.top,
             innerFill: palette.topInner,
-            stroke: '#1e1b4b',
+            stroke: crystalStroke,
           });
         }
 
@@ -299,7 +306,7 @@ export const StageVolume3D: React.FC<StageVolume3DProps> = ({
             depth: outer.depth,
             fill: palette.bottom,
             innerFill: palette.right,
-            stroke: '#1e1b4b',
+            stroke: crystalStroke,
           });
         }
 
@@ -320,7 +327,7 @@ export const StageVolume3D: React.FC<StageVolume3DProps> = ({
             depth: outer.depth,
             fill: palette.left,
             innerFill: palette.leftInner,
-            stroke: '#1e1b4b',
+            stroke: crystalStroke,
           });
         }
 
@@ -341,7 +348,7 @@ export const StageVolume3D: React.FC<StageVolume3DProps> = ({
             depth: outer.depth,
             fill: palette.left,
             innerFill: palette.leftInner,
-            stroke: '#1e1b4b',
+            stroke: crystalStroke,
           });
         }
 
@@ -362,7 +369,7 @@ export const StageVolume3D: React.FC<StageVolume3DProps> = ({
             depth: outer.depth,
             fill: palette.right,
             innerFill: palette.rightInner,
-            stroke: '#1e1b4b',
+            stroke: crystalStroke,
           });
         }
 
@@ -383,7 +390,7 @@ export const StageVolume3D: React.FC<StageVolume3DProps> = ({
             depth: outer.depth,
             fill: palette.right,
             innerFill: palette.rightInner,
-            stroke: '#1e1b4b',
+            stroke: crystalStroke,
           });
         }
       }
@@ -412,25 +419,25 @@ export const StageVolume3D: React.FC<StageVolume3DProps> = ({
   return (
     <div
       data-testid="tang-stagegrid-3d-viewer"
-      className="my-1.5 p-3 sm:p-3.5 rounded-3xl bg-slate-950/95 border-2 border-cyan-400/60 shadow-[0_0_30px_rgba(34,211,238,0.25)] flex flex-col items-center gap-2.5 w-full max-w-xl"
+      className="my-1.5 p-3 sm:p-3.5 rounded-3xl bg-gradient-to-b from-purple-950/45 via-indigo-950/40 to-slate-950/50 backdrop-blur-md border border-violet-300/55 shadow-[0_10px_28px_rgba(139,92,246,0.22)] flex flex-col items-center gap-2.5 w-full max-w-xl"
     >
       {/* Top 3D Dimensions & Drag Hint Bar */}
       <div className="flex flex-wrap items-center justify-between gap-2 w-full px-1">
         <div className="flex flex-wrap items-center gap-1.5 text-xs sm:text-sm font-display font-black">
-          <span className="px-2.5 py-1 rounded-xl bg-pink-500/20 border border-pink-400/50 text-pink-200">
+          <span className="px-2.5 py-1 rounded-xl bg-pink-500/35 border border-pink-300/75 text-pink-100">
             ↔ {cols}m
           </span>
-          <span className="text-purple-300">×</span>
-          <span className="px-2.5 py-1 rounded-xl bg-amber-500/20 border border-amber-400/50 text-amber-200">
+          <span className="text-purple-200">×</span>
+          <span className="px-2.5 py-1 rounded-xl bg-amber-500/35 border border-amber-300/75 text-amber-100">
             ↗ {rows}m
           </span>
-          <span className="text-purple-300">×</span>
-          <span className="px-2.5 py-1 rounded-xl bg-cyan-500/20 border border-cyan-400/50 text-cyan-200">
+          <span className="text-purple-200">×</span>
+          <span className="px-2.5 py-1 rounded-xl bg-cyan-500/35 border border-cyan-300/75 text-cyan-100">
             ↕ {height3d}m
           </span>
         </div>
 
-        <div className="px-3 py-1 rounded-full bg-purple-900/70 border border-purple-500/50 text-[11px] sm:text-xs font-bold text-purple-200">
+        <div className="px-3 py-1 rounded-full bg-purple-500/30 border border-purple-300/65 text-[11px] sm:text-xs font-bold text-purple-100">
           🖐️ {lang === 'nl' ? 'Sleep om 3D te draaien!' : 'Drag to rotate in 3D!'}
         </div>
       </div>
@@ -447,41 +454,41 @@ export const StageVolume3D: React.FC<StageVolume3DProps> = ({
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
           onPointerCancel={handlePointerUp}
-          className={`w-full h-[210px] sm:h-[240px] select-none touch-none rounded-2xl bg-gradient-to-b from-[#16072e] via-[#0d041c] to-[#06020e] border border-purple-700/50 ${
+          className={`w-full h-[210px] sm:h-[240px] select-none touch-none rounded-2xl bg-gradient-to-b from-sky-950/60 via-slate-900/50 to-slate-950/60 border border-white/35 ${
             isDragging ? 'cursor-grabbing' : 'cursor-grab'
           }`}
         >
-          {/* Subtle glowing stage floor ellipse */}
+          {/* Soft realistic shadow / reflection ellipse under crystal prism */}
           <ellipse
             cx={cx}
             cy={floorY}
             rx={floorRx}
             ry={floorRy}
-            fill="rgba(34, 211, 238, 0.08)"
-            stroke="rgba(34, 211, 238, 0.25)"
+            fill="rgba(56, 189, 248, 0.14)"
+            stroke="rgba(186, 230, 253, 0.45)"
             strokeDasharray="5 5"
           />
 
-          {/* Render sorted 3D cube faces */}
+          {/* Render sorted 3D crystal cube faces */}
           {faces.map((f) => (
             <g key={f.key}>
               <polygon
                 points={f.points}
                 fill={f.fill}
                 stroke={f.stroke}
-                strokeWidth="1.6"
+                strokeWidth="1.2"
                 strokeLinejoin="round"
               />
               <polygon
                 points={f.innerPoints}
                 fill={f.innerFill}
-                fillOpacity="0.45"
+                fillOpacity="0.4"
                 stroke="none"
               />
             </g>
           ))}
 
-          {/* 3D Floating Dimension Pills */}
+          {/* 3D Floating Tinted-Glass Dimension Pills */}
           <g
             transform={`translate(${Math.max(36, Math.min(384, widthLabelPos.sx))}, ${Math.max(18, Math.min(192, widthLabelPos.sy))})`}
           >
@@ -490,16 +497,16 @@ export const StageVolume3D: React.FC<StageVolume3DProps> = ({
               y="-12"
               width="56"
               height="24"
-              rx="8"
-              fill="#0f172a"
-              stroke="#f472b6"
-              strokeWidth="1.8"
+              rx="10"
+              fill="rgba(131, 24, 67, 0.65)"
+              stroke="rgba(249, 168, 212, 0.9)"
+              strokeWidth="1.5"
             />
             <text
               x="0"
               y="4"
               textAnchor="middle"
-              fill="#fbcfe8"
+              fill="#fce7f3"
               fontSize="12"
               fontWeight="900"
               fontFamily="Fredoka, sans-serif"
@@ -516,16 +523,16 @@ export const StageVolume3D: React.FC<StageVolume3DProps> = ({
               y="-12"
               width="56"
               height="24"
-              rx="8"
-              fill="#0f172a"
-              stroke="#fbbf24"
-              strokeWidth="1.8"
+              rx="10"
+              fill="rgba(120, 53, 15, 0.65)"
+              stroke="rgba(253, 224, 71, 0.9)"
+              strokeWidth="1.5"
             />
             <text
               x="0"
               y="4"
               textAnchor="middle"
-              fill="#fde68a"
+              fill="#fef3c7"
               fontSize="12"
               fontWeight="900"
               fontFamily="Fredoka, sans-serif"
@@ -542,16 +549,16 @@ export const StageVolume3D: React.FC<StageVolume3DProps> = ({
               y="-12"
               width="56"
               height="24"
-              rx="8"
-              fill="#0f172a"
-              stroke="#22d3ee"
-              strokeWidth="1.8"
+              rx="10"
+              fill="rgba(12, 74, 110, 0.65)"
+              stroke="rgba(103, 232, 249, 0.9)"
+              strokeWidth="1.5"
             />
             <text
               x="0"
               y="4"
               textAnchor="middle"
-              fill="#a5f3fc"
+              fill="#e0f2fe"
               fontSize="12"
               fontWeight="900"
               fontFamily="Fredoka, sans-serif"
@@ -565,7 +572,7 @@ export const StageVolume3D: React.FC<StageVolume3DProps> = ({
         {explodeLayers && (
           <div
             data-testid="stage-volume-layer-breakdown"
-            className="mt-2 px-4 py-1.5 rounded-2xl bg-cyan-500/20 border border-cyan-300/60 text-cyan-100 font-display font-black text-xs sm:text-sm animate-fadeIn"
+            className="mt-2 px-4 py-1.5 rounded-2xl bg-cyan-500/25 backdrop-blur-md border border-cyan-300/70 text-cyan-100 font-display font-black text-xs sm:text-sm animate-fadeIn"
           >
             🥞 {height3d} {lang === 'nl' ? 'lagen van' : 'layers of'} ({cols} × {rows} = {baseBlocks}){' '}
             {lang === 'nl' ? 'blokjes' : 'cubes'}!
@@ -582,10 +589,10 @@ export const StageVolume3D: React.FC<StageVolume3DProps> = ({
             soundEngine.playSelect();
             setExplodeLayers((prev) => !prev);
           }}
-          className={`px-4 py-1.5 rounded-xl font-display font-black text-xs sm:text-sm flex items-center gap-1.5 border cursor-pointer transition-all ${
+          className={`px-4 py-1.5 rounded-xl font-display font-black text-xs sm:text-sm flex items-center gap-1.5 border cursor-pointer backdrop-blur-md transition-all ${
             explodeLayers
-              ? 'bg-gradient-to-r from-cyan-400 to-pink-500 text-slate-950 border-white shadow-md'
-              : 'bg-purple-900/80 hover:bg-purple-800 border-cyan-400/60 text-cyan-200'
+              ? 'bg-cyan-400/40 text-white border-white shadow-[0_0_16px_rgba(34,211,238,0.45)]'
+              : 'bg-cyan-500/20 hover:bg-cyan-500/30 border-cyan-300/60 text-cyan-100'
           }`}
         >
           <Layers className="w-4 h-4" />
@@ -599,10 +606,10 @@ export const StageVolume3D: React.FC<StageVolume3DProps> = ({
             soundEngine.playTap();
             setAutoSpin((prev) => !prev);
           }}
-          className={`px-4 py-1.5 rounded-xl font-display font-black text-xs sm:text-sm flex items-center gap-1.5 border cursor-pointer transition-all ${
+          className={`px-4 py-1.5 rounded-xl font-display font-black text-xs sm:text-sm flex items-center gap-1.5 border cursor-pointer backdrop-blur-md transition-all ${
             autoSpin
-              ? 'bg-amber-400 text-slate-950 border-white shadow-md'
-              : 'bg-purple-900/80 hover:bg-purple-800 border-amber-400/50 text-amber-200'
+              ? 'bg-amber-400/45 text-white border-white shadow-[0_0_16px_rgba(251,191,36,0.45)]'
+              : 'bg-amber-500/20 hover:bg-amber-500/30 border-amber-300/60 text-amber-100'
           }`}
         >
           <RefreshCw className={`w-4 h-4 ${autoSpin ? 'animate-spin' : ''}`} />
