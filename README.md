@@ -1,46 +1,64 @@
-# 🎤✨ HUNTR/X: Honmoon Beat — K-Pop Math & Number-Sense Game
+# 🎤✨ HUNTR/X: Honmoon Beat — K-Pop Math & Number-Sense Super-App
 
-> **A high-dopamine, bilingual (🇳🇱 Dutch & 🇬🇧 English) mental math puzzle game inspired by [Greg Tang’s Kakooma®](https://tangmath.com/kakooma) and themed around _K-Pop Demon Hunters_ (HUNTR/X: Rumi, Mira, Zoey & Derpy the Blue Tiger vs. The Saja Boys).**
+> **A high-dopamine, bilingual (🇳🇱 Dutch & 🇬🇧 English) mental math & IB PYP curriculum game inspired by [Greg Tang’s Kakooma®](https://tangmath.com/kakooma) and themed around _K-Pop Demon Hunters_ (HUNTR/X: Rumi, Mira, Zoey & Derpy the Blue Tiger vs. Gwi-Ma & The Saja Boys).**
 
-Built specifically to help a **10-year-old** build mental math fluency, number bonds, and confidence across **Addition (`+`), Subtraction (`−`), Multiplication (`×`), Division (`÷`), and Fractions (`½`)**—playable solo or together with a parent on desktop, iPad, or mobile!
+Built for primary school learners (**Ages 6–12 · Groep 3–8 · Year 1–6 · IB PYP 1–6**) to build deep number sense, mental math fluency, and algebraic confidence across **Addition (`+`), Subtraction (`−`), Multiplication (`×`), Division (`÷`), Fractions (`½`), Decimals, Percentages (`%`), Negative Numbers, Ratios, and Algebra**—playable solo or together with a parent on desktop, iPad, or mobile!
 
 ---
 
 ## 🌟 Why Kids Love It (and Why It Works)
 
-### 1. 🧩 Core Kakooma® Number-Bond Gameplay + Step-by-Step Center Loop
+### 1. 🎓 IB PYP 1–6 / Groep 3–8 / Year 1–6 Curriculum Progression
+- **Interactive Group Selector & Mission Map**: Choose your school level from **Groep 3 / Year 1 / PYP 1 (Ages 6–7)** up to **Groep 8 / Year 6 / PYP 6 (Ages 11–12)**.
+- **Automatic Skill & Group Advancement**: Each school group features structured curriculum missions with visual progress bars. Completing a mission's target solves automatically levels the player up to the next skill mission—and graduating all missions in a group automatically promotes the player to the next school year!
+
+### 2. 🧩 Core Kakooma® Number-Bond Gameplay + Step-by-Step Center Loop
 - Inside every Honmoon Star Seal of 4, 5, or 6 numbers, **spot the hidden number bond** where one number is the result of two others (e.g., `8 + 7 = 15`, `15 − 7 = 8`, `6 × 8 = 48`, `48 ÷ 6 = 8`, or `1/4 + 2/4 = 3/4`).
 - **Animated Step-by-Step Center Evaluation**: When the right answer is tapped, the outer orbs smoothly shrink into the background while the **Center Loop expands** to evaluate the full expression step-by-step (`Part 1` ➔ `+ Part 2` ➔ `= Target!`) alongside a bite-sized mental math shortcut before moving to the next puzzle.
 
-### 2. ➕➖✖️➗🍕 All 5 Essential Math Operations
-- **➕ Addition (`+`)**: Make-10 bridges, friendly tens, and 2-digit mental splits up to 100.
-- **➖ Subtraction (`−`)**: Count-up jumps and difference bonds within 20 and within 100.
-- **✖️ Multiplication (`×`)**: Easy tables (`2×, 3×, 4×, 5×, 10×`) and all tables `2×–10×`.
-- **➗ Division (`÷`)**: Inverse multiplication fact families (tables `2–10`) for division fluency.
-- **🍕 Fractions (`½`)**: Every seal uses one shared denominator and every value stays within one whole, with **live SVG fraction pie slices** inside every orb.
-  - *Fractions Easy*: like-denominator addition in sixths, eighths, tenths, and twelfths (`1/8 + 3/8 = 4/8`).
-  - *Fractions Pro*: the same sums shown in simplest form, so kids spot equivalent fractions (`2/8 + 4/8 = 6/8` appears as `1/4 + 1/2 = 3/4`).
+### 3. 🕹️ HUNTR/X Math Arcade — 6 Progressive Visual Mini-Games
+Every Arcade mini-game dynamically scales its mathematical concepts to match the child's active **IB PYP / Groep 3–8** level and automatically advances to the next level every 5 solves:
+- **🫧 Saja Soda-Pop Bubbles**: Pop two floating soda bubbles that combine to hit the target—scaling from *Make-10 & Teen Bonds* (`g3`–`g4`) to *Factor Pairs* (`g5`), *Decimal Tenths* (`g6`), *Negative Integer Sums* (`g7`), and *Signed Integer Products* (`g8`).
+- **📏 Honmoon Laser-Line**: Interactive **SVG Number Line** with animated jump arcs—covering *Counting & Make-10 Jumps* (`g3`), *2-Digit & 100s Jumps* (`g4`–`g5`), *Midpoints & Decimal Number Lines* (`g6`), *Sub-Zero Crossing* (`g7`), and *Negative-to-Negative Integer Deltas* (`g8`).
+- **❄️ Gwi-Ma Sub-Zero Portal**: Interactive **Vertical Thermometer & Portal Gauge** with a glowing `0°C` frost line—scaling from *Temperature Steps* (`g3`–`g5`) to *Sub-Zero Drops, Negative Sums, and Positive-Minus-Negative* (`12 − (−8) = +20`) in `g6`–`g8`.
+- **⚔️ Saingeom Missing Rune**: Algebraic thinking and equations—scaling from *Missing Addends* (`8 + ? = 15`) and *Inverse Division* (`g3`–`g5`) to *Order of Operations (BODMAS)* (`g6`), *Square Numbers (`n²`) & 2-Step Algebra (`3x + 4 = 19`)* (`g7`), and *Exponents (`n³`), Square Roots (`√`), & Signed Equations* (`g8`).
+- **🐯 Derpy’s Break-Apart Beat**: Interactive **2-Step Split Chip Builder** teaching mental math decomposition—*Bridge-Through-10* (`8 + 7 = 8 + 2 + 5`), *Near-10 Compensation*, *Distributive Multiplication Splits* (`7 × 8 = 5×8 + 2×8`), and *2-Digit × 1-Digit Partitioning* (`16 × 6 = 10×6 + 6×6`).
+- **🧪 Mira’s Crystal Lab**: Interactive **10-Segment Visual Energy Bar** teaching *Place Value (Tens & Ones)*, *Rounding*, *Unit Fractions of a Quantity (`3/4 of 24`)*, *Fraction-to-Decimal Conversions*, *Percentages (`15% of 80`)*, and *Ratios, Mean/Average & Powers (`2⁴`)* in `g7`–`g8`.
 
-### 3. 🎮 5 Gamified Stage Modes (Solo, Co-op & 1v1)
+### 4. 🎮 5 Gamified Stage Modes (Solo, Co-op & 1v1)
 - **🌱 Idol Training (No Timer)**: Stress-free practice at your own pace with smart hints and visual number-sense tools.
 - **🔗 Golden Honmoon Chain (Classic Multi-Ring Kakooma)**: Solve 4 or 5 mini-seals in a pentagon ring—each winning answer flies into the center to unlock the **Final Golden Master Seal**!
-- **⚡ Concert Speed Rush (60s)**: 60-second round with combo streaks and demon boss purification bars. Every correct answer earns the same reward, so careful thinking is never punished.
+- **⚡ Concert Speed Rush (60s)**: 60-second round with combo streaks and demon boss purification bars.
 - **🎤 Parent & Daughter Duet (Co-op)**: Team up on the same screen, alternating turns to purify the Saja Boys together.
 - **⚔️ 1v1 Idol Battle (Split-Screen Duel + Fair Handicap)**: Head-to-head race on the same tablet, phone, or laptop! Includes a **Fair Skill Balancer** so the kid can play at her level (e.g., *Up to 20, 4 orbs*) while the parent plays a tougher level (e.g., *Up to 100, 6 orbs*).
 
-### 4. 🐯 Built-In Number-Sense Coaching (Zero Finger-Counting!)
-- **Derpy’s Number-Sense X-Ray**: One tap opens an interactive **10-Frame Dot Grid**, **Make-10 Jump Line**, **Smart Multiplication Split (`7 × 8 = 5×8 + 2×8`)**, or **Fraction Pie Visualizer** for the current puzzle.
-- **🥋 HUNTR/X Number Dojo**:
-  - **🎯 Fact Training (spaced review)**: Every fact the child misses in any mode (including her side of 1v1 and her co-op turns) lands here. A fact comes back only after 3 other puzzles, and counts as *cracked* after 2 spaced correct answers. Mastery pays bonus Starlight Gems (`💎`) once per fact. The strategy hint appears after an attempt, so she retrieves first.
-  - **📐 Fact-Family Triangle Lab**: Interactive visual triangles showing how knowing 1 number bond automatically unlocks 4 equations (`+ / −` or `× / ÷`).
-  - **🧠 5 Math Secrets**: Kid-friendly cards teaching *Make-10 First*, *Count-Up Subtraction*, *The 5× Stepping Stone*, *Double-Double*, and *Fraction Pie Slices*, each with a fresh **Try it** question that explains the trick after a wrong answer.
+### 5. ⚡ Speed-Based Starlight Gem Economy & HUNTR/X Number Dojo
+- **⚡ Speed-Tiered Starlight Gem (`💎`) Rewards**: Solving puzzles on the first try without hints in **Main Stage** or **Math Arcade** rewards bonus Gems based on solve speed:
+  - **⚡ Lightning (`≤ 3.5s`)**: `+8 💎`
+  - **🔥 Fast (`≤ 7.0s`)**: `+5 💎`
+  - **✨ Steady (`≤ 14.0s`)**: `+3 💎`
+  - **🐢 Careful (`> 14.0s` or with hint/retry)**: `+1 💎`
+- **🥋 Automatic Mistake Routing to the HUNTR/X Number Dojo**:
+  - **🎯 Fact Training (Spaced Review)**: Every mistake made on the Main Stage *or* in any of the 6 Arcade Mini-Games automatically lands in the Dojo queue. A fact returns after 3 other puzzles and counts as *cracked* after 2 spaced correct answers.
+  - **Modest Practice Token (`+2 💎` & `+30 XP`)**: Dojo practice is completely untimed so kids can reflect on the visual strategy hint; cracking a fact awards a modest `+2 💎` token so big Gem farming stays in live Stage and Arcade challenges.
+  - **📐 Fact-Family Triangle Lab & 🧠 5 Math Secrets**: Interactive visual triangles (`+ / −` and `× / ÷`) and guided strategy cards (*Make-10 First*, *Count-Up Subtraction*, *The 5× Stepping Stone*, *Double-Double*, and *Fraction Pie Slices*).
 
-### 5. 💎 K-Pop Dopamine, Themes & Accessibility
-- **🃏 Holographic Idol Photocard Album**: Earn **Starlight Gems (`💎`)** and XP from every puzzle to unbox 12 collectible HUNTR/X holographic photocards and climb from *Trainee* to *Golden Honmoon Legend*.
-- **🌙 Concert Dark Theme & ☀️ Daylight Pastel Light Theme**: Switch anytime with a single click in the top bar—both themes are tuned for high contrast and zero eye strain on iPad, phone, and desktop.
-- **🔤 Kid-Friendly Typography**: Rounded, friendly `Fredoka` and `Nunito` fonts with open counters so digits and fractions are effortless to read.
+### 6. 🃏 100 Collectible K-Pop Demon Hunters Photocards, Shapes & Fandom Lore
+- **100 Unique Photocards (`90–950 💎`)**: Unbox 100 unique cards featuring HUNTR/X (Rumi, Mira, Zoey), Derpy & Sussie, Celine, Bobby, Jinu, The Saja Boys, Gwi-Ma, Sacred Weapons, Honmoon Locations, Concert Anthems, and Iconic Movie Moments.
+- **Geometric Rarity Shapes & Silhouettes**:
+  - **🌟 Golden (Legendary)**: 8-Pointed Starburst Frame (`650–950 💎`)
+  - **🔮 Epic**: 6-Sided Crystal Hexagon Frame (`320–520 💎`)
+  - **💎 Rare**: 4-Pointed Octagonal Diamond Frame (`170–290 💎`)
+  - **🛡️ Common**: Rounded Crest Shield Frame (`90–150 💎`)
+  - Uncollected cards appear as mystery greyed-out silhouettes in the geometric shape of their rarity until unboxed!
+- **Interactive Lore & Movie Transcript Quotes**: Tap any unlocked card to open the **Photocard Lore Modal** with bilingual character bios, *K-Pop Demon Hunters* movie transcript quotes, power stats, and custom multi-layered Web Audio unboxing fanfares.
+
+### 7. 🎨 K-Pop Dopamine, Themes & Kid-Friendly Accessibility
+- **🌙 Concert Dark Theme & ☀️ Daylight Pastel Light Theme**: Switch anytime with a single click—both themes are tuned for high contrast and zero eye strain on iPad, phone, and desktop.
+- **🔤 Kid-Friendly Oversized Typography**: Rounded `Fredoka` and `Nunito` fonts with enlarged equations (`text-3xl sm:text-5xl`) and open counters so digits, negative signs, exponents, and fractions are effortless for kids to read.
+- **📱 Responsive Navigation**: Clean top header with a collapsible Hamburger menu that automatically closes on outside click or `Escape`.
 - **🇳🇱 / 🇬🇧 Instant Bilingual Toggle**: 100% translated into both **Dutch (Nederlands)** and **English**.
-- **🔊 Zero-Latency Web Audio Synth**: Built-in K-Pop chords, combo arpeggios, and victory fanfares synthesized directly in the browser (no external MP3 loading delays).
+- **🔊 Zero-Latency Web Audio Synth**: Built-in K-Pop chords, combo arpeggios, rarity-tiered card unboxing fanfares, and victory synth effects generated directly in the browser.
 
 ---
 

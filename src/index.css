@@ -11,7 +11,8 @@
     background-color: #090414;
     color: #ffffff;
     font-family: 'Nunito', system-ui, -apple-system, sans-serif;
-    letter-spacing: 0.01em;
+    font-size: 16.5px;
+    letter-spacing: 0.012em;
   }
 
   .font-display {

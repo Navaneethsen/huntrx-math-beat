@@ -330,6 +330,69 @@ class KPopSoundEngine {
       osc.stop(start + 0.56);
     });
   }
+
+  public playCardOpen() {
+    if (!this.sfxEnabled) return;
+    const ctx = this.getContext();
+    if (!ctx) return;
+
+    // Holographic card flip / lore reveal shimmer (celestial harp arpeggio)
+    const shimmerNotes = [659.25, 783.99, 987.77, 1318.51, 1567.98]; // E5, G5, B5, E6, G6
+    shimmerNotes.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = idx % 2 === 0 ? 'sine' : 'triangle';
+      const start = ctx.currentTime + idx * 0.045;
+      osc.frequency.setValueAtTime(freq, start);
+      osc.frequency.exponentialRampToValueAtTime(freq * 1.015, start + 0.25);
+
+      gain.gain.setValueAtTime(0.11, start);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + 0.28);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(start);
+      osc.stop(start + 0.29);
+    });
+  }
+
+  public playCardUnlock(rarity: 'common' | 'rare' | 'epic' | 'golden' = 'rare') {
+    if (!this.sfxEnabled) return;
+    const ctx = this.getContext();
+    if (!ctx) return;
+
+    // Tiered K-Pop holographic gacha unbox sound!
+    const chords: Record<'common' | 'rare' | 'epic' | 'golden', number[]> = {
+      common: [523.25, 659.25, 783.99, 1046.5],
+      rare: [587.33, 739.99, 880, 1174.66, 1479.98],
+      epic: [523.25, 659.25, 783.99, 1046.5, 1318.51, 1567.98],
+      golden: [523.25, 659.25, 783.99, 987.77, 1174.66, 1318.51, 1567.98, 2093.0],
+    };
+    const notes = chords[rarity] || chords.rare;
+    notes.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = rarity === 'golden' || idx === notes.length - 1 ? 'triangle' : 'sine';
+      const start = ctx.currentTime + idx * 0.055;
+      osc.frequency.setValueAtTime(freq, start);
+
+      gain.gain.setValueAtTime(0.16, start);
+      gain.gain.exponentialRampToValueAtTime(0.001, start + 0.48);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(start);
+      osc.stop(start + 0.5);
+    });
+  }
+
+  public playSelect() {
+    this.playTap();
+  }
+
+  public playWrong() {
+    this.playGentleMiss();
+  }
 }
 
 export const soundEngine = new KPopSoundEngine();

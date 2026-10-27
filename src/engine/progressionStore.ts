@@ -2,8 +2,16 @@ import type { Language } from '../i18n/translations';
 import type { Operation, FractionMeta, SkillId, SealSize } from './kakoomaGenerator';
 import { gcd } from './kakoomaGenerator.ts';
 import type { FactReviewState } from './learningLoop';
+export {
+  PHOTOCARD_CATALOG,
+  RARITY_COSTS,
+  type PhotocardItem,
+  type PhotocardRarity,
+  type PhotocardCategory,
+} from './photocardCatalog.ts';
 
 export type ProfileHunterId = 'rumi' | 'mira' | 'zoey';
+export type SchoolGroupId = 'g3' | 'g4' | 'g5' | 'g6' | 'g7' | 'g8';
 
 export type ProfileGameMode =
   | 'soloPractice'
@@ -24,127 +32,6 @@ export const STAGE_SKILL_ORDER: SkillId[] = [
   'fracEasy',
   'fracPro',
   'mixBoss',
-];
-
-export interface PhotocardItem {
-  id: string;
-  rarity: 'rare' | 'epic' | 'golden';
-  icon: string;
-  image: string;
-  color: string;
-  title: { nl: string; en: string };
-  subtitle: { nl: string; en: string };
-}
-
-export const PHOTOCARD_CATALOG: PhotocardItem[] = [
-  {
-    id: 'card_rumi_gold',
-    rarity: 'golden',
-    icon: '👑',
-    image: '/images/card_rumi_gold.png',
-    color: 'from-amber-400 via-yellow-300 to-fuchsia-600',
-    title: { nl: 'Golden Leader Rumi', en: 'Golden Leader Rumi' },
-    subtitle: { nl: 'Saingeom Sterrenzwaard Meesteres', en: 'Saingeom Star-Sword Master' },
-  },
-  {
-    id: 'card_mira_dance',
-    rarity: 'golden',
-    icon: '💃',
-    image: '/images/card_mira_dance.png',
-    color: 'from-pink-500 via-rose-400 to-cyan-400',
-    title: { nl: 'Neon Dancer Mira', en: 'Neon Dancer Mira' },
-    subtitle: { nl: 'Gokdo Maan-Speer Virtuoos', en: 'Gokdo Moon-Polearm Virtuoso' },
-  },
-  {
-    id: 'card_zoey_rap',
-    rarity: 'golden',
-    icon: '🎤',
-    image: '/images/card_zoey_rap.png',
-    color: 'from-lime-400 via-emerald-400 to-purple-600',
-    title: { nl: 'Maknae Rapper Zoey', en: 'Maknae Rapper Zoey' },
-    subtitle: { nl: 'Shinkal Spirit-Messen Kampioen', en: 'Shinkal Spirit-Blades Champion' },
-  },
-  {
-    id: 'card_derpy_tiger',
-    rarity: 'epic',
-    icon: '🐯',
-    image: '/images/card_derpy_tiger.png',
-    color: 'from-sky-400 via-cyan-300 to-blue-600',
-    title: { nl: 'Derpy de Blauwe Tijger', en: 'Derpy the Blue Tiger' },
-    subtitle: { nl: 'Magische Reken-Mascotte', en: 'Magical Math Mascot' },
-  },
-  {
-    id: 'card_sussie_magpie',
-    rarity: 'rare',
-    icon: '🐦‍⬛',
-    image: '/images/card_sussie_magpie.png',
-    color: 'from-indigo-400 via-purple-500 to-slate-800',
-    title: { nl: 'Sussie de Zes-Ogige Ekster', en: 'Sussie the Six-Eyed Magpie' },
-    subtitle: { nl: 'Spot elk geheim getal!', en: 'Spots every hidden number!' },
-  },
-  {
-    id: 'card_golden_honmoon',
-    rarity: 'golden',
-    icon: '🌕',
-    image: '/images/card_golden_honmoon.png',
-    color: 'from-yellow-300 via-amber-500 to-orange-600',
-    title: { nl: 'De Gouden Honmoon', en: 'The Golden Honmoon' },
-    subtitle: { nl: 'Onbreekbare Muziek-Barrière', en: 'Unbreakable Music Barrier' },
-  },
-  {
-    id: 'card_jinu_redeemed',
-    rarity: 'epic',
-    icon: '🎩',
-    image: '/images/card_jinu_redeemed.png',
-    color: 'from-purple-500 via-fuchsia-500 to-indigo-900',
-    title: { nl: 'Jinu (Saja Boys)', en: 'Jinu (Saja Boys)' },
-    subtitle: { nl: '400-Jarige Idol Rival', en: '400-Year-Old Idol Rival' },
-  },
-  {
-    id: 'card_soda_pop',
-    rarity: 'rare',
-    icon: '🥤',
-    image: '/images/card_soda_pop.png',
-    color: 'from-pink-400 via-cyan-400 to-blue-500',
-    title: { nl: 'Soda Pop Spellbreaker', en: 'Soda Pop Spellbreaker' },
-    subtitle: { nl: 'Immuun voor demonen-hypnose!', en: 'Immune to demon hypnosis!' },
-  },
-  {
-    id: 'card_lightstick_vip',
-    rarity: 'epic',
-    icon: '🪄',
-    image: '/images/card_lightstick_vip.png',
-    color: 'from-fuchsia-400 via-pink-500 to-amber-300',
-    title: { nl: 'HUNTR/X VIP Lightstick', en: 'HUNTR/X VIP Lightstick' },
-    subtitle: { nl: 'Verlicht het hele stadion!', en: 'Lights up the whole stadium!' },
-  },
-  {
-    id: 'card_saingeom_blade',
-    rarity: 'epic',
-    icon: '⚔️',
-    image: '/images/card_saingeom_blade.png',
-    color: 'from-cyan-300 via-blue-500 to-purple-700',
-    title: { nl: 'Sterren-Saingeom Zwaard', en: 'Starlight Saingeom Sword' },
-    subtitle: { nl: 'Snijdt door elke lastige som!', en: 'Cuts through any tough sum!' },
-  },
-  {
-    id: 'card_takedown_single',
-    rarity: 'rare',
-    icon: '💿',
-    image: '/images/card_takedown_single.png',
-    color: 'from-rose-500 via-purple-600 to-slate-900',
-    title: { nl: 'Platinum Hit: "Takedown"', en: 'Platinum Hit: "Takedown"' },
-    subtitle: { nl: '#1 op de Wereldwijde Hitlijst', en: '#1 on the Global Charts' },
-  },
-  {
-    id: 'card_world_tour_trophy',
-    rarity: 'golden',
-    icon: '🏆',
-    image: '/images/card_world_tour_trophy.png',
-    color: 'from-amber-300 via-yellow-500 to-pink-600',
-    title: { nl: 'Wereldtournee Reken-Trofee', en: 'World Tour Math Trophy' },
-    subtitle: { nl: 'Ultieme Ouder & Dochter Kampioen', en: 'Ultimate Parent & Daughter Champ' },
-  },
 ];
 
 export interface TrickyFactItem {
@@ -271,6 +158,7 @@ export interface PlayerProfile {
   id: string;
   name: string;
   hunter: ProfileHunterId;
+  schoolGroup?: SchoolGroupId;
   mode: ProfileGameMode;
   skill: SkillId;
   sealSize: SealSize;
@@ -288,7 +176,7 @@ export interface ProfilesStore {
 export function createDefaultProgress(): PlayerProgress {
   return {
     xp: 0,
-    gems: 60, // Start with 60 gems so she can unlock her first photocard right away!
+    gems: 120, // Start with 120 gems so she can unlock her first 100-gem photocard right away!
     totalSolved: 0,
     unlockedCards: ['card_derpy_tiger'],
     bestSpeedMs: null,
@@ -383,6 +271,15 @@ export function loadProfilesStore(): ProfilesStore {
               p.hunter === 'rumi' || p.hunter === 'mira' || p.hunter === 'zoey'
                 ? p.hunter
                 : 'rumi',
+            schoolGroup:
+              p.schoolGroup === 'g3' ||
+              p.schoolGroup === 'g4' ||
+              p.schoolGroup === 'g5' ||
+              p.schoolGroup === 'g6' ||
+              p.schoolGroup === 'g7' ||
+              p.schoolGroup === 'g8'
+                ? p.schoolGroup
+                : undefined,
             mode:
               p.mode === 'soloPractice' ||
               p.mode === 'honmoonChain' ||
@@ -469,7 +366,9 @@ export function saveProfilesStore(store: ProfilesStore): void {
 export function createPlayerProfile(
   store: ProfilesStore,
   name: string,
-  hunter: ProfileHunterId
+  hunter: ProfileHunterId,
+  schoolGroup?: SchoolGroupId,
+  initialSkill: SkillId = 'add10'
 ): ProfilesStore {
   const cleanName =
     name.trim() || (hunter === 'rumi' ? 'Rumi' : hunter === 'mira' ? 'Mira' : 'Zoey');
@@ -477,8 +376,9 @@ export function createPlayerProfile(
     id: `hunter_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
     name: cleanName,
     hunter,
+    schoolGroup,
     mode: 'soloPractice',
-    skill: 'add10',
+    skill: initialSkill,
     sealSize: 4,
     stagesCleared: 0,
     createdAt: Date.now(),
@@ -575,6 +475,87 @@ export function getLevelInfo(xp: number, lang: Language) {
     currentLevelXp,
     xpPerLevel,
     progressPct,
+  };
+}
+
+export type SpeedTierId = 'lightning' | 'fast' | 'steady' | 'careful';
+
+export interface SpeedGemReward {
+  tier: SpeedTierId;
+  gems: number;
+  xp: number;
+  points: number;
+  secondsDisplay: string;
+  badge: { nl: string; en: string };
+}
+
+/**
+ * Calculates Gem, XP, and Point rewards based on solve speed (`timeMs`) and whether
+ * a hint or wrong attempt occurred on the current question (`hadPenalty`).
+ * - Lightning (<= 3.5s, clean): +8 Gems, +35 XP, +140 pts
+ * - Fast (<= 7.0s, clean): +5 Gems, +28 XP, +110 pts
+ * - Steady (<= 14.0s, clean): +3 Gems, +20 XP, +85 pts
+ * - Careful / Slow (> 14.0s or had hint/miss): +1 Gem, +15 XP, +60 pts
+ */
+export function calculateSpeedGemReward(
+  timeMs: number,
+  hadPenalty = false
+): SpeedGemReward {
+  const safeMs = Math.max(100, Number.isFinite(timeMs) ? timeMs : 15000);
+  const secondsDisplay = `${(safeMs / 1000).toFixed(1)}s`;
+
+  if (hadPenalty || safeMs > 14000) {
+    return {
+      tier: 'careful',
+      gems: 1,
+      xp: 15,
+      points: 60,
+      secondsDisplay,
+      badge: {
+        nl: `🐢 Rustig tempo (${secondsDisplay})`,
+        en: `🐢 Careful pace (${secondsDisplay})`,
+      },
+    };
+  }
+
+  if (safeMs <= 3500) {
+    return {
+      tier: 'lightning',
+      gems: 8,
+      xp: 35,
+      points: 140,
+      secondsDisplay,
+      badge: {
+        nl: `⚡ Bliksem-snel! (${secondsDisplay})`,
+        en: `⚡ Lightning fast! (${secondsDisplay})`,
+      },
+    };
+  }
+
+  if (safeMs <= 7000) {
+    return {
+      tier: 'fast',
+      gems: 5,
+      xp: 28,
+      points: 110,
+      secondsDisplay,
+      badge: {
+        nl: `🔥 Vlot gerekend! (${secondsDisplay})`,
+        en: `🔥 Fast solve! (${secondsDisplay})`,
+      },
+    };
+  }
+
+  return {
+    tier: 'steady',
+    gems: 3,
+    xp: 20,
+    points: 85,
+    secondsDisplay,
+    badge: {
+      nl: `✨ Goed tempo (${secondsDisplay})`,
+      en: `✨ Steady pace (${secondsDisplay})`,
+    },
   };
 }
 

@@ -10,8 +10,8 @@ import {
 } from '../engine/learningLoop';
 import { soundEngine } from '../audio/soundEngine';
 
-export const MASTERY_GEMS = 15;
-export const MASTERY_XP = 50;
+export const MASTERY_GEMS = 2;
+export const MASTERY_XP = 30;
 
 interface NumberDojoModalProps {
   lang: Language;
@@ -31,6 +31,9 @@ type ReviewFeedback = {
 /** The inverse fact from the same fact family, e.g. 7 × 8 = 56 → 56 ÷ 8 = 7. */
 function inverseFact(fact: TrickyFactItem): string {
   const { aLabel: a, bLabel: b, targetLabel: t } = fact;
+  if (b === '?') {
+    return `${a.replace('[ ? ]', t)} → ${t}`;
+  }
   switch (fact.op) {
     case '+':
       return `${t} − ${b} = ${a}`;
@@ -210,7 +213,7 @@ export const NumberDojoModal: React.FC<NumberDojoModalProps> = ({
   return (
     <div
       data-testid="dojo-modal"
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-md animate-pop-in"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-md animate-fadeIn"
     >
       <div className="light-surface-card relative w-full max-w-2xl max-h-[92vh] overflow-y-auto rounded-3xl bg-gradient-to-b from-slate-900 via-purple-950 to-slate-950 border-2 border-cyan-400/60 p-4 sm:p-6 shadow-[0_0_60px_rgba(34,211,238,0.3)]">
         {/* Header */}
@@ -308,27 +311,58 @@ export const NumberDojoModal: React.FC<NumberDojoModalProps> = ({
           <div className="light-subcard rounded-2xl bg-slate-900/90 border border-pink-500/40 p-4 sm:p-5 space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <span className="text-xs font-bold text-pink-300">{L.reviewIntro}</span>
-              <span className="px-2.5 py-0.5 rounded-full bg-amber-400/20 border border-amber-300/40 text-amber-200 text-xs font-extrabold">
-                {L.reviewProgress(
-                  feedback ? feedback.doneCount : shownState.consecutiveCorrect,
-                  REVIEWS_TO_MASTER
-                )}
-              </span>
+              <div className="flex items-center gap-1.5">
+                <span
+                  data-testid="dojo-practice-reward-badge"
+                  className="px-2.5 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-400/40 text-cyan-200 text-[11px] font-bold"
+                >
+                  {lang === 'nl'
+                    ? `Rustig oefenen • +${MASTERY_GEMS} 💎 bij meesterschap`
+                    : `No-timer practice • +${MASTERY_GEMS} 💎 on mastery`}
+                </span>
+                <span className="px-2.5 py-0.5 rounded-full bg-amber-400/20 border border-amber-300/40 text-amber-200 text-xs font-extrabold">
+                  {L.reviewProgress(
+                    feedback ? feedback.doneCount : shownState.consecutiveCorrect,
+                    REVIEWS_TO_MASTER
+                  )}
+                </span>
+              </div>
             </div>
 
             {/* Equation Display */}
             <div
               data-testid="dojo-equation-box"
-              className="dojo-eq-box py-5 px-4 rounded-2xl bg-gradient-to-r from-purple-950 via-slate-950 to-indigo-950 border-2 border-cyan-400/50 text-center shadow-inner"
+              className="dojo-eq-box py-6 px-4 rounded-2xl bg-gradient-to-r from-purple-950 via-slate-950 to-indigo-950 border-2 border-cyan-400/50 text-center shadow-inner"
             >
-              <div className="font-display font-black text-3xl sm:text-4xl text-white tracking-wide">
-                <span>{shownFact.aLabel}</span>{' '}
-                <span className="text-amber-400">{shownFact.op}</span>{' '}
-                <span>{shownFact.bLabel}</span>{' '}
-                <span className="text-cyan-300">=</span>{' '}
-                <span className="inline-block px-3 py-0.5 rounded-xl bg-amber-400/20 border border-amber-300 text-amber-300">
-                  {feedback ? shownFact.targetLabel : '?'}
-                </span>
+              <div className="font-display font-black text-3xl sm:text-5xl text-white tracking-wide">
+                {shownFact.bLabel === '?' ? (
+                  <>
+                    <span>
+                      {shownFact.aLabel.replace(
+                        '[ ? ]',
+                        feedback ? shownFact.targetLabel : '[ ? ]'
+                      )}
+                    </span>{' '}
+                    {!shownFact.aLabel.includes('[ ? ]') && (
+                      <>
+                        <span className="text-cyan-300">=</span>{' '}
+                        <span className="inline-block px-3 py-0.5 rounded-xl bg-amber-400/20 border border-amber-300 text-amber-300">
+                          {feedback ? shownFact.targetLabel : '?'}
+                        </span>
+                      </>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <span>{shownFact.aLabel}</span>{' '}
+                    <span className="text-amber-400">{shownFact.op}</span>{' '}
+                    <span>{shownFact.bLabel}</span>{' '}
+                    <span className="text-cyan-300">=</span>{' '}
+                    <span className="inline-block px-3 py-0.5 rounded-xl bg-amber-400/20 border border-amber-300 text-amber-300">
+                      {feedback ? shownFact.targetLabel : '?'}
+                    </span>
+                  </>
+                )}
               </div>
             </div>
 
@@ -344,7 +378,7 @@ export const NumberDojoModal: React.FC<NumberDojoModalProps> = ({
                     data-testid="dojo-choice-btn"
                     disabled={!!feedback}
                     onClick={() => handleChoiceTap(ch)}
-                    className={`py-3.5 rounded-2xl font-display font-black text-xl border-2 transition ${
+                    className={`py-4 rounded-2xl font-display font-black text-2xl sm:text-3xl border-2 transition ${
                       feedback && isAnswer
                         ? 'bg-emerald-900/80 border-emerald-400 text-emerald-100'
                         : feedback && picked

@@ -55,8 +55,18 @@ import {
   getNextStage,
   getLevelInfo,
   getSmartMathTrick,
+  calculateSpeedGemReward,
   PHOTOCARD_CATALOG,
+  SchoolGroupId,
+  TrickyFactItem,
 } from './engine/progressionStore';
+import {
+  CURRICULUM_GROUPS,
+  getCurriculumGroup,
+  getAutoProgressedCurriculum,
+} from './engine/curriculumGroups';
+import { TangMiniGameId } from './engine/tangGamesEngine';
+import { TangArcadeModal } from './components/TangArcadeModal';
 import {
   advanceOtherReviews,
   claimMasteryReward,
@@ -152,10 +162,45 @@ export const App: React.FC = () => {
   );
   const [showPhotocards, setShowPhotocards] = useState(false);
   const [showDojo, setShowDojo] = useState(false);
+  const [showTangArcade, setShowTangArcade] = useState(false);
+  const [initialTangGame, setInitialTangGame] = useState<TangMiniGameId>('sodaBubbles');
   const [showXRay, setShowXRay] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showHeaderMenu, setShowHeaderMenu] = useState(false);
+  const headerMenuBtnRef = useRef<HTMLButtonElement | null>(null);
+  const headerDropdownRef = useRef<HTMLDivElement | null>(null);
   const [leveledUpBanner, setLeveledUpBanner] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!showHeaderMenu) return;
+
+    const handleOutsideClick = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as Node | null;
+      if (!target) return;
+      if (
+        headerMenuBtnRef.current?.contains(target) ||
+        headerDropdownRef.current?.contains(target)
+      ) {
+        return;
+      }
+      setShowHeaderMenu(false);
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setShowHeaderMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleOutsideClick);
+    document.addEventListener('touchstart', handleOutsideClick);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick);
+      document.removeEventListener('touchstart', handleOutsideClick);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [showHeaderMenu]);
 
   // Audio & Modals
   const [sfxOn, setSfxOn] = useState(true);
@@ -163,6 +208,9 @@ export const App: React.FC = () => {
   const [showTutorial, setShowTutorial] = useState(false);
 
   // Stage Configuration (initialized from active cached profile if returning player)
+  const [schoolGroup, setSchoolGroup] = useState<SchoolGroupId>(() =>
+    activeProfile?.schoolGroup ?? 'g5'
+  );
   const [mode, setMode] = useState<GameMode>(() =>
     activeProfile ? activeProfile.mode : 'soloPractice'
   );
@@ -251,6 +299,32 @@ export const App: React.FC = () => {
     []
   );
 
+  const handleSelectSchoolGroup = useCallback((groupId: SchoolGroupId) => {
+    const spec = getCurriculumGroup(groupId);
+    setSchoolGroup(groupId);
+    setSkill(spec.defaultSkill);
+    setSealSize(spec.defaultSealSize);
+    setProfilesStore((prev) => {
+      if (!prev.activeProfileId) return prev;
+      const nextStore: ProfilesStore = {
+        ...prev,
+        profiles: prev.profiles.map((p) =>
+          p.id === prev.activeProfileId
+            ? {
+                ...p,
+                schoolGroup: groupId,
+                skill: spec.defaultSkill,
+                sealSize: spec.defaultSealSize,
+                lastPlayedAt: Date.now(),
+              }
+            : p
+        ),
+      };
+      saveProfilesStore(nextStore);
+      return nextStore;
+    });
+  }, []);
+
   const handleSelectProfile = (profileId: string) => {
     soundEngine.playTap();
     const nextStore = switchPlayerProfile(profilesStore, profileId);
@@ -259,6 +333,7 @@ export const App: React.FC = () => {
     if (target) {
       setProgress(target.progress);
       setHunter(target.hunter);
+      setSchoolGroup(target.schoolGroup ?? 'g5');
       setMode(target.mode);
       setSkill(target.skill);
       setSealSize(target.sealSize);
@@ -307,8 +382,15 @@ export const App: React.FC = () => {
 
   const handleSaveStep1AndAdvance = (targetStep: 2 | 3 | 4 = 2) => {
     soundEngine.playTap();
+    const groupSpec = getCurriculumGroup(schoolGroup);
     if (isCreatingNewProfile || !activeProfile) {
-      const nextStore = createPlayerProfile(profilesStore, playerNameInput, hunter);
+      const nextStore = createPlayerProfile(
+        profilesStore,
+        playerNameInput,
+        hunter,
+        schoolGroup,
+        groupSpec.defaultSkill
+      );
       setProfilesStore(nextStore);
       const created = nextStore.profiles.find((p) => p.id === nextStore.activeProfileId);
       if (created) {
@@ -329,7 +411,7 @@ export const App: React.FC = () => {
           ...prev,
           profiles: prev.profiles.map((p) =>
             p.id === prev.activeProfileId
-              ? { ...p, name: cleanName, hunter, lastPlayedAt: Date.now() }
+              ? { ...p, name: cleanName, hunter, schoolGroup, lastPlayedAt: Date.now() }
               : p
           ),
         };
@@ -510,10 +592,37 @@ export const App: React.FC = () => {
   const completeStageAndShowSummary = useCallback(() => {
     soundEngine.playVictoryFanfare();
     triggerConfetti();
+    // Stage clear bonus: modest +10 Starlight Gems & +60 XP!
+    const stageBonusGems = 10;
+    const stageBonusXp = 60;
+    setSessionGemsEarned((prev) => prev + stageBonusGems);
+    setSessionXpEarned((prev) => prev + stageBonusXp);
+    updateProgress((prev) => ({
+      ...prev,
+      gems: prev.gems + stageBonusGems,
+      xp: prev.xp + stageBonusXp,
+    }));
+    const autoProg = getAutoProgressedCurriculum(schoolGroup, skill, sealSize);
     const nextSt = getNextStage(skill, sealSize);
+    if (autoProg.promotedGroup && autoProg.nextGroupId !== schoolGroup) {
+      setSchoolGroup(autoProg.nextGroupId);
+      setProfilesStore((prev) => {
+        if (!prev.activeProfileId) return prev;
+        const nextStore: ProfilesStore = {
+          ...prev,
+          profiles: prev.profiles.map((p) =>
+            p.id === prev.activeProfileId
+              ? { ...p, schoolGroup: autoProg.nextGroupId, lastPlayedAt: Date.now() }
+              : p
+          ),
+        };
+        saveProfilesStore(nextStore);
+        return nextStore;
+      });
+    }
     syncActiveProfileStage(mode, nextSt.skill, nextSt.sealSize, hunter, true);
     setScreen('summary');
-  }, [skill, sealSize, mode, hunter, syncActiveProfileStage, triggerConfetti]);
+  }, [schoolGroup, skill, sealSize, mode, hunter, syncActiveProfileStage, triggerConfetti, updateProgress]);
 
   useEffect(() => {
     if (screen !== 'playing' || mode === 'versusBattle' || solvedEquation !== null) return;
@@ -614,6 +723,16 @@ export const App: React.FC = () => {
     });
   };
 
+  const recordArcadeMiss = useCallback(
+    (fact: TrickyFactItem) => {
+      updateProgress((prev) => {
+        const merged = mergeMissedFact(fact, prev.trickyFacts, prev.factReview);
+        return { ...prev, trickyFacts: merged.facts, factReview: merged.factReview };
+      });
+    },
+    [updateProgress]
+  );
+
   const recordChildSolve = (puz: KakoomaPuzzle) => {
     const solvedFactId = getFactId(puz);
     updateProgress((prev) => ({
@@ -633,11 +752,10 @@ export const App: React.FC = () => {
     if (check.isCorrect) {
       const timeTakenMs = Date.now() - puzzleStartRef.current;
       const newStreak = streak + 1;
-      // Flat rewards: every correct answer counts the same, so careful thinking is never punished.
-      // Streaks stay purely cosmetic (banner, confetti, slash charges).
-      const pointsEarned = 100;
-      const gemsEarned = 7;
-      const xpEarned = 50;
+      const speedReward = calculateSpeedGemReward(timeTakenMs, hintLevel > 0);
+      const pointsEarned = speedReward.points;
+      const gemsEarned = speedReward.gems;
+      const xpEarned = speedReward.xp;
       const isChildTurn = mode !== 'coopDuet' || coopTurn === 'daughter';
 
       soundEngine.playCorrect(newStreak);
@@ -708,7 +826,7 @@ export const App: React.FC = () => {
 
       setFloatingBanner({
         text: hypeTitle,
-        sub: `+${gemsEarned} 💎  •  +${xpEarned} XP`,
+        sub: `${speedReward.badge[lang]}  •  +${gemsEarned} 💎  •  +${xpEarned} XP`,
       });
 
       setMasteredFacts((prev) => [
@@ -946,6 +1064,19 @@ export const App: React.FC = () => {
               <span>{t.dojoBtnLabel}</span>
             </button>
 
+            {/* Greg Tang Mini-Games Arcade Button */}
+            <button
+              type="button"
+              data-testid="open-tang-arcade-btn"
+              onClick={() => {
+                soundEngine.playTap();
+                setShowTangArcade(true);
+              }}
+              className="px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-fuchsia-500/25 to-pink-500/25 hover:from-fuchsia-500/40 hover:to-pink-500/40 border border-fuchsia-400/70 text-pink-200 text-xs font-extrabold flex items-center gap-1 shadow-[0_0_15px_rgba(236,72,153,0.25)] transition-all"
+            >
+              <span>🎮 {lang === 'nl' ? 'Arcade' : 'Arcade'}</span>
+            </button>
+
             {/* Collectible Photobook & Gems Button */}
             <button
               type="button"
@@ -964,6 +1095,7 @@ export const App: React.FC = () => {
 
             {/* Hamburger Settings Dropdown Trigger (Music, Sound, Theme, Language, Rules) */}
             <button
+              ref={headerMenuBtnRef}
               type="button"
               data-testid="header-menu-btn"
               onClick={() => {
@@ -983,15 +1115,11 @@ export const App: React.FC = () => {
 
           {/* Hamburger Dropdown Menu Panel (Music, Sound FX, Light/Dark Theme, NL/EN Language, Rules) */}
           {showHeaderMenu && (
-            <>
-              <div
-                className="fixed inset-0 z-40"
-                onClick={() => setShowHeaderMenu(false)}
-              />
-              <div
-                data-testid="header-dropdown-menu"
-                className="light-surface-card absolute right-0 top-full mt-2 w-72 sm:w-80 z-50 rounded-2xl bg-gradient-to-b from-[#220a47] to-[#120529] border-2 border-fuchsia-400/60 p-3.5 shadow-[0_14px_40px_rgba(0,0,0,0.65)] space-y-2.5 animate-fadeIn"
-              >
+            <div
+              ref={headerDropdownRef}
+              data-testid="header-dropdown-menu"
+              className="light-surface-card absolute right-0 top-full mt-2 w-72 sm:w-80 z-50 rounded-2xl bg-gradient-to-b from-[#220a47] to-[#120529] border-2 border-fuchsia-400/60 p-3.5 shadow-[0_14px_40px_rgba(0,0,0,0.65)] space-y-2.5 animate-fadeIn"
+            >
                 {/* 1. Language Switcher (NL / EN) */}
                 <div className="flex items-center justify-between gap-2 bg-purple-950/60 border border-purple-700/50 rounded-xl p-2">
                   <span className="text-xs font-extrabold text-purple-200 pl-1">
@@ -1126,7 +1254,6 @@ export const App: React.FC = () => {
                   <span>{t.howToPlayBtn}</span>
                 </button>
               </div>
-            </>
           )}
         </div>
       </header>
@@ -1263,6 +1390,212 @@ export const App: React.FC = () => {
                   </div>
                 </div>
 
+                {/* ==================== IB PYP / GROEP 3–8 / YEAR 1–6 SELECTOR & MISSIONS ==================== */}
+                {(() => {
+                  const activeGroupSpec = getCurriculumGroup(schoolGroup);
+                  return (
+                    <div
+                      data-testid="dashboard-school-group-section"
+                      className="bg-purple-950/65 border-2 border-cyan-400/45 rounded-2xl p-3.5 sm:p-5 space-y-3"
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-400/20 border border-cyan-300/50 text-cyan-300 text-xs font-black uppercase">
+                            <span>🎓 IB PYP & Groep 3–8 / Year 1–6</span>
+                            <span>• {activeGroupSpec.ageRange} jr/yrs</span>
+                          </div>
+                          <h3 className="font-display font-black text-lg sm:text-xl text-white mt-0.5">
+                            {activeGroupSpec.mascotEmoji}{' '}
+                            {activeGroupSpec.fullTitle[lang]}
+                          </h3>
+                          <p className="text-xs sm:text-sm text-purple-200">
+                            {activeGroupSpec.ixlSummary[lang]}
+                          </p>
+                        </div>
+
+                        {/* 6 School Group Pills (Groep 3–8 / Year 1–6) */}
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          {CURRICULUM_GROUPS.map((grp) => {
+                            const isSelected = grp.id === schoolGroup;
+                            return (
+                              <button
+                                key={grp.id}
+                                type="button"
+                                data-testid={`select-group-${grp.id}`}
+                                onClick={() => {
+                                  soundEngine.playSelect();
+                                  handleSelectSchoolGroup(grp.id);
+                                }}
+                                className={`px-3 py-1.5 rounded-xl font-display font-black text-xs sm:text-sm transition-all cursor-pointer ${
+                                  isSelected
+                                    ? `bg-gradient-to-r ${grp.accentGradient} text-slate-950 shadow-[0_0_15px_rgba(251,191,36,0.45)] scale-105`
+                                    : 'bg-purple-900/70 hover:bg-purple-800 text-purple-200 border border-purple-700/60'
+                                }`}
+                              >
+                                {grp.mascotEmoji} {grp.shortLabel[lang]}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Concept Tags for Selected Group */}
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        {activeGroupSpec.conceptTags[lang].map((tag) => (
+                          <span
+                            key={tag}
+                            className="px-2.5 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-400/35 text-xs font-bold text-cyan-200"
+                          >
+                            ✨ {tag}
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* 4 Mission Cards for Selected Group */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+                        {activeGroupSpec.missions.map((mission) => (
+                          <button
+                            key={mission.id}
+                            type="button"
+                            data-testid={`group-mission-${mission.id}`}
+                            onClick={() =>
+                              startGameWithConfig(
+                                activeProfile.mode,
+                                mission.skill,
+                                mission.sealSize
+                              )
+                            }
+                            className="group text-left p-3.5 rounded-xl bg-gradient-to-br from-purple-900/80 to-indigo-950/80 hover:from-pink-600/35 hover:to-purple-800/80 border border-purple-600/60 hover:border-amber-300 transition-all flex flex-col justify-between gap-2 cursor-pointer"
+                          >
+                            <div>
+                              <div className="flex items-center justify-between gap-1 mb-1">
+                                <span className="text-xl">{mission.badgeEmoji}</span>
+                                <span className="px-2 py-0.5 rounded-md bg-black/40 border border-amber-300/40 text-amber-300 font-black text-[11px]">
+                                  {mission.ixlSkillCode[lang]}
+                                </span>
+                              </div>
+                              <div className="font-display font-black text-sm sm:text-base text-white group-hover:text-amber-200">
+                                {mission.title[lang]}
+                              </div>
+                              <p className="text-xs text-purple-200/90 mt-0.5 leading-snug">
+                                {mission.description[lang]}
+                              </p>
+                            </div>
+                            <div className="text-xs font-black text-cyan-300 flex items-center justify-between pt-1 border-t border-purple-800/50">
+                              <span>{mission.sealSize}-Blad / Petals</span>
+                              <span>▶ ⚡ +1..8 💎</span>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Movie Transcript Quote from Selected Group */}
+                      <div className="px-3 py-1.5 rounded-xl bg-black/35 border border-amber-300/35 text-xs sm:text-sm italic text-amber-200">
+                        🎬 {activeGroupSpec.transcriptQuote[lang]}
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {/* ==================== HUNTR/X REKEN-ARCADE (6 MINI-GAMES) ==================== */}
+                <div
+                  data-testid="dashboard-tang-arcade-section"
+                  className="bg-purple-950/60 border-2 border-pink-400/45 rounded-2xl p-3.5 sm:p-4 space-y-2.5"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <div>
+                      <h3 className="font-display font-black text-base sm:text-lg text-amber-300">
+                        🎮{' '}
+                        {lang === 'nl'
+                          ? 'HUNTR/X Reken-Arcade (6 Mini-Games • Groeit automatisch mee!)'
+                          : 'HUNTR/X Math Arcade (6 Mini-Games • Auto-Scales by Level!)'}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-purple-200">
+                        {lang === 'nl'
+                          ? 'Getallenlijn, Negatieve Getallen, Splitsen, Breuken, Procenten & Algebra — foutjes gaan direct naar je Dojo!'
+                          : 'Number Line, Negative Numbers, Splits, Fractions, Percentages & Algebra — mistakes go straight to your Dojo!'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                    {(
+                      [
+                        {
+                          id: 'sodaBubbles' as TangMiniGameId,
+                          emoji: '🫧',
+                          titleNl: 'Saja Soda-Pop Bubbels',
+                          titleEn: 'Saja Soda-Pop Bubbles',
+                          subNl: 'Getalparen, Factoren & Negatieve Bubbels',
+                          subEn: 'Number Bonds, Factors & Integer Bubbles',
+                        },
+                        {
+                          id: 'numberLine' as TangMiniGameId,
+                          emoji: '📏',
+                          titleNl: 'Honmoon Laser-Lijn',
+                          titleEn: 'Honmoon Laser Line',
+                          subNl: 'Getallenlijn: Sprongen, Midden & Over Nul',
+                          subEn: 'Number Line: Jumps, Midpoints & Across 0',
+                        },
+                        {
+                          id: 'subZero' as TangMiniGameId,
+                          emoji: '❄️',
+                          titleNl: 'Gwi-Ma Sub-Zero Portaal',
+                          titleEn: 'Gwi-Ma Sub-Zero Portal',
+                          subNl: 'Negatieve Getallen & Thermometer onder 0°',
+                          subEn: 'Negative Numbers & Sub-Zero Thermometer',
+                        },
+                        {
+                          id: 'missingRune' as TangMiniGameId,
+                          emoji: '⚔️',
+                          titleNl: 'Saingeom Geheime Rune',
+                          titleEn: 'Saingeom Missing Rune',
+                          subNl: 'Algebra, Kwadraten n² & Rekenvolgorde',
+                          subEn: 'Algebra, Squares n² & Order of Operations',
+                        },
+                        {
+                          id: 'breakApart' as TangMiniGameId,
+                          emoji: '🐯',
+                          titleNl: 'Derpy’s Splits-Beat',
+                          titleEn: 'Derpy’s Break-Apart Beat',
+                          subNl: 'Slim Splitsen via 10, 5× & Grote Deelsommen',
+                          subEn: 'Smart Split via 10, 5× & Big Division',
+                        },
+                        {
+                          id: 'powerLab' as TangMiniGameId,
+                          emoji: '🧪',
+                          titleNl: 'Mira’s Kristal-Lab',
+                          titleEn: 'Mira’s Crystal Lab',
+                          subNl: 'Breuken, Procenten %, Kommagetallen & Ratio’s',
+                          subEn: 'Fractions, Percentages %, Decimals & Ratios',
+                        },
+                      ] as const
+                    ).map((g) => (
+                      <button
+                        key={g.id}
+                        type="button"
+                        data-testid={`launch-tang-${g.id}`}
+                        onClick={() => {
+                          soundEngine.playCardOpen();
+                          setInitialTangGame(g.id);
+                          setShowTangArcade(true);
+                        }}
+                        className="p-3 rounded-xl bg-gradient-to-r from-fuchsia-900/70 via-purple-900/70 to-indigo-900/70 hover:from-pink-600/45 hover:to-amber-500/35 border border-pink-400/50 hover:border-amber-300 text-left transition-all flex items-center gap-3 cursor-pointer"
+                      >
+                        <span className="text-2xl sm:text-3xl shrink-0">{g.emoji}</span>
+                        <div className="min-w-0">
+                          <div className="font-display font-black text-sm sm:text-base text-white truncate">
+                            {lang === 'nl' ? g.titleNl : g.titleEn}
+                          </div>
+                          <div className="text-xs text-purple-200 leading-snug">
+                            {lang === 'nl' ? g.subNl : g.subEn}
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 {/* Quick Rewards & Dojo Bar (Balanced 2-Column Grid + Derpy Quote) */}
                 <div className="space-y-3 pt-1">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -1277,8 +1610,8 @@ export const App: React.FC = () => {
                       <Gift className="w-4 h-4 shrink-0" />
                       <span>
                         {lang === 'nl'
-                          ? `Fotoboek (${progress.unlockedCards.length}/12 Kaarten)`
-                          : `Photobook (${progress.unlockedCards.length}/12 Cards)`}
+                          ? `Fotoboek (${progress.unlockedCards.length}/${PHOTOCARD_CATALOG.length} Kaarten)`
+                          : `Photobook (${progress.unlockedCards.length}/${PHOTOCARD_CATALOG.length} Cards)`}
                       </span>
                     </button>
 
@@ -1447,6 +1780,56 @@ export const App: React.FC = () => {
                           </button>
                         );
                       })}
+                    </div>
+
+                    {/* School Group / Year Selector (Groep 3-8 / IB PYP 1-6 / Year 1-6) */}
+                    <div
+                      data-testid="wizard-school-group-selector"
+                      className="bg-purple-950/60 border border-amber-400/40 rounded-2xl p-4 space-y-2.5"
+                    >
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <span className="font-display font-extrabold text-sm sm:text-base text-amber-300">
+                          {lang === 'nl'
+                            ? '🎓 In welke groep / welk leerjaar zit je? (Groep 3–8 / IB PYP 1–6)'
+                            : '🎓 Which school group / year are you in? (Year 1–6 / IB PYP 1–6)'}
+                        </span>
+                        <span className="text-xs font-bold text-purple-200/80">
+                          {lang === 'nl'
+                            ? 'Groeit automatisch met je mee!'
+                            : 'Auto-advances as you progress!'}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+                        {CURRICULUM_GROUPS.map((grp) => {
+                          const isGrpActive = schoolGroup === grp.id;
+                          return (
+                            <button
+                              key={grp.id}
+                              type="button"
+                              data-testid={`wizard-group-btn-${grp.id}`}
+                              onClick={() => handleSelectSchoolGroup(grp.id)}
+                              className={`p-2.5 rounded-xl border-2 text-left transition-all ${
+                                isGrpActive
+                                  ? 'bg-gradient-to-br from-amber-500/30 to-pink-600/30 border-amber-300 shadow-[0_0_14px_rgba(251,191,36,0.3)]'
+                                  : 'bg-slate-950/70 border-purple-500/30 hover:border-purple-400/60'
+                              }`}
+                            >
+                              <div className="flex items-center justify-between gap-1">
+                                <span className="text-base">{grp.mascotEmoji}</span>
+                                <span className="text-[10px] font-extrabold text-amber-300">
+                                  {grp.ageRange} {lang === 'nl' ? 'jr' : 'yrs'}
+                                </span>
+                              </div>
+                              <div className="font-display font-black text-xs text-white mt-0.5">
+                                {grp.shortLabel[lang]}
+                              </div>
+                              <div className="text-[10px] text-purple-200/80 font-semibold truncate">
+                                {grp.shortLabel[lang === 'nl' ? 'en' : 'nl']}
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
 
                     {/* Player Session Name Input */}
@@ -2503,6 +2886,29 @@ export const App: React.FC = () => {
             unlockedCards: prev.unlockedCards.includes(cardId)
               ? prev.unlockedCards
               : [...prev.unlockedCards, cardId],
+          }));
+        }}
+      />
+
+      {/* HUNTR/X Math Arcade Modal */}
+      <TangArcadeModal
+        isOpen={showTangArcade}
+        onClose={() => setShowTangArcade(false)}
+        lang={lang}
+        schoolGroup={schoolGroup}
+        onChangeSchoolGroup={handleSelectSchoolGroup}
+        gems={progress.gems}
+        initialGame={initialTangGame}
+        onRecordMiss={recordArcadeMiss}
+        onOpenDojo={() => {
+          setShowTangArcade(false);
+          setShowDojo(true);
+        }}
+        onEarnReward={(gemsEarned, xpEarned) => {
+          updateProgress((prev) => ({
+            ...prev,
+            gems: prev.gems + gemsEarned,
+            xp: prev.xp + xpEarned,
           }));
         }}
       />
