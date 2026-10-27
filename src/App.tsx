@@ -145,6 +145,10 @@ export const App: React.FC = () => {
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
 
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
+
   const t = translations[lang];
 
   const toggleLanguage = (newLang: Language) => {
