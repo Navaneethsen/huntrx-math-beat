@@ -67,6 +67,8 @@ import {
 } from './engine/curriculumGroups';
 import { TangMiniGameId } from './engine/tangGamesEngine';
 import { TangArcadeModal, ARCADE_GAMES_CATALOG } from './components/TangArcadeModal';
+import { ClockQuest, ClockMood } from './components/ClockQuest';
+import { MAX_CLOCK_LEVEL } from './engine/clockEngine';
 import {
   advanceOtherReviews,
   claimMasteryReward,
@@ -163,6 +165,8 @@ export const App: React.FC = () => {
   const [showPhotocards, setShowPhotocards] = useState(false);
   const [showDojo, setShowDojo] = useState(false);
   const [showTangArcade, setShowTangArcade] = useState(false);
+  const [showClockQuest, setShowClockQuest] = useState(false);
+  const [clockMood, setClockMood] = useState<ClockMood>('menu');
   const [arcadeViewMode, setArcadeViewMode] = useState<'hub' | 'stage'>('hub');
   const [initialTangGame, setInitialTangGame] = useState<TangMiniGameId>('sodaBubbles');
   const [showXRay, setShowXRay] = useState(false);
@@ -488,6 +492,7 @@ export const App: React.FC = () => {
   // Dynamic Mood Soundtrack Selection (6 sliced sections from midi.mp3)
   const activeMusicTrack: MusicTrackId = (() => {
     if (showDojo || showPhotocards) return 'dojo';
+    if (showClockQuest) return clockMood;
     if (screen === 'menu') return 'menu';
     if (screen === 'summary' || versusResult !== null) return 'victory';
     // screen === 'playing'
@@ -584,6 +589,18 @@ export const App: React.FC = () => {
     }
 
     setScreen('playing');
+  };
+
+  const openClockQuest = () => {
+    soundEngine.playCardOpen();
+    if (!profilesStore.activeProfileId) {
+      const createdStore = createPlayerProfile(profilesStore, playerNameInput, hunter);
+      saveProfilesStore(createdStore);
+      setProfilesStore(createdStore);
+      setIsCreatingNewProfile(false);
+    }
+    setShowTangArcade(false);
+    setShowClockQuest(true);
   };
 
   const startGame = () => {
@@ -984,12 +1001,13 @@ export const App: React.FC = () => {
         <div className="relative max-w-6xl mx-auto flex items-center justify-between gap-2">
           {/* Logo & Back Button */}
           <div className="flex items-center gap-2 min-w-0">
-            {(screen !== 'menu' || showTangArcade) && (
+            {(screen !== 'menu' || showTangArcade || showClockQuest) && (
               <button
                 type="button"
                 onClick={() => {
                   soundEngine.playTap();
                   setShowTangArcade(false);
+                  setShowClockQuest(false);
                   setScreen('menu');
                 }}
                 className="p-2 rounded-xl bg-purple-900/60 hover:bg-purple-800 border border-fuchsia-400/40 text-fuchsia-200 flex items-center gap-1 text-xs font-bold shrink-0"
@@ -1001,6 +1019,7 @@ export const App: React.FC = () => {
             <div
               onClick={() => {
                 setShowTangArcade(false);
+                setShowClockQuest(false);
                 setScreen('menu');
               }}
               className="cursor-pointer flex items-center gap-2 min-w-0"
@@ -1076,6 +1095,7 @@ export const App: React.FC = () => {
               onClick={() => {
                 soundEngine.playTap();
                 setArcadeViewMode('hub');
+                setShowClockQuest(false);
                 setShowTangArcade(true);
               }}
               className={`px-3 py-1.5 rounded-xl border text-xs sm:text-sm font-extrabold flex items-center gap-1.5 transition-all cursor-pointer ${
@@ -1295,8 +1315,46 @@ export const App: React.FC = () => {
           }}
         />
 
+        {/* ==================== HONMOON CLOCK QUEST (CLOCK-READING STORY MODE) ==================== */}
+        {showClockQuest && (
+          <ClockQuest
+            lang={lang}
+            hunter={hunter}
+            playerName={activeProfile?.name ?? playerNameInput}
+            gems={progress.gems}
+            clockLevelUnlocked={progress.clockLevelUnlocked}
+            clockStars={progress.clockStars}
+            onMoodChange={setClockMood}
+            onEarnReward={(gemsEarned, xpEarned) => {
+              updateProgress((prev) => ({
+                ...prev,
+                gems: prev.gems + gemsEarned,
+                xp: prev.xp + xpEarned,
+              }));
+            }}
+            onLevelComplete={(levelId, stars) => {
+              updateProgress((prev) => ({
+                ...prev,
+                clockLevelUnlocked: Math.max(
+                  prev.clockLevelUnlocked,
+                  Math.min(levelId + 1, MAX_CLOCK_LEVEL)
+                ),
+                clockStars: {
+                  ...prev.clockStars,
+                  [String(levelId)]: Math.max(prev.clockStars[String(levelId)] ?? 0, stars),
+                },
+              }));
+            }}
+            onOpenPhotocards={() => setShowPhotocards(true)}
+            onExit={() => {
+              setShowClockQuest(false);
+              setScreen('menu');
+            }}
+          />
+        )}
+
         {/* ==================== MENU SCREEN (RETURNING DASHBOARD + 4-STEP WIZARD) ==================== */}
-        {!showTangArcade && screen === 'menu' && (
+        {!showTangArcade && !showClockQuest && screen === 'menu' && (
           <div className="space-y-5 animate-fadeIn">
             {/* CASE A: RETURNING PLAYER KID-FRIENDLY BLOCK DASHBOARD */}
             {wizardStep === 0 && activeProfile ? (
@@ -1421,6 +1479,27 @@ export const App: React.FC = () => {
                   </div>
                 </div>
 
+                {/* ==================== HONMOON CLOCK QUEST ENTRY ==================== */}
+                <button
+                  type="button"
+                  data-testid="dashboard-clock-quest-btn"
+                  onClick={openClockQuest}
+                  className="kid-block-card w-full rounded-3xl p-4 sm:p-5 bg-gradient-to-r from-cyan-900/70 via-purple-900/80 to-fuchsia-900/70 border-2 border-cyan-300/60 shadow-[0_0_28px_rgba(34,211,238,0.25)] flex items-center gap-4 text-left cursor-pointer"
+                >
+                  <span className="text-4xl sm:text-5xl animate-float-slow">⏰</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-display font-black text-lg sm:text-2xl text-white leading-tight">
+                      {lang === 'nl' ? 'Honmoon Klok-Missie' : 'Honmoon Clock Quest'}
+                    </div>
+                    <div className="text-xs sm:text-sm font-bold text-cyan-100">
+                      {lang === 'nl'
+                        ? `Red de tour-dag! Level ${progress.clockLevelUnlocked} wacht op je.`
+                        : `Save the tour day! Level ${progress.clockLevelUnlocked} is waiting.`}
+                    </div>
+                  </div>
+                  <span className="px-3 py-2 rounded-xl bg-amber-400 text-slate-950 font-display font-black text-sm shrink-0">▶</span>
+                </button>
+
                 {/* ==================== BLOCK 2: FULL-PAGE 10-GAME MATH ARCADE PORTAL ==================== */}
                 <div
                   data-testid="dashboard-tang-arcade-section"
@@ -1449,6 +1528,7 @@ export const App: React.FC = () => {
                       onClick={() => {
                         soundEngine.playCardOpen();
                         setArcadeViewMode('hub');
+                        setShowClockQuest(false);
                         setShowTangArcade(true);
                       }}
                       className="kid-block-card px-5 py-3 rounded-2xl bg-gradient-to-r from-amber-400 via-pink-500 to-fuchsia-500 text-slate-950 font-display font-black text-sm sm:text-base shadow-[0_0_25px_rgba(251,191,36,0.5)] flex items-center justify-center gap-2 cursor-pointer shrink-0"
@@ -1473,6 +1553,7 @@ export const App: React.FC = () => {
                           soundEngine.playCardOpen();
                           setInitialTangGame(g.id);
                           setArcadeViewMode('stage');
+                          setShowClockQuest(false);
                           setShowTangArcade(true);
                         }}
                         className={`kid-block-card pad-3d-step p-3.5 rounded-2xl bg-white/12 hover:bg-white/22 backdrop-blur-md border ${g.cardBorder} text-left flex flex-col justify-between gap-2 cursor-pointer`}
@@ -1896,7 +1977,7 @@ export const App: React.FC = () => {
                       </p>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                       {(
                         [
                           { id: 'soloPractice', icon: ShieldCheck, color: 'from-purple-600 to-indigo-700' },
@@ -1947,6 +2028,33 @@ export const App: React.FC = () => {
                           </button>
                         );
                       })}
+
+                      {/* Honmoon Clock Quest: clock-reading story mode */}
+                      <button
+                        type="button"
+                        data-testid="select-mode-clockQuest"
+                        onClick={openClockQuest}
+                        className="text-left rounded-2xl p-4 border-2 transition-all flex flex-col justify-between bg-gradient-to-b from-cyan-950/60 to-purple-950/70 border-cyan-400/60 hover:border-amber-300"
+                      >
+                        <div>
+                          <div className="flex items-center justify-between gap-2 mb-2">
+                            <div className="p-2 rounded-xl bg-gradient-to-br from-cyan-500 to-fuchsia-600 text-white shadow text-base leading-none">
+                              ⏰
+                            </div>
+                            <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-white/10 text-amber-200">
+                              {lang === 'nl' ? 'Nieuw!' : 'New!'}
+                            </span>
+                          </div>
+                          <div className="font-display font-black text-base text-white mb-1">
+                            {lang === 'nl' ? 'Honmoon Klok-Missie' : 'Honmoon Clock Quest'}
+                          </div>
+                          <p className="text-xs text-purple-200/85 leading-relaxed">
+                            {lang === 'nl'
+                              ? 'Leer klokkijken in een HUNTR/X-verhaal: hele uren tot op de minuut, 24-uursklok en hoe lang iets duurt. Versla de klok-demonen!'
+                              : 'Learn to tell time in a HUNTR/X story: hours to exact minutes, the 24-hour clock and durations. Beat the clock demons!'}
+                          </p>
+                        </div>
+                      </button>
                     </div>
 
                     <div className="flex items-center justify-between pt-2">
@@ -2266,7 +2374,7 @@ export const App: React.FC = () => {
         )}
 
         {/* ==================== PLAYING SCREEN ==================== */}
-        {!showTangArcade && screen === 'playing' && (
+        {!showTangArcade && !showClockQuest && screen === 'playing' && (
           <div className="space-y-3.5 animate-fadeIn">
             {mode === 'versusBattle' ? (
               <VersusBattleBoard
@@ -2539,7 +2647,7 @@ export const App: React.FC = () => {
         )}
 
         {/* ==================== SUMMARY / ENCORE SCREEN ==================== */}
-        {!showTangArcade && screen === 'summary' && (
+        {!showTangArcade && !showClockQuest && screen === 'summary' && (
           <div className="max-w-2xl mx-auto bg-gradient-to-b from-[#250e4c] to-[#110626] border-2 border-amber-300/80 rounded-3xl p-6 sm:p-8 text-center shadow-[0_0_50px_rgba(251,191,36,0.3)] space-y-6 animate-fadeIn">
             <div className="flex justify-center items-center gap-3">
               <HunterAvatar hunter={hunter} size={78} />

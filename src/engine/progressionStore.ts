@@ -97,6 +97,10 @@ export interface PlayerProgress {
   trickyFacts: TrickyFactItem[];
   factReview: Record<string, FactReviewState>;
   conqueredTrickyCount: number;
+  /** Highest Clock Quest level the player may start (1-based). */
+  clockLevelUnlocked: number;
+  /** Best stars (1–3) per Clock Quest level id. */
+  clockStars: Record<string, number>;
 }
 
 function dueReviewState(): FactReviewState {
@@ -185,7 +189,19 @@ export function createDefaultProgress(): PlayerProgress {
       DEFAULT_STARTER_TRICKY_FACTS.map((fact) => [fact.id, dueReviewState()])
     ),
     conqueredTrickyCount: 0,
+    clockLevelUnlocked: 1,
+    clockStars: {},
   };
+}
+
+function normalizeClockStars(value: unknown): Record<string, number> {
+  const result: Record<string, number> = {};
+  if (value && typeof value === 'object' && !Array.isArray(value)) {
+    for (const [id, stars] of Object.entries(value as Record<string, unknown>)) {
+      if (typeof stars === 'number' && stars >= 1) result[id] = Math.min(3, Math.floor(stars));
+    }
+  }
+  return result;
 }
 
 function normalizeProgress(raw: unknown): PlayerProgress {
@@ -206,6 +222,11 @@ function normalizeProgress(raw: unknown): PlayerProgress {
     factReview: normalizeFactReview(parsed.factReview, trickyFacts),
     conqueredTrickyCount:
       typeof parsed.conqueredTrickyCount === 'number' ? parsed.conqueredTrickyCount : 0,
+    clockLevelUnlocked:
+      typeof parsed.clockLevelUnlocked === 'number' && parsed.clockLevelUnlocked >= 1
+        ? Math.floor(parsed.clockLevelUnlocked)
+        : 1,
+    clockStars: normalizeClockStars(parsed.clockStars),
   };
 }
 
