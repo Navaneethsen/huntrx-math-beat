@@ -551,7 +551,7 @@ export function generateClockTask(
 
   if (kind === 'dayTime') {
     const time = randomTimeForLevel(level, rng, true);
-    if (time.h < 13 && rng() < 0.75) time.h += 12;
+    if (time.h < 12 && rng() < 0.75) time.h += 12;
     const wrong = dayTimeDistractors(time, optionsCount, rng).map(timeChoice);
     return { id, kind, levelId, time, showAs: 'phrase', eventIndex, ...withChoices(timeChoice(time), wrong) };
   }

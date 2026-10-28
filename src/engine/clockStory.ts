@@ -180,7 +180,7 @@ export function taskPrompt(task: ClockTask, lang: Language): string {
     case 'set':
       return nl ? 'Zet de wijzers!' : 'Set the hands!';
     case 'duration':
-      return nl ? 'Hoe lang duurt het?' : 'How long does it take?';
+      return nl ? 'Hoe lang duurt het?' : 'How long is it?';
   }
 }
 

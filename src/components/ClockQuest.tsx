@@ -1024,15 +1024,20 @@ export const ClockQuest: React.FC<ClockQuestProps> = ({
         >
           <div className="flex items-center justify-between gap-2 text-xs sm:text-sm font-black">
             <span className="shrink-0 px-2.5 py-1 rounded-full bg-white/10 text-amber-200">
-              {isBoss ? `⚔️ BOSS` : `${Math.min(qIndex + 1, deck.length)}/${deck.length}`}
+              {isBoss ? (
+                <>⚔️<span className="hidden sm:inline"> BOSS</span></>
+              ) : (
+                `${Math.min(qIndex + 1, deck.length)}/${deck.length}`
+              )}
             </span>
             <div className="flex-1 min-w-0 flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
               {!isBoss && (
-                <span className="px-2.5 py-0.5 rounded-full bg-fuchsia-500/20 border border-fuchsia-400/50 text-[11px] sm:text-xs font-black text-fuchsia-200 whitespace-nowrap" data-testid="clock-event-tag">
-                  🎤 {taskEvent(task, lang)}
+                <span className="px-2 sm:px-2.5 py-0.5 rounded-full bg-fuchsia-500/20 border border-fuchsia-400/50 text-[10px] sm:text-xs font-black text-fuchsia-200 whitespace-nowrap" data-testid="clock-event-tag">
+                  <span className="hidden sm:inline">🎤 </span>
+                  {taskEvent(task, lang)}
                 </span>
               )}
-              <p className="text-base sm:text-lg font-display font-black text-white leading-snug text-center" data-testid="clock-question-prompt">
+              <p className="min-w-0 text-sm min-[375px]:text-[15px] sm:text-lg font-display font-black text-white leading-tight text-center text-balance sm:whitespace-nowrap" data-testid="clock-question-prompt">
                 {taskPrompt(task, lang)}
               </p>
             </div>

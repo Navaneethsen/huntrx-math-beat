@@ -115,3 +115,13 @@ test('short duration labels fit small buttons', () => {
   assert.deepEqual(formatDurationShort(120, 'en'), ['2 hrs']);
   assert.deepEqual(formatDurationShort(20, 'en'), ['20 min']);
 });
+
+test('day-time answers always use a real 24-hour time', () => {
+  const rng = seeded(11);
+  for (const levelId of [7, 9]) {
+    for (let i = 0; i < 3000; i++) {
+      const task = generateClockTask(levelId, 'dayTime', rng);
+      for (const c of task.choices) assert.ok(c.time.h >= 0 && c.time.h <= 23, `hour ${c.time.h}`);
+    }
+  }
+});
