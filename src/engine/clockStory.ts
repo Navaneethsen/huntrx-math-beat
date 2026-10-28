@@ -1,6 +1,5 @@
 import type { Language } from '../i18n/translations';
 import type { ClockTask } from './clockEngine';
-import { formatDigital, getClockLevel, phrase } from './clockEngine.ts';
 
 /**
  * "The Honmoon Time Heist": Gwi-Ma's demons stole the hands of the Honmoon Clock on the
@@ -162,39 +161,26 @@ export const CLOCK_EVENTS: Bilingual[] = [
 
 const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
-/** The question text, themed around the tour day. */
+/** The tour-day event a question belongs to, shown as a small tag. */
+export function taskEvent(task: ClockTask, lang: Language): string {
+  return capitalize(CLOCK_EVENTS[task.eventIndex % CLOCK_EVENTS.length][lang]);
+}
+
+/** The short, one-line question text. */
 export function taskPrompt(task: ClockTask, lang: Language): string {
-  const level = getClockLevel(task.levelId);
-  const ev = CLOCK_EVENTS[task.eventIndex % CLOCK_EVENTS.length][lang];
-  const shown =
-    task.showAs === 'phrase'
-      ? `"${phrase(task.time, lang)}"`
-      : formatDigital(task.time, task.kind === 'dayTime' || (task.kind === 'set' && level.use24h));
+  const nl = lang === 'nl';
   switch (task.kind) {
     case 'read':
-      return lang === 'nl'
-        ? `${capitalize(ev)} begint als de Honmoon-Klok dit aanwijst. Hoe laat is het?`
-        : `${capitalize(ev)} starts when the Honmoon Clock shows this. What time is it?`;
+      return nl ? 'Hoe laat is het?' : 'What time is it?';
     case 'words':
-      return lang === 'nl'
-        ? `Roep ${ev} om! Hoe zeg je deze tijd?`
-        : `Announce ${ev}! How do you say this time?`;
-    case 'match':
-      return lang === 'nl'
-        ? `Het schema zegt: ${ev} om ${shown}. Welke klok klopt?`
-        : `The schedule says: ${ev} at ${shown}. Which clock is right?`;
-    case 'set':
-      return lang === 'nl'
-        ? `${capitalize(ev)} begint om ${shown}. Zet de wijzers goed!`
-        : `${capitalize(ev)} starts at ${shown}. Set the hands!`;
-    case 'duration':
-      return lang === 'nl'
-        ? `${capitalize(ev)} begint en eindigt op deze tijden. Hoe lang duurt het?`
-        : `${capitalize(ev)} starts and ends at these times. How long does it take?`;
     case 'dayTime':
-      return lang === 'nl'
-        ? `In de tour-app staat ${ev} om ${shown}. Hoe zeg je dat?`
-        : `The tour app lists ${ev} at ${shown}. How do you say that?`;
+      return nl ? 'Welke tijd is dit?' : 'Which time is this?';
+    case 'match':
+      return nl ? 'Welke klok klopt?' : 'Which clock is right?';
+    case 'set':
+      return nl ? 'Zet de wijzers!' : 'Set the hands!';
+    case 'duration':
+      return nl ? 'Hoe lang duurt het?' : 'How long does it take?';
   }
 }
 

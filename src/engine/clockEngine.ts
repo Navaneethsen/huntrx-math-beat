@@ -21,7 +21,7 @@ export interface ClockLevel {
   kinds: ClockTaskKind[];
   durationStep: number;
   maxDurationMinutes: number;
-  choiceCount: 3 | 4;
+  choiceCount: 4;
   skill: { nl: string; en: string };
 }
 
@@ -56,7 +56,7 @@ export const CLOCK_LEVELS: ClockLevel[] = [
     kinds: ['read', 'words', 'match', 'set'],
     durationStep: 60,
     maxDurationMinutes: 180,
-    choiceCount: 3,
+    choiceCount: 4,
     skill: { nl: 'Hele uren', en: "O'clock times" },
   },
   {
@@ -66,7 +66,7 @@ export const CLOCK_LEVELS: ClockLevel[] = [
     kinds: ['read', 'words', 'match', 'set'],
     durationStep: 30,
     maxDurationMinutes: 180,
-    choiceCount: 3,
+    choiceCount: 4,
     skill: { nl: 'Halve uren', en: 'Half hours' },
   },
   {
@@ -268,6 +268,42 @@ export function formatDuration(minutes: number, lang: Language): string {
   if (h === 0) return mins;
   if (m === 0) return hours;
   return `${hours} ${mins}`;
+}
+
+/** Short two-part duration label for small answer buttons, e.g. ["1 uur", "45 min"]. */
+export function formatDurationShort(minutes: number, lang: Language): string[] {
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  const parts: string[] = [];
+  if (h > 0) parts.push(lang === 'nl' ? `${h} uur` : `${h} ${h === 1 ? 'hr' : 'hrs'}`);
+  if (m > 0 || h === 0) parts.push(`${m} min`);
+  return parts;
+}
+
+/** Explains how a spoken time becomes digits, e.g. "kwart voor vier" → 03:45. */
+export function explainWords(t: ClockTime, lang: Language): string {
+  const digital = formatDigital(t, false);
+  const said = lang === 'nl' ? phraseNl(t) : phraseEn(t);
+  const m = t.m;
+  let rule: string;
+  if (lang === 'nl') {
+    if (m === 0) rule = '"uur" betekent precies op het uur: :00.';
+    else if (m === 15) rule = 'Kwart over = 15 minuten na het uur.';
+    else if (m === 30) rule = 'Let op: half betekent een half uur vóór dat uur.';
+    else if (m === 45) rule = 'Kwart voor = 15 minuten vóór het uur, dus :45.';
+    else if (m < 15) rule = `${m} over = ${m} minuten na het uur.`;
+    else if (m < 30) rule = `${30 - m} voor half = ${30 - m} minuten vóór half: 30 − ${30 - m} = ${m}.`;
+    else if (m < 45) rule = `${m - 30} over half = ${m - 30} minuten na half: 30 + ${m - 30} = ${m}.`;
+    else rule = `${60 - m} voor = ${60 - m} minuten vóór het uur: 60 − ${60 - m} = ${m}.`;
+    return `"${said}" = ${digital}. ${rule}`;
+  }
+  if (m === 0) rule = "o'clock means exactly on the hour: :00.";
+  else if (m === 15) rule = 'Quarter past = 15 minutes after the hour.';
+  else if (m === 30) rule = 'Half past = 30 minutes after the hour.';
+  else if (m === 45) rule = 'Quarter to = 15 minutes before the hour, so :45.';
+  else if (m < 30) rule = `${m} past = ${m} minutes after the hour.`;
+  else rule = `${60 - m} to = ${60 - m} minutes before the hour: 60 − ${60 - m} = ${m}.`;
+  return `"${said}" = ${digital}. ${rule}`;
 }
 
 /** Child-friendly explanation of how to read a time on the analog clock. */
@@ -517,7 +553,7 @@ export function generateClockTask(
     const time = randomTimeForLevel(level, rng, true);
     if (time.h < 13 && rng() < 0.75) time.h += 12;
     const wrong = dayTimeDistractors(time, optionsCount, rng).map(timeChoice);
-    return { id, kind, levelId, time, showAs: 'digital', eventIndex, ...withChoices(timeChoice(time), wrong) };
+    return { id, kind, levelId, time, showAs: 'phrase', eventIndex, ...withChoices(timeChoice(time), wrong) };
   }
 
   const time = kind === 'set' && level.use24h ? randomTimeForLevel(level, rng, true) : randomTimeForLevel(level, rng, false);
@@ -528,7 +564,7 @@ export function generateClockTask(
   }
 
   const wrong = timeDistractors(time, level, optionsCount, rng).map(timeChoice);
-  const showAs = kind === 'match' ? 'digital' : 'analog';
+  const showAs = kind === 'match' ? 'digital' : kind === 'words' ? 'phrase' : 'analog';
   return { id, kind, levelId, time, showAs, eventIndex, ...withChoices(timeChoice(time), wrong) };
 }
 

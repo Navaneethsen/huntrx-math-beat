@@ -19,8 +19,9 @@ import {
   explainDayTime,
   explainDuration,
   explainTime,
+  explainWords,
   formatDigital,
-  formatDuration,
+  formatDurationShort,
   fromMinutes,
   generateClockTask,
   getClockLevel,
@@ -38,6 +39,7 @@ import {
   StorySpeaker,
   getChapter,
   pickLine,
+  taskEvent,
   taskPrompt,
 } from '../engine/clockStory';
 
@@ -81,6 +83,8 @@ interface AnalogClockProps {
   show24h?: boolean;
   glow?: 'none' | 'correct' | 'wrong' | 'fever';
   compact?: boolean;
+  /** Tiny answer-button clock: only 12, 3, 6 and 9, with thicker hands. */
+  mini?: boolean;
   testId?: string;
 }
 
@@ -93,6 +97,7 @@ export const AnalogClock: React.FC<AnalogClockProps> = ({
   show24h = false,
   glow = 'none',
   compact = false,
+  mini = false,
   testId,
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -209,8 +214,9 @@ export const AnalogClock: React.FC<AnalogClockProps> = ({
       })}
       {Array.from({ length: 12 }, (_, i) => {
         const n = i + 1;
+        if (mini && n % 3 !== 0) return null;
         const a = (n * 30 * Math.PI) / 180;
-        const r = show24h ? 62 : 64;
+        const r = mini ? 60 : show24h ? 62 : 64;
         return (
           <text
             key={n}
@@ -219,7 +225,7 @@ export const AnalogClock: React.FC<AnalogClockProps> = ({
             textAnchor="middle"
             dominantBaseline="central"
             fill="#ffffff"
-            fontSize={compact ? 17 : 15}
+            fontSize={mini ? 30 : compact ? 17 : 15}
             fontWeight={900}
             fontFamily="inherit"
           >
@@ -253,7 +259,7 @@ export const AnalogClock: React.FC<AnalogClockProps> = ({
         x2={100 + Math.sin((hour * Math.PI) / 180) * 42}
         y2={100 - Math.cos((hour * Math.PI) / 180) * 42}
         stroke="#fbbf24"
-        strokeWidth="8"
+        strokeWidth={mini ? 13 : 8}
         strokeLinecap="round"
         style={{ transition: dragging.current ? undefined : 'all 0.35s ease' }}
       />
@@ -264,7 +270,7 @@ export const AnalogClock: React.FC<AnalogClockProps> = ({
         x2={100 + Math.sin((minute * Math.PI) / 180) * 70}
         y2={100 - Math.cos((minute * Math.PI) / 180) * 70}
         stroke="#f472b6"
-        strokeWidth="4.5"
+        strokeWidth={mini ? 8 : 4.5}
         strokeLinecap="round"
         style={{ transition: dragging.current ? undefined : 'all 0.35s ease' }}
       />
@@ -469,6 +475,7 @@ export const ClockQuest: React.FC<ClockQuestProps> = ({
   const explanationFor = (t: ClockTask): string => {
     if (t.kind === 'duration' && t.endTime) return explainDuration(t.time, t.endTime, lang);
     if (t.kind === 'dayTime') return explainDayTime(t.time, lang);
+    if (t.kind === 'words') return explainWords(t.time, lang);
     return explainTime(t.time, lang);
   };
 
@@ -529,6 +536,10 @@ export const ClockQuest: React.FC<ClockQuestProps> = ({
         return nl
           ? 'Tel eerst hele uren vanaf de begintijd, daarna de losse minuten.'
           : 'Count whole hours from the start time first, then the extra minutes.';
+      case 'words':
+        return nl
+          ? 'Zoek eerst het uur. Onthoud: half drie = 2:30, kwart over = :15, kwart voor = :45.'
+          : 'Find the hour first. Remember: half past = :30, quarter past = :15, quarter to = :45.';
       case 'dayTime':
         return nl
           ? 'Na 12 uur tel je 12 erbij: 3 uur \'s middags = 15:00.'
@@ -721,39 +732,50 @@ export const ClockQuest: React.FC<ClockQuestProps> = ({
     </div>
   );
 
-  const choiceLabel = (t: ClockTask, idx: number): string => {
+  const choiceLabel = (t: ClockTask, idx: number): React.ReactNode => {
     const c = t.choices[idx];
-    if (t.kind === 'duration' && c.minutes !== undefined) return formatDuration(c.minutes, lang);
+    if (t.kind === 'duration' && c.minutes !== undefined) {
+      return formatDurationShort(c.minutes, lang).map((part) => (
+        <span key={part} className="block">
+          {part}
+        </span>
+      ));
+    }
     if (!c.time) return '';
-    if (t.kind === 'read') return formatDigital(c.time, false);
-    if (t.kind === 'dayTime') return phraseWithDayPart(c.time, lang);
-    return phrase(c.time, lang);
+    return formatDigital(c.time, t.kind === 'dayTime');
   };
 
   const renderQuestion = (t: ClockTask) => {
     const answered = feedback !== null;
-    const clockSize = 'min(64vw, 250px)';
+    const clockSize = 'min(54vw, 230px)';
     const glow = feedback ? (feedback.correct ? 'correct' : 'wrong') : fever ? 'fever' : 'none';
 
     let display: React.ReactNode = null;
-    if (t.kind === 'read' || t.kind === 'words') {
+    if (t.kind === 'read') {
       display = <AnalogClock time={t.time} size={clockSize} glow={glow} testId="clock-question-analog" />;
+    } else if (t.kind === 'words' || t.kind === 'dayTime') {
+      display = (
+        <div
+          className="px-5 py-4 rounded-2xl bg-amber-400/15 border-2 border-amber-300/60 font-display font-black text-2xl sm:text-3xl text-amber-200 text-center leading-snug"
+          data-testid="clock-phrase"
+        >
+          {t.kind === 'dayTime' ? phraseWithDayPart(t.time, lang) : phrase(t.time, lang)}
+        </div>
+      );
     } else if (t.kind === 'match') {
       display = <DigitalClock text={formatDigital(t.time, false)} />;
-    } else if (t.kind === 'dayTime') {
-      display = <DigitalClock text={formatDigital(t.time, true)} />;
     } else if (t.kind === 'duration' && t.endTime) {
       const showAnalog = t.showAs === 'analog';
       display = (
         <div className="flex items-center justify-center gap-2 sm:gap-4">
           <div className="flex flex-col items-center gap-1">
             <span className="text-xs font-black uppercase text-emerald-300">{nl ? 'Begin' : 'Start'}</span>
-            {showAnalog ? <AnalogClock time={t.time} size="min(36vw, 150px)" compact /> : <DigitalClock text={formatDigital(t.time, true)} big={false} />}
+            {showAnalog ? <AnalogClock time={t.time} size="min(30vw, 130px)" compact /> : <DigitalClock text={formatDigital(t.time, true)} big={false} />}
           </div>
           <span className="text-2xl text-amber-300 font-black">➔</span>
           <div className="flex flex-col items-center gap-1">
             <span className="text-xs font-black uppercase text-rose-300">{nl ? 'Eind' : 'End'}</span>
-            {showAnalog ? <AnalogClock time={t.endTime} size="min(36vw, 150px)" compact /> : <DigitalClock text={formatDigital(t.endTime, true)} big={false} />}
+            {showAnalog ? <AnalogClock time={t.endTime} size="min(30vw, 130px)" compact /> : <DigitalClock text={formatDigital(t.endTime, true)} big={false} />}
           </div>
         </div>
       );
@@ -767,7 +789,7 @@ export const ClockQuest: React.FC<ClockQuestProps> = ({
           </div>
           <AnalogClock
             time={setTime}
-            size={clockSize}
+            size="min(48vw, 210px)"
             interactive={!answered}
             snapMinutes={snap}
             onChange={setSetTime}
@@ -810,9 +832,14 @@ export const ClockQuest: React.FC<ClockQuestProps> = ({
 
     return (
       <div className="space-y-3">
-        <p className="text-center text-sm sm:text-base font-bold text-purple-100 leading-snug px-1" data-testid="clock-question-prompt">
-          {taskPrompt(t, lang)}
-        </p>
+        <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 px-1">
+          <span className="px-2.5 py-0.5 rounded-full bg-fuchsia-500/20 border border-fuchsia-400/50 text-[11px] sm:text-xs font-black text-fuchsia-200" data-testid="clock-event-tag">
+            🎤 {taskEvent(t, lang)}
+          </span>
+          <p className="text-base sm:text-lg font-display font-black text-white leading-snug" data-testid="clock-question-prompt">
+            {taskPrompt(t, lang)}
+          </p>
+        </div>
         <div className="flex justify-center">{display}</div>
 
         {t.kind === 'set' ? (
@@ -827,7 +854,7 @@ export const ClockQuest: React.FC<ClockQuestProps> = ({
             </button>
           )
         ) : t.kind === 'match' ? (
-          <div className="grid grid-cols-2 gap-3 justify-items-center">
+          <div className="grid grid-cols-4 gap-1.5 sm:gap-3 justify-items-center">
             {t.choices.map((c, i) => {
               const state = answered ? (i === t.correctIndex ? 'correct' : i === feedback?.chosenIndex ? 'wrong' : 'none') : 'none';
               return (
@@ -838,7 +865,7 @@ export const ClockQuest: React.FC<ClockQuestProps> = ({
                   data-choice-index={i}
                   disabled={answered || eliminated.includes(i)}
                   onClick={() => submitAnswer(i === t.correctIndex, i)}
-                  className={`rounded-2xl p-2 border-2 transition-all ${eliminated.includes(i) && !answered ? 'opacity-25 grayscale line-through' : ''} ${
+                  className={`w-full flex justify-center rounded-2xl p-1 sm:p-2 border-2 transition-all ${eliminated.includes(i) && !answered ? 'opacity-25 grayscale line-through' : ''} ${
                     state === 'correct'
                       ? 'border-emerald-300 bg-emerald-500/20'
                       : state === 'wrong'
@@ -846,13 +873,13 @@ export const ClockQuest: React.FC<ClockQuestProps> = ({
                       : 'border-purple-600/60 bg-purple-950/50 hover:border-amber-300'
                   }`}
                 >
-                  {c.time && <AnalogClock time={c.time} size="min(36vw, 140px)" compact />}
+                  {c.time && <AnalogClock time={c.time} size="min(19vw, 120px)" mini />}
                 </button>
               );
             })}
           </div>
         ) : (
-          <div className={`grid gap-2.5 ${t.kind === 'read' ? 'grid-cols-2' : 'grid-cols-1 sm:grid-cols-2'}`}>
+          <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5">
             {t.choices.map((c, i) => {
               const state = answered ? (i === t.correctIndex ? 'correct' : i === feedback?.chosenIndex ? 'wrong' : 'none') : 'none';
               return (
@@ -863,8 +890,8 @@ export const ClockQuest: React.FC<ClockQuestProps> = ({
                   data-choice-index={i}
                   disabled={answered || eliminated.includes(i)}
                   onClick={() => submitAnswer(i === t.correctIndex, i)}
-                  className={`kid-block-card px-3 py-3.5 rounded-2xl border-2 font-display font-black transition-all ${eliminated.includes(i) && !answered ? 'opacity-25 grayscale line-through' : ''} ${
-                    t.kind === 'read' ? 'text-2xl font-mono tracking-wider' : 'text-base sm:text-lg'
+                  className={`kid-block-card min-h-[3.5rem] px-1 py-3 rounded-2xl border-2 font-display font-black leading-tight transition-all ${eliminated.includes(i) && !answered ? 'opacity-25 grayscale line-through' : ''} ${
+                    t.kind === 'duration' ? 'text-sm sm:text-lg' : 'text-lg sm:text-2xl font-mono'
                   } ${
                     state === 'correct'
                       ? 'border-emerald-300 bg-emerald-500/25 text-emerald-100'
@@ -1033,20 +1060,22 @@ export const ClockQuest: React.FC<ClockQuestProps> = ({
         </div>
 
         {/* Bottom coaching bar with Derpy, like the other stages */}
-        <div className="max-w-3xl mx-auto bg-gradient-to-r from-sky-950/80 via-purple-950/85 to-indigo-950/80 border-2 border-sky-400/50 rounded-3xl p-3 sm:p-4 flex flex-col sm:flex-row items-center justify-between gap-2.5 shadow-lg">
-          <div className="flex items-center gap-3">
-            <DerpyTigerMascot size={46} excited={Boolean(feedback?.correct)} />
-            <p className="font-display font-bold text-sm sm:text-base text-sky-100 leading-snug" data-testid="clock-coach-message">
+        <div className="max-w-3xl mx-auto bg-gradient-to-r from-sky-950/80 via-purple-950/85 to-indigo-950/80 border-2 border-sky-400/50 rounded-3xl p-2.5 sm:p-4 flex items-center justify-between gap-2 sm:gap-3 shadow-lg">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+            <div className="shrink-0">
+              <DerpyTigerMascot size={40} excited={Boolean(feedback?.correct)} />
+            </div>
+            <p className="font-display font-bold text-xs sm:text-base text-sky-100 leading-snug" data-testid="clock-coach-message">
               {coachMessage || t.derpyReady}
             </p>
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-2 shrink-0">
+          <div className="flex flex-col sm:flex-row items-stretch gap-1.5 sm:gap-2 shrink-0">
             <button
               type="button"
               data-testid="clock-slash-btn"
               disabled={slashCharges <= 0 || slashableIndices.length <= 1 || Boolean(feedback)}
               onClick={handleSlash}
-              className={`px-3.5 py-2 rounded-2xl font-display font-bold text-sm flex items-center gap-1.5 transition-all ${
+              className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-2xl font-display font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all ${
                 slashCharges > 0 && slashableIndices.length > 1 && !feedback
                   ? 'keep-white-text bg-gradient-to-r from-pink-500 to-fuchsia-600 text-white border border-pink-300 shadow-[0_0_16px_rgba(236,72,153,0.6)] hover:brightness-110 active:scale-95'
                   : 'bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed'
@@ -1060,7 +1089,7 @@ export const ClockQuest: React.FC<ClockQuestProps> = ({
               data-testid="clock-hint-btn"
               disabled={Boolean(feedback)}
               onClick={handleHint}
-              className="px-4 py-2 rounded-2xl bg-gradient-to-r from-amber-400 to-yellow-300 text-slate-950 font-display font-bold text-sm shadow-[0_0_18px_rgba(251,191,36,0.5)] hover:brightness-110 active:scale-95 transition-all disabled:opacity-50"
+              className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-2xl bg-gradient-to-r from-amber-400 to-yellow-300 text-slate-950 font-display font-bold text-xs sm:text-sm shadow-[0_0_18px_rgba(251,191,36,0.5)] hover:brightness-110 active:scale-95 transition-all disabled:opacity-50"
             >
               {t.derpyHintBtn}
             </button>

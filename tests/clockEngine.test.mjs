@@ -10,6 +10,9 @@ import {
   isSetAnswerCorrect,
   buildClockStageDeck,
   clockStars,
+  explainWords,
+  formatDurationShort,
+  generateClockTask,
 } from '../src/engine/clockEngine.ts';
 import { loadProgress } from '../src/engine/progressionStore.ts';
 
@@ -88,4 +91,27 @@ test('old saved progress gets default clock fields', () => {
   const progress = loadProgress();
   assert.equal(progress.clockLevelUnlocked, 1);
   assert.deepEqual(progress.clockStars, { 1: 3 });
+});
+
+test('every level offers four distinct answers', () => {
+  const rng = seeded(7);
+  for (const level of CLOCK_LEVELS) {
+    for (const kind of level.kinds.filter((k) => k !== 'set')) {
+      const task = generateClockTask(level.id, kind, rng);
+      assert.equal(task.choices.length, 4, `level ${level.id} ${kind}`);
+      assert.equal(new Set(task.choices.map((c) => c.key)).size, 4);
+    }
+  }
+});
+
+test('spoken-time questions are explained with digits', () => {
+  assert.equal(explainWords({ h: 2, m: 30 }, 'nl').startsWith('"half drie" = 02:30.'), true);
+  assert.match(explainWords({ h: 9, m: 25 }, 'nl'), /5 voor half = 5 minuten vóór half: 30 − 5 = 25/);
+  assert.match(explainWords({ h: 3, m: 45 }, 'en'), /^"quarter to four" = 03:45\./);
+});
+
+test('short duration labels fit small buttons', () => {
+  assert.deepEqual(formatDurationShort(105, 'nl'), ['1 uur', '45 min']);
+  assert.deepEqual(formatDurationShort(120, 'en'), ['2 hrs']);
+  assert.deepEqual(formatDurationShort(20, 'en'), ['20 min']);
 });
