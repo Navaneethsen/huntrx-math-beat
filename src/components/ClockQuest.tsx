@@ -832,14 +832,6 @@ export const ClockQuest: React.FC<ClockQuestProps> = ({
 
     return (
       <div className="space-y-3">
-        <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 px-1">
-          <span className="px-2.5 py-0.5 rounded-full bg-fuchsia-500/20 border border-fuchsia-400/50 text-[11px] sm:text-xs font-black text-fuchsia-200" data-testid="clock-event-tag">
-            🎤 {taskEvent(t, lang)}
-          </span>
-          <p className="text-base sm:text-lg font-display font-black text-white leading-snug" data-testid="clock-question-prompt">
-            {taskPrompt(t, lang)}
-          </p>
-        </div>
         <div className="flex justify-center">{display}</div>
 
         {t.kind === 'set' ? (
@@ -1031,20 +1023,32 @@ export const ClockQuest: React.FC<ClockQuestProps> = ({
           data-testid="clock-play-card"
         >
           <div className="flex items-center justify-between gap-2 text-xs sm:text-sm font-black">
-            <span className="px-2.5 py-1 rounded-full bg-white/10 text-amber-200">
+            <span className="shrink-0 px-2.5 py-1 rounded-full bg-white/10 text-amber-200">
               {isBoss ? `⚔️ BOSS` : `${Math.min(qIndex + 1, deck.length)}/${deck.length}`}
             </span>
+            <div className="flex-1 min-w-0 flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
+              {!isBoss && (
+                <span className="px-2.5 py-0.5 rounded-full bg-fuchsia-500/20 border border-fuchsia-400/50 text-[11px] sm:text-xs font-black text-fuchsia-200 whitespace-nowrap" data-testid="clock-event-tag">
+                  🎤 {taskEvent(task, lang)}
+                </span>
+              )}
+              <p className="text-base sm:text-lg font-display font-black text-white leading-snug text-center" data-testid="clock-question-prompt">
+                {taskPrompt(task, lang)}
+              </p>
+            </div>
             {isBoss ? (
-              <div className="flex items-center gap-2">
-                <div className="md:hidden">
-                  <SajaDemonBoss hpPercent={bossHpPercent} hitFlash={bossFlash} />
+              <div className="shrink-0 flex items-center gap-2">
+                <div className="md:hidden w-11 h-11 flex items-center justify-center">
+                  <div className="scale-[0.65]">
+                    <SajaDemonBoss hpPercent={bossHpPercent} hitFlash={bossFlash} />
+                  </div>
                 </div>
-                <div className="w-24 sm:w-32 h-3 rounded-full bg-purple-900 border border-rose-400/60 overflow-hidden">
+                <div className="w-14 sm:w-32 h-3 rounded-full bg-purple-900 border border-rose-400/60 overflow-hidden">
                   <div className="h-full bg-gradient-to-r from-rose-500 to-pink-400 transition-all duration-300" style={{ width: `${bossHpPercent}%` }} />
                 </div>
               </div>
             ) : (
-              <div className="flex gap-1" data-testid="clock-progress-dots">
+              <div className="hidden sm:flex shrink-0 gap-1" data-testid="clock-progress-dots">
                 {deck.map((_, i) => (
                   <span
                     key={i}
