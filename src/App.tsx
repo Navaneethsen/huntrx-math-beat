@@ -1432,8 +1432,8 @@ export const App: React.FC = () => {
                       <div>
                         <h3 className="font-display font-black text-xl sm:text-2xl text-amber-300 leading-tight">
                           {lang === 'nl'
-                            ? 'Reken-Arcade • 10 Spellen'
-                            : 'Math Arcade • 10 Games'}
+                            ? 'Reken-Arcade • 11 Spellen'
+                            : 'Math Arcade • 11 Games'}
                         </h3>
                         <p className="text-xs sm:text-sm font-bold text-pink-200">
                           {lang === 'nl'
@@ -1456,13 +1456,13 @@ export const App: React.FC = () => {
                       <span>🕹️</span>
                       <span>
                         {lang === 'nl'
-                          ? 'Open Alle 10 Spellen ➔'
-                          : 'Open All 10 Games ➔'}
+                          ? 'Open Alle 11 Spellen ➔'
+                          : 'Open All 11 Games ➔'}
                       </span>
                     </button>
                   </div>
 
-                  {/* 10 Visual Arcade Game Blocks */}
+                  {/* 11 Visual Arcade Game Blocks */}
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
                     {ARCADE_GAMES_CATALOG.map((g) => (
                       <button
@@ -1489,8 +1489,15 @@ export const App: React.FC = () => {
                           <div className="font-display font-black text-sm sm:text-base text-white leading-snug">
                             {lang === 'nl' ? g.titleNl : g.titleEn}
                           </div>
-                          <div className="text-xs font-bold text-sky-100/90 mt-0.5 truncate">
-                            {lang === 'nl' ? g.subtitleNl : g.subtitleEn}
+                          <div className="flex flex-wrap items-center gap-1 mt-0.5">
+                            <span className="text-xs font-bold text-sky-100/90 truncate">
+                              {lang === 'nl' ? g.subtitleNl : g.subtitleEn}
+                            </span>
+                            {g.minGroupBadgeNl && g.minGroupBadgeEn && (
+                              <span className="px-1.5 py-0.5 rounded bg-amber-400/35 border border-amber-200/80 text-[10px] font-display font-black text-amber-100">
+                                🎓 {lang === 'nl' ? g.minGroupBadgeNl : g.minGroupBadgeEn}
+                              </span>
+                            )}
                           </div>
                         </div>
                       </button>

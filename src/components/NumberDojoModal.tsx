@@ -91,6 +91,20 @@ const SECRET_CHECKS: SecretCheck[] = [
     explainNl: 'Zesden zijn half zo groot als derden. Elk derde stuk wordt 2 zesde stukjes: 1/3 = 2/6.',
     explainEn: 'Sixths are half the size of thirds. Each third becomes 2 sixths: 1/3 = 2/6.',
   },
+  {
+    question: 'GGD / HCF(12, 18) = ?',
+    choices: ['3', '6', '9', '36'],
+    answer: '6',
+    explainNl: 'De delers van 12 zijn 1,2,3,4,6,12 en van 18 zijn 1,2,3,6,9,18. De grootste gedeelde deler (GGD) is 6!',
+    explainEn: 'The factors of 12 are 1,2,3,4,6,12 and of 18 are 1,2,3,6,9,18. The Highest Common Factor (HCF) is 6!',
+  },
+  {
+    question: 'KGV / LCM(4, 6) = ?',
+    choices: ['2', '12', '18', '24'],
+    answer: '12',
+    explainNl: 'Tafel van 4: 4, 8, 12... Tafel van 6: 6, 12... Ze landen voor het eerst samen op 12 (het KGV)!',
+    explainEn: 'Multiples of 4: 4, 8, 12... Multiples of 6: 6, 12... They first land together at 12 (the LCM)!',
+  },
 ];
 
 interface BondFamilyPreset {

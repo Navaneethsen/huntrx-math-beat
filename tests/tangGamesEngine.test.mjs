@@ -11,6 +11,7 @@ import {
   generateSoulScaleChallenge,
   generateRhythmPatternChallenge,
   generateTargetTrioChallenge,
+  generateHcfLcmChallenge,
   generateTangChallenge,
   challengeToTrickyFact,
   localizeFormulaLabel,
@@ -28,6 +29,7 @@ const GAMES = [
   'soulScale',
   'rhythmPattern',
   'targetTrio',
+  'hcfLcm',
 ];
 
 test('generateBubblePopChallenge produces 6 unique bubbles with a valid solution pair across g3–g8 and streaks', () => {
@@ -240,6 +242,68 @@ test('English localization across all 10 Arcade games and g3–g8 contains zero 
     localizeFormulaLabel('Mean (8, 6, 19)', 'nl'),
     'Gemiddelde (8, 6, 19)'
   );
+  assert.equal(
+    localizeFormulaLabel('GGD(12, 18)', 'en'),
+    'HCF(12, 18)'
+  );
+  assert.equal(
+    localizeFormulaLabel('KGV(4, 6)', 'en'),
+    'LCM(4, 6)'
+  );
+  assert.equal(
+    localizeFormulaLabel('HCF(12, 18)', 'nl'),
+    'GGD(12, 18)'
+  );
+  assert.equal(
+    localizeFormulaLabel('LCM(4, 6)', 'nl'),
+    'KGV(4, 6)'
+  );
+});
+
+test('generateHcfLcmChallenge teaches HCF (GGD) and LCM (KGV) for Groep 5–8 and upgrades g3/g4 to g5', () => {
+  for (const group of GROUPS) {
+    for (const modeFilter of ['all', 'hcf', 'lcm']) {
+      for (let i = 0; i < 10; i++) {
+        const ch = generateHcfLcmChallenge(group, i, modeFilter);
+        assert.equal(ch.kind, 'hcfLcm');
+        // g3 and g4 automatically upgrade to g5 starter level
+        const expectedEff = group === 'g3' || group === 'g4' ? 'g5' : group;
+        assert.equal(ch.effectiveGroup, expectedEff);
+        if (modeFilter !== 'all') {
+          assert.equal(ch.mode, modeFilter);
+        }
+        assert.equal(ch.choices.length, 4);
+        assert.ok(ch.choices.includes(ch.answer));
+        assert.equal(ch.stepByStepNl.length, 3);
+        assert.equal(ch.stepByStepEn.length, 3);
+
+        const [a, b, c] = ch.numbers;
+        if (ch.mode === 'hcf') {
+          assert.ok(ch.equationDisplayNl.startsWith('GGD('));
+          assert.ok(ch.equationDisplayEn.startsWith('HCF('));
+          assert.equal(a % ch.answer, 0);
+          assert.equal(b % ch.answer, 0);
+          if (c !== undefined) assert.equal(c % ch.answer, 0);
+          assert.equal(
+            Math.max(...ch.commonFactors),
+            ch.answer,
+            'Highest common factor must equal answer'
+          );
+        } else {
+          assert.ok(ch.equationDisplayNl.startsWith('KGV('));
+          assert.ok(ch.equationDisplayEn.startsWith('LCM('));
+          assert.equal(ch.answer % a, 0);
+          assert.equal(ch.answer % b, 0);
+          if (c !== undefined) assert.equal(ch.answer % c, 0);
+          assert.ok(ch.trackA.includes(ch.answer));
+          assert.ok(ch.trackB.includes(ch.answer));
+          if (c !== undefined && ch.trackC) {
+            assert.ok(ch.trackC.includes(ch.answer));
+          }
+        }
+      }
+    }
+  }
 });
 
 test('Consecutive challenges across all 10 Arcade games and g3–g8 are non-repeating and varied', () => {

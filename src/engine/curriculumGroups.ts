@@ -207,12 +207,12 @@ export const CURRICULUM_GROUPS: CurriculumGroupSpec[] = [
       en: '“Cause we are hunters, voices strong and I know I believe!” — Mira 💃',
     },
     ixlSummary: {
-      nl: 'Tafels 2 t/m 10, getallenlijn-middelpunt, negatieve sprongen tot −20, omtrek en sommen tot 100.',
-      en: 'Times tables 2–10, number-line midpoints, negative jumps to −20, perimeter, and sums to 100.',
+      nl: 'Tafels 2 t/m 10, delers & veelvouden (start GGD & KGV), getallenlijn-middelpunt, negatieve sprongen tot −20 en omtrek.',
+      en: 'Times tables 2–10, factors & multiples (starter HCF & LCM), number-line midpoints, negative jumps to −20, and perimeter.',
     },
     conceptTags: {
-      nl: ['📏 Getallenlijn & Midden', '❄️ Sub-Zero −20 tot +20', '✖️ Alle Tafels 2–10', '📐 Omtrek & Waarde'],
-      en: ['📏 Number Line Midpoints', '❄️ Sub-Zero −20 to +20', '✖️ All Tables 2–10', '📐 Perimeter & Place Value'],
+      nl: ['📏 Getallenlijn & Midden', '❄️ Sub-Zero −20 tot +20', '✖️ Alle Tafels 2–10', '🎸 Start GGD & KGV'],
+      en: ['📏 Number Line Midpoints', '❄️ Sub-Zero −20 to +20', '✖️ All Tables 2–10', '🎸 Starter HCF & LCM'],
     },
     missions: [
       {
@@ -283,12 +283,12 @@ export const CURRICULUM_GROUPS: CurriculumGroupSpec[] = [
       en: '“Now we’re in the fight, it’s a takedown!” — Rumi ⚔️',
     },
     ixlSummary: {
-      nl: 'Negatieve getallenlijn (−30 tot +30), deeltafels, gelijknamige breuken, kommagetallen en oppervlakte.',
-      en: 'Negative number line (−30 to +30), division facts, like fractions, decimals, and area.',
+      nl: 'Negatieve getallenlijn (−30 tot +30), deeltafels, GGD & KGV (delers en veelvouden), breuken en oppervlakte.',
+      en: 'Negative number line (−30 to +30), division facts, HCF & LCM (factors and multiples), fractions, and area.',
     },
     conceptTags: {
-      nl: ['❄️ Negatieve Lijn −30..+30', '➗ Deeltafels 2–12', '🍕 Breuken & Kommagetallen', '📐 Oppervlakte & Factoren'],
-      en: ['❄️ Negative Line −30..+30', '➗ Division Facts 2–12', '🍕 Fractions & Decimals', '📐 Area & Factors'],
+      nl: ['❄️ Negatieve Lijn −30..+30', '➗ Deeltafels 2–12', '🍕 Breuken & Kommagetallen', '🎸 GGD & KGV (Delers & Veelvouden)'],
+      en: ['❄️ Negative Line −30..+30', '➗ Division Facts 2–12', '🍕 Fractions & Decimals', '🎸 HCF & LCM (Factors & Multiples)'],
     },
     missions: [
       {
@@ -359,12 +359,12 @@ export const CURRICULUM_GROUPS: CurriculumGroupSpec[] = [
       en: '“Thank you for freeing my soul, Rumi.” — Jinu 🎸',
     },
     ixlSummary: {
-      nl: 'Kommagetallen & negatieve getallenlijn, procenten (10%, 25%, 50%), kwadraten, volgorde van bewerkingen en ongelijknamige breuken.',
-      en: 'Decimal & negative number lines, percentages (10%, 25%, 50%), square numbers, order of operations & unlike fractions.',
+      nl: 'Kommagetallen & negatieve getallenlijn, priemfactoren, GGD & KGV voor ongelijknamige breuken, procenten en kwadraten.',
+      en: 'Decimal & negative number lines, prime factors, HCF & LCM for unlike fractions, percentages & square numbers.',
     },
     conceptTags: {
-      nl: ['📏 Komma & Negatieve Lijn', '❄️ Rekenen onder Nul', '💯 Procenten & Kommagetallen', '⚔️ Kwadraten & Haakjes'],
-      en: ['📏 Decimal & Negative Line', '❄️ Sub-Zero Arithmetic', '💯 Percentages & Decimals', '⚔️ Squares & Order of Ops'],
+      nl: ['📏 Komma & Negatieve Lijn', '🎸 GGD & KGV + Priemfactoren', '💯 Procenten & Kommagetallen', '⚔️ Kwadraten & Haakjes'],
+      en: ['📏 Decimal & Negative Line', '🎸 HCF & LCM + Prime Factors', '💯 Percentages & Decimals', '⚔️ Squares & Order of Ops'],
     },
     missions: [
       {
@@ -435,12 +435,12 @@ export const CURRICULUM_GROUPS: CurriculumGroupSpec[] = [
       en: '“No more hiding, I’ll be shining, like I’m born to be!” — Rumi ("Golden") 👑',
     },
     ixlSummary: {
-      nl: 'Negatieve getallen (+, −, ×, ÷), verhoudingen, procenten, machten (n², n³), algebra-runen en Eindbaas Mix.',
-      en: 'Negative integers (+, −, ×, ÷), ratios, percentages, powers (n², n³), algebra runes & Final Boss Mix.',
+      nl: 'Negatieve getallen (+, −, ×, ÷), GGD & KGV van 3 getallen, verhoudingen, procenten, machten (n², n³) en Eindbaas Mix.',
+      en: 'Negative integers (+, −, ×, ÷), 3-number HCF & LCM, ratios, percentages, powers (n², n³) & Final Boss Mix.',
     },
     conceptTags: {
-      nl: ['❄️ Negatief +, −, ×, ÷', '📊 Verhoudingen & Procenten', '⚔️ Algebra & Machten (n³)', '👑 Golden Eindbaas Mix'],
-      en: ['❄️ Negative +, −, ×, ÷', '📊 Ratios & Percentages', '⚔️ Algebra & Powers (n³)', '👑 Golden Final Boss Mix'],
+      nl: ['❄️ Negatief +, −, ×, ÷', '🎸 3-Getallen GGD & KGV', '⚔️ Algebra & Machten (n³)', '👑 Golden Eindbaas Mix'],
+      en: ['❄️ Negative +, −, ×, ÷', '🎸 3-Number HCF & LCM', '⚔️ Algebra & Powers (n³)', '👑 Golden Final Boss Mix'],
     },
     missions: [
       {

@@ -11,7 +11,8 @@ export type TangMiniGameId =
   | 'stageGrid'
   | 'soulScale'
   | 'rhythmPattern'
-  | 'targetTrio';
+  | 'targetTrio'
+  | 'hcfLcm';
 
 export interface BubblePopChallenge {
   kind: 'sodaBubbles';
@@ -144,6 +145,31 @@ export interface TargetTrioChallenge {
   coachTip: { nl: string; en: string };
 }
 
+export interface HcfLcmChallenge {
+  kind: 'hcfLcm';
+  mode: 'hcf' | 'lcm';
+  effectiveGroup: 'g5' | 'g6' | 'g7' | 'g8';
+  numbers: [number, number] | [number, number, number];
+  equationDisplayNl: string;
+  equationDisplayEn: string;
+  factorsA: number[];
+  factorsB: number[];
+  factorsC?: number[];
+  commonFactors: number[];
+  trackA: number[];
+  trackB: number[];
+  trackC?: number[];
+  primeBreakdownNl: string;
+  primeBreakdownEn: string;
+  stepByStepNl: [string, string, string];
+  stepByStepEn: [string, string, string];
+  answer: number;
+  choices: number[];
+  conceptBadge: { nl: string; en: string };
+  prompt: { nl: string; en: string };
+  coachTip: { nl: string; en: string };
+}
+
 export type TangChallenge =
   | BubblePopChallenge
   | NumberLineChallenge
@@ -154,7 +180,8 @@ export type TangChallenge =
   | StageGridChallenge
   | SoulScaleChallenge
   | RhythmPatternChallenge
-  | TargetTrioChallenge;
+  | TargetTrioChallenge
+  | HcfLcmChallenge;
 
 const BUBBLE_COLORS = ['pink', 'cyan', 'amber', 'violet'] as const;
 
@@ -213,6 +240,8 @@ export function getChallengeSignature(ch: TangChallenge): string {
       return `rp:${ch.equationDisplay}:${ch.answer}`;
     case 'targetTrio':
       return `tt:${ch.equationDisplay}:${ch.answer}`;
+    case 'hcfLcm':
+      return `hl:${ch.mode}:${ch.numbers.join(',')}:${ch.answer}`;
   }
 }
 
@@ -2806,6 +2835,286 @@ export function generateTargetTrioChallenge(
   });
 }
 
+function gcdTwo(a: number, b: number): number {
+  let x = Math.abs(a);
+  let y = Math.abs(b);
+  while (y !== 0) {
+    const t = y;
+    y = x % y;
+    x = t;
+  }
+  return x || 1;
+}
+
+function lcmTwo(a: number, b: number): number {
+  return Math.abs(a * b) / gcdTwo(a, b);
+}
+
+function getPositiveFactors(n: number): number[] {
+  const out: number[] = [];
+  for (let i = 1; i <= n; i++) {
+    if (n % i === 0) out.push(i);
+  }
+  return out;
+}
+
+function getPrimeFactorsExpr(n: number): string {
+  if (n < 2) return String(n);
+  const factors: number[] = [];
+  let rem = n;
+  for (let d = 2; d * d <= rem; d++) {
+    while (rem % d === 0) {
+      factors.push(d);
+      rem = Math.floor(rem / d);
+    }
+  }
+  if (rem > 1) factors.push(rem);
+  return factors.join(' × ');
+}
+
+function buildMultiplesTrack(step: number, targetLcm: number, maxCount = 8): number[] {
+  const stepsNeeded = Math.min(maxCount, Math.max(4, Math.round(targetLcm / step) + 1));
+  const out: number[] = [];
+  for (let i = 1; i <= stepsNeeded; i++) {
+    out.push(step * i);
+  }
+  if (!out.includes(targetLcm)) {
+    out[out.length - 1] = targetLcm;
+  }
+  return out;
+}
+
+const HCF_POOLS: Record<'g5' | 'g6' | 'g7' | 'g8', ([number, number] | [number, number, number])[]> = {
+  g5: [
+    [4, 6], [4, 8], [4, 10], [6, 8], [6, 9], [6, 10], [6, 12], [6, 15],
+    [8, 10], [8, 12], [8, 16], [8, 20], [9, 12], [9, 15], [9, 18], [10, 15],
+    [10, 20], [10, 25], [12, 15], [12, 16], [12, 18], [12, 20], [14, 21], [15, 20],
+    [15, 25], [16, 20], [16, 24], [18, 24], [20, 25], [20, 30], [12, 24], [18, 30],
+  ],
+  g6: [
+    [12, 16], [12, 18], [12, 20], [12, 28], [12, 30], [14, 21], [14, 28], [14, 35],
+    [15, 20], [15, 25], [15, 35], [16, 24], [16, 36], [16, 40], [18, 24], [18, 27],
+    [18, 30], [18, 45], [20, 28], [20, 30], [20, 35], [21, 28], [21, 35], [24, 32],
+    [24, 36], [24, 40], [27, 36], [28, 42], [30, 45], [32, 48], [36, 48], [40, 50],
+  ],
+  g7: [
+    [18, 42], [21, 49], [24, 36], [24, 40], [24, 56], [24, 60], [27, 45], [28, 42],
+    [28, 70], [30, 42], [30, 45], [30, 75], [32, 48], [32, 56], [35, 49], [36, 48],
+    [36, 54], [36, 60], [40, 56], [40, 64], [42, 56], [42, 63], [42, 70], [45, 60],
+    [45, 75], [48, 64], [48, 72], [54, 72], [56, 84], [60, 84], [63, 81], [64, 96],
+  ],
+  g8: [
+    [12, 18, 24], [12, 20, 28], [14, 21, 35], [15, 25, 40], [15, 30, 45], [16, 24, 32],
+    [16, 24, 40], [18, 27, 36], [18, 27, 45], [18, 30, 42], [20, 30, 50], [21, 28, 42],
+    [24, 36, 48], [24, 36, 60], [24, 40, 56], [27, 36, 54], [28, 42, 56], [30, 45, 60],
+    [30, 45, 75], [32, 48, 64], [36, 54, 72], [40, 60, 80], [42, 63, 84], [48, 72, 96],
+    [48, 80], [54, 90], [56, 98], [60, 96], [63, 105], [72, 108], [75, 120], [84, 126],
+  ],
+};
+
+const LCM_POOLS: Record<'g5' | 'g6' | 'g7' | 'g8', ([number, number] | [number, number, number])[]> = {
+  g5: [
+    [2, 3], [2, 5], [2, 7], [2, 9], [3, 4], [3, 5], [3, 6], [3, 7],
+    [3, 8], [3, 9], [3, 10], [4, 5], [4, 6], [4, 8], [4, 10], [4, 12],
+    [5, 6], [5, 8], [5, 10], [5, 15], [6, 8], [6, 9], [6, 10], [6, 12],
+    [6, 15], [8, 10], [8, 12], [9, 12], [10, 15], [10, 20], [4, 7], [5, 7],
+  ],
+  g6: [
+    [3, 7], [3, 8], [4, 6], [4, 7], [4, 9], [4, 10], [5, 6], [5, 7],
+    [5, 8], [5, 9], [6, 8], [6, 9], [6, 10], [6, 14], [6, 15], [7, 8],
+    [7, 14], [8, 10], [8, 12], [8, 16], [8, 20], [9, 12], [9, 15], [9, 18],
+    [10, 12], [10, 15], [10, 25], [12, 15], [12, 16], [12, 18], [12, 20], [15, 20],
+  ],
+  g7: [
+    [6, 14], [6, 16], [7, 9], [8, 10], [8, 12], [8, 14], [8, 18], [8, 20],
+    [9, 12], [9, 15], [9, 21], [10, 12], [10, 14], [10, 15], [10, 16], [12, 14],
+    [12, 15], [12, 16], [12, 18], [12, 20], [12, 30], [14, 21], [15, 20], [15, 25],
+    [16, 20], [16, 24], [18, 24], [18, 30], [20, 25], [20, 30], [24, 36], [25, 30],
+  ],
+  g8: [
+    [2, 3, 4], [2, 3, 5], [2, 4, 6], [2, 5, 6], [3, 4, 5], [3, 4, 6],
+    [3, 5, 6], [3, 6, 9], [4, 5, 10], [4, 6, 8], [4, 6, 9], [4, 6, 12],
+    [4, 8, 12], [5, 6, 10], [5, 6, 15], [5, 10, 15], [6, 8, 12], [6, 9, 18],
+    [6, 10, 15], [8, 10, 20], [8, 12, 16], [8, 12, 24], [9, 12, 18], [10, 12, 15],
+    [12, 16], [14, 21], [15, 18], [16, 20], [16, 24], [18, 24], [20, 24], [24, 32],
+  ],
+};
+
+/**
+ * 11. 🎸 GGD & KGV Beat-Sync Studio (HCF & LCM Lab — Groep 5 to Groep 8)
+ * - Specially designed for Groep 5 and above (g5, g6, g7, g8).
+ * - If called with g3 or g4, automatically upgrades to g5 starter level.
+ * - Teaches both:
+ *   1. GGD / HCF (Grootste Gemene Deler / Highest Common Factor) via visual Factor Crystal Ribbons & Shared Divisors
+ *   2. KGV / LCM (Kleinste Gemene Veelvoud / Lowest Common Multiple) via Dual/Triple Idol Skip-Count Beat Tracks
+ */
+export function generateHcfLcmChallenge(
+  group: SchoolGroupId = 'g5',
+  _streak = 0,
+  modeFilter: 'all' | 'hcf' | 'lcm' = 'all'
+): HcfLcmChallenge {
+  const effectiveGroup: 'g5' | 'g6' | 'g7' | 'g8' =
+    group === 'g3' || group === 'g4' ? 'g5' : group;
+
+  return withNonRepeatingChallenge('hcfLcm', effectiveGroup, () => {
+    const mode: 'hcf' | 'lcm' =
+      modeFilter === 'all'
+        ? Math.random() < 0.5
+          ? 'hcf'
+          : 'lcm'
+        : modeFilter;
+
+    const pool = mode === 'hcf' ? HCF_POOLS[effectiveGroup] : LCM_POOLS[effectiveGroup];
+    const picked = pool[randInt(0, pool.length - 1)];
+    const [a, b, c] = picked;
+
+    const factorsA = getPositiveFactors(a);
+    const factorsB = getPositiveFactors(b);
+    const factorsC = c !== undefined ? getPositiveFactors(c) : undefined;
+
+    const commonFactors = factorsA.filter(
+      (f) => factorsB.includes(f) && (factorsC === undefined || factorsC.includes(f))
+    );
+
+    const hcfVal = c !== undefined ? gcdTwo(gcdTwo(a, b), c) : gcdTwo(a, b);
+    const lcmVal = c !== undefined ? lcmTwo(lcmTwo(a, b), c) : lcmTwo(a, b);
+
+    const trackA = buildMultiplesTrack(a, lcmVal, 8);
+    const trackB = buildMultiplesTrack(b, lcmVal, 8);
+    const trackC = c !== undefined ? buildMultiplesTrack(c, lcmVal, 8) : undefined;
+
+    const numsLabel = c !== undefined ? `${a}, ${b}, ${c}` : `${a}, ${b}`;
+    const primeBreakdown =
+      c !== undefined
+        ? `${a} = ${getPrimeFactorsExpr(a)}  •  ${b} = ${getPrimeFactorsExpr(b)}  •  ${c} = ${getPrimeFactorsExpr(c)}`
+        : `${a} = ${getPrimeFactorsExpr(a)}  •  ${b} = ${getPrimeFactorsExpr(b)}`;
+
+    if (mode === 'hcf') {
+      const ans = hcfVal;
+      const secondLargestCommon =
+        commonFactors.length >= 2 ? commonFactors[commonFactors.length - 2] : 1;
+      const distractorPool = [
+        secondLargestCommon,
+        Math.min(a, b),
+        ans * 2,
+        ans + 2,
+        Math.max(1, ans - 1),
+        lcmVal,
+      ].filter((v) => v >= 1 && v !== ans);
+
+      const choices = buildUniqueChoices(ans, distractorPool, false);
+      const divisionCheck =
+        c !== undefined
+          ? `${a} ÷ ${ans} = ${a / ans}, ${b} ÷ ${ans} = ${b / ans}, ${c} ÷ ${ans} = ${c / ans}`
+          : `${a} ÷ ${ans} = ${a / ans} & ${b} ÷ ${ans} = ${b / ans}`;
+
+      return {
+        kind: 'hcfLcm',
+        mode: 'hcf',
+        effectiveGroup,
+        numbers: picked,
+        equationDisplayNl: `GGD(${numsLabel}) = [ ? ]`,
+        equationDisplayEn: `HCF(${numsLabel}) = [ ? ]`,
+        factorsA,
+        factorsB,
+        factorsC,
+        commonFactors,
+        trackA,
+        trackB,
+        trackC,
+        primeBreakdownNl: `Priemblokjes: ${primeBreakdown}`,
+        primeBreakdownEn: `Prime blocks: ${primeBreakdown}`,
+        stepByStepNl: [
+          `1️⃣ Zoek alle delers van ${numsLabel}.`,
+          `2️⃣ Gedeelde delers: ${commonFactors.join(', ')}.`,
+          `3️⃣ De grootste gedeelde deler (GGD) is ${ans} (${divisionCheck})!`,
+        ],
+        stepByStepEn: [
+          `1️⃣ List the factors of ${numsLabel}.`,
+          `2️⃣ Common factors shared by all: ${commonFactors.join(', ')}.`,
+          `3️⃣ The Highest Common Factor (HCF) is ${ans} (${divisionCheck})!`,
+        ],
+        answer: ans,
+        choices,
+        conceptBadge: {
+          nl: c !== undefined ? 'GGD van 3 Getallen (Gr 8)' : `GGD • Grootste Gemene Deler (${effectiveGroup.toUpperCase()})`,
+          en: c !== undefined ? '3-Number HCF (Gr 8)' : `HCF • Highest Common Factor (${effectiveGroup.toUpperCase()})`,
+        },
+        prompt: {
+          nl: `Wat is de GGD (Grootste Gemene Deler) van ${numsLabel}?`,
+          en: `What is the HCF (Highest Common Factor) of ${numsLabel}?`,
+        },
+        coachTip: {
+          nl: `💡 Gedeelde delers zijn [${commonFactors.join(', ')}]. De grootste is ${ans} (${divisionCheck})!`,
+          en: `💡 Common factors are [${commonFactors.join(', ')}]. The highest is ${ans} (${divisionCheck})!`,
+        },
+      };
+    }
+
+    // LCM mode ('lcm')
+    const ans = lcmVal;
+    const sumNums = c !== undefined ? a + b + c : a + b;
+    const rawProduct = c !== undefined ? a * b : a * b;
+    const distractorPool = [
+      ans * 2,
+      Math.max(a, b, c ?? 0),
+      rawProduct !== ans ? rawProduct : ans + a,
+      ans + b,
+      Math.max(2, ans - a),
+      sumNums,
+      hcfVal > 1 ? hcfVal : ans + 2,
+    ].filter((v) => v >= 2 && v !== ans);
+
+    const choices = buildUniqueChoices(ans, distractorPool, false);
+    const multCheck =
+      c !== undefined
+        ? `${a} × ${ans / a} = ${ans}, ${b} × ${ans / b} = ${ans}, ${c} × ${ans / c} = ${ans}`
+        : `${a} × ${ans / a} = ${ans} & ${b} × ${ans / b} = ${ans}`;
+
+    return {
+      kind: 'hcfLcm',
+      mode: 'lcm',
+      effectiveGroup,
+      numbers: picked,
+      equationDisplayNl: `KGV(${numsLabel}) = [ ? ]`,
+      equationDisplayEn: `LCM(${numsLabel}) = [ ? ]`,
+      factorsA,
+      factorsB,
+      factorsC,
+      commonFactors,
+      trackA,
+      trackB,
+      trackC,
+      primeBreakdownNl: `Priemblokjes: ${primeBreakdown}`,
+      primeBreakdownEn: `Prime blocks: ${primeBreakdown}`,
+      stepByStepNl: [
+        `1️⃣ Spring in veelvouden (tafels) van ${numsLabel}.`,
+        `2️⃣ Kijk waar de sprong-sporen voor het eerst op hetzelfde getal landen.`,
+        `3️⃣ Het Kleinste Gemene Veelvoud (KGV) is ${ans} (${multCheck})!`,
+      ],
+      stepByStepEn: [
+        `1️⃣ Skip-count along the multiples of ${numsLabel}.`,
+        `2️⃣ Spot the first number where all rhythm tracks land together.`,
+        `3️⃣ The Lowest Common Multiple (LCM) is ${ans} (${multCheck})!`,
+      ],
+      answer: ans,
+      choices,
+      conceptBadge: {
+        nl: c !== undefined ? 'KGV van 3 Getallen (Gr 8)' : `KGV • Kleinste Gemene Veelvoud (${effectiveGroup.toUpperCase()})`,
+        en: c !== undefined ? '3-Number LCM (Gr 8)' : `LCM • Lowest Common Multiple (${effectiveGroup.toUpperCase()})`,
+      },
+      prompt: {
+        nl: `Wat is het KGV (Kleinste Gemene Veelvoud) van ${numsLabel}?`,
+        en: `What is the LCM (Lowest Common Multiple) of ${numsLabel}?`,
+      },
+      coachTip: {
+        nl: `💡 Eerste gezamenlijke veelvoud is ${ans} (${multCheck})!`,
+        en: `💡 First shared multiple on the beat track is ${ans} (${multCheck})!`,
+      },
+    };
+  });
+}
+
 export function generateTangChallenge(
   gameId: TangMiniGameId,
   group: SchoolGroupId = 'g5',
@@ -2820,6 +3129,7 @@ export function generateTangChallenge(
   if (gameId === 'soulScale') return generateSoulScaleChallenge(group, streak);
   if (gameId === 'rhythmPattern') return generateRhythmPatternChallenge(group, streak);
   if (gameId === 'targetTrio') return generateTargetTrioChallenge(group, streak);
+  if (gameId === 'hcfLcm') return generateHcfLcmChallenge(group, streak);
   return generatePowerLabChallenge(group, streak);
 }
 
@@ -2987,6 +3297,20 @@ export function challengeToTrickyFact(ch: TangChallenge): TrickyFactItem {
     };
   }
 
+  if (ch.kind === 'hcfLcm') {
+    const op: Operation = ch.mode === 'hcf' ? '÷' : '×';
+    return {
+      id: `arcade_hcflcm_${ch.mode}_${ch.numbers.join('_')}_${ch.answer}`,
+      aLabel: ch.equationDisplayEn.replace('= [ ? ]', '').trim(),
+      bLabel: '?',
+      targetLabel: String(ch.answer),
+      op,
+      choices: ch.choices.map(String),
+      hintNl: ch.coachTip.nl,
+      hintEn: ch.coachTip.en,
+    };
+  }
+
   // powerLab
   return {
     id: `arcade_lab_${ch.visualFormula.replace(/\s+/g, '')}_${ch.answer}`,
@@ -3011,6 +3335,8 @@ export function challengeToTrickyFact(ch: TangChallenge): TrickyFactItem {
 export function localizeFormulaLabel(label: string, lang: 'nl' | 'en'): string {
   if (lang === 'en') {
     return label
+      .replace(/\bGGD\(/g, 'HCF(')
+      .replace(/\bKGV\(/g, 'LCM(')
       .replace(/\bGemiddelde\b/g, 'Mean')
       .replace(/\bMidden:/g, 'Midpoint:')
       .replace(/\bOmtrek:/g, 'Perimeter:')
@@ -3018,6 +3344,8 @@ export function localizeFormulaLabel(label: string, lang: 'nl' | 'en'): string {
       .replace(/\bvan\b/g, 'of');
   }
   return label
+    .replace(/\bHCF\(/g, 'GGD(')
+    .replace(/\bLCM\(/g, 'KGV(')
     .replace(/\bMean\b/g, 'Gemiddelde')
     .replace(/\bMidpoint:/g, 'Midden:')
     .replace(/\bPerimeter:/g, 'Omtrek:')

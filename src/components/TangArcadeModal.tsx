@@ -28,6 +28,7 @@ import {
   TangMiniGameId,
   TangChallenge,
   generateTangChallenge,
+  generateHcfLcmChallenge,
   challengeToTrickyFact,
 } from '../engine/tangGamesEngine';
 import { soundEngine } from '../audio/soundEngine';
@@ -43,6 +44,8 @@ export interface ArcadeGameMeta {
   titleEn: string;
   subtitleNl: string;
   subtitleEn: string;
+  minGroupBadgeNl?: string;
+  minGroupBadgeEn?: string;
   badgeGradient: string;
   cardBorder: string;
 }
@@ -158,6 +161,19 @@ export const ARCADE_GAMES_CATALOG: ArcadeGameMeta[] = [
     badgeGradient: 'from-teal-400/45 via-cyan-400/35 to-sky-400/45 border border-teal-200/75',
     cardBorder: 'border-teal-300/55 hover:border-teal-200',
   },
+  {
+    id: 'hcfLcm',
+    category: 'numberSense',
+    emoji: '🎸',
+    titleNl: 'GGD & KGV Beat-Sync',
+    titleEn: 'HCF & LCM Beat-Sync',
+    subtitleNl: 'Delers & Veelvouden',
+    subtitleEn: 'Factors & Multiples',
+    minGroupBadgeNl: 'Groep 5+',
+    minGroupBadgeEn: 'Group 5+',
+    badgeGradient: 'from-indigo-400/45 via-fuchsia-400/35 to-amber-300/45 border border-indigo-200/75',
+    cardBorder: 'border-indigo-300/55 hover:border-indigo-200',
+  },
 ];
 
 interface TangArcadeModalProps {
@@ -208,14 +224,28 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
   const [lastSpeedReward, setLastSpeedReward] = useState<SpeedGemReward | null>(
     null
   );
+  const [hcfLcmFilter, setHcfLcmFilter] = useState<'all' | 'hcf' | 'lcm'>('all');
+  const [showHcfLcmLesson, setShowHcfLcmLesson] = useState(false);
   const questionStartRef = useRef<number>(Date.now());
   const missTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const buildChallenge = (
+    gameId: TangMiniGameId,
+    grp: SchoolGroupId,
+    strk: number,
+    hlFilter: 'all' | 'hcf' | 'lcm' = hcfLcmFilter
+  ): TangChallenge => {
+    if (gameId === 'hcfLcm') {
+      return generateHcfLcmChallenge(grp, strk, hlFilter);
+    }
+    return generateTangChallenge(gameId, grp, strk);
+  };
 
   useEffect(() => {
     if (isOpen) {
       setActiveGame(initialGame);
       setViewMode(initialViewMode);
-      setChallenge(generateTangChallenge(initialGame, schoolGroup, 0));
+      setChallenge(buildChallenge(initialGame, schoolGroup, 0, hcfLcmFilter));
       setSelectedBubbleIds([]);
       setShowCoachTip(false);
       setFeedback(null);
@@ -228,7 +258,7 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
 
   useEffect(() => {
     if (isOpen) {
-      setChallenge(generateTangChallenge(activeGame, schoolGroup, streak));
+      setChallenge(buildChallenge(activeGame, schoolGroup, streak, hcfLcmFilter));
       setSelectedBubbleIds([]);
       setShowCoachTip(false);
       setFeedback(null);
@@ -236,7 +266,7 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
       setHadPenaltyOnCurrent(false);
       questionStartRef.current = Date.now();
     }
-  }, [activeGame, schoolGroup]);
+  }, [activeGame, schoolGroup, hcfLcmFilter]);
 
   if (!isOpen) return null;
 
@@ -256,7 +286,7 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
     nextGroupId = schoolGroup,
     nextStreak = streak
   ) => {
-    setChallenge(generateTangChallenge(nextGame, nextGroupId, nextStreak));
+    setChallenge(buildChallenge(nextGame, nextGroupId, nextStreak, hcfLcmFilter));
     setSelectedBubbleIds([]);
     setShowCoachTip(false);
     setFeedback(null);
@@ -437,8 +467,8 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
               <Gamepad2 className="w-3.5 h-3.5" />
               <span>
                 {lang === 'nl'
-                  ? '10 REKEN-ARCADE GAMES'
-                  : '10 MATH ARCADE GAMES'}
+                  ? '11 REKEN-ARCADE GAMES'
+                  : '11 MATH ARCADE GAMES'}
               </span>
             </div>
             <h2 className="font-display font-black text-xl sm:text-3xl text-white leading-tight mt-0.5">
@@ -477,8 +507,8 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                   ? '▶ Terug naar Spel'
                   : '▶ Back to Game'
                 : lang === 'nl'
-                  ? '🕹️ Alle 10 Games'
-                  : '🕹️ All 10 Games'}
+                  ? '🕹️ Alle 11 Games'
+                  : '🕹️ All 11 Games'}
             </span>
           </button>
 
@@ -566,8 +596,8 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
               [
                 {
                   id: 'all' as ArcadeCategory,
-                  nl: '🌟 Alle 10 Games',
-                  en: '🌟 All 10 Games',
+                  nl: '🌟 Alle 11 Games',
+                  en: '🌟 All 11 Games',
                 },
                 {
                   id: 'numberSense' as ArcadeCategory,
@@ -642,8 +672,15 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                     <div className="font-display font-black text-lg text-white leading-snug">
                       {lang === 'nl' ? game.titleNl : game.titleEn}
                     </div>
-                    <div className="inline-block mt-1 px-2.5 py-0.5 rounded-lg bg-purple-950/55 border border-purple-400/40 text-purple-100 font-bold text-xs">
-                      {lang === 'nl' ? game.subtitleNl : game.subtitleEn}
+                    <div className="flex flex-wrap items-center gap-1.5 mt-1">
+                      <span className="inline-block px-2.5 py-0.5 rounded-lg bg-purple-950/55 border border-purple-400/40 text-purple-100 font-bold text-xs">
+                        {lang === 'nl' ? game.subtitleNl : game.subtitleEn}
+                      </span>
+                      {game.minGroupBadgeNl && game.minGroupBadgeEn && (
+                        <span className="inline-block px-2 py-0.5 rounded-lg bg-gradient-to-r from-amber-400/45 to-pink-500/45 border border-amber-200/80 text-amber-100 font-display font-black text-[11px]">
+                          🎓 {lang === 'nl' ? game.minGroupBadgeNl : game.minGroupBadgeEn}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </button>
@@ -1638,6 +1675,373 @@ export const TangArcadeModal: React.FC<TangArcadeModalProps> = ({
                     data-correct={c === challenge.answer ? 'true' : 'false'}
                     onClick={() => handleChoiceTap(c)}
                     className="keep-dark-card btn-3d-key py-4 sm:py-5 rounded-2xl bg-gradient-to-b from-teal-400/35 to-cyan-600/35 hover:from-teal-400/50 hover:to-cyan-500/50 border border-teal-200/75 font-display font-black text-3xl sm:text-4xl text-white transition-all hover:scale-105 cursor-pointer"
+                  >
+                    {c}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* GAME 11: GGD & KGV BEAT-SYNC STUDIO (HCF & LCM FOR GROEP 5+) */}
+          {challenge.kind === 'hcfLcm' && (
+            <div className="flex flex-col items-center text-center space-y-3.5">
+              {/* Groep 5+ Curriculum Banner if user is currently on Groep 3 or Groep 4 */}
+              {(schoolGroup === 'g3' || schoolGroup === 'g4') && (
+                <div
+                  data-testid="hcflcm-g5-upgrade-banner"
+                  className="w-full max-w-3xl px-4 py-2.5 rounded-2xl bg-gradient-to-r from-amber-400/25 via-pink-500/25 to-indigo-500/25 border border-amber-300/70 flex flex-wrap items-center justify-between gap-2 text-left"
+                >
+                  <span className="text-xs sm:text-sm font-display font-black text-amber-100">
+                    {lang === 'nl'
+                      ? '🎓 GGD & KGV hoort bij Groep 5 t/m 8! Je oefent nu op Groep 5-startniveau.'
+                      : '🎓 HCF & LCM is designed for Group 5–8 (Ages 8–12)! Practicing at Group 5 starter level.'}
+                  </span>
+                  <button
+                    type="button"
+                    data-testid="hcflcm-switch-g5-btn"
+                    onClick={() => {
+                      soundEngine.playSelect();
+                      onChangeSchoolGroup('g5');
+                    }}
+                    className="px-3 py-1 rounded-xl bg-amber-400 text-slate-950 font-display font-black text-xs hover:bg-amber-300 transition-all cursor-pointer"
+                  >
+                    {lang === 'nl' ? 'Zet op Groep 5 ➔' : 'Switch to Group 5 ➔'}
+                  </button>
+                </div>
+              )}
+
+              {/* Sub-Mode Filter Pills (Mix / HCF Only / LCM Only) + Interactive Lesson Button */}
+              <div
+                data-testid="hcflcm-controls-bar"
+                className="flex flex-wrap items-center justify-center gap-2 w-full"
+              >
+                {(
+                  [
+                    {
+                      id: 'all' as const,
+                      nl: '🌟 Mix (GGD & KGV)',
+                      en: '🌟 Mix (HCF & LCM)',
+                    },
+                    {
+                      id: 'hcf' as const,
+                      nl: '🧩 GGD • Grootste Deler',
+                      en: '🧩 HCF • Highest Factor',
+                    },
+                    {
+                      id: 'lcm' as const,
+                      nl: '🚀 KGV • Kleinste Veelvoud',
+                      en: '🚀 LCM • Lowest Multiple',
+                    },
+                  ] as const
+                ).map((tab) => {
+                  const active = hcfLcmFilter === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      data-testid={`hcflcm-filter-${tab.id}`}
+                      onClick={() => {
+                        soundEngine.playTap();
+                        setHcfLcmFilter(tab.id);
+                      }}
+                      className={`px-3.5 py-1.5 rounded-2xl font-display font-black text-xs sm:text-sm transition-all cursor-pointer border ${
+                        active
+                          ? 'bg-gradient-to-r from-indigo-400/70 via-fuchsia-500/65 to-amber-400/70 text-white border-amber-200 shadow-[0_0_16px_rgba(244,114,182,0.45)] scale-105'
+                          : 'bg-purple-900/45 border-purple-400/45 text-purple-100 hover:bg-purple-800/55'
+                      }`}
+                    >
+                      {lang === 'nl' ? tab.nl : tab.en}
+                    </button>
+                  );
+                })}
+
+                <button
+                  type="button"
+                  data-testid="hcflcm-lesson-toggle"
+                  onClick={() => {
+                    soundEngine.playTap();
+                    setShowHcfLcmLesson((prev) => !prev);
+                  }}
+                  className={`px-3.5 py-1.5 rounded-2xl font-display font-black text-xs sm:text-sm transition-all cursor-pointer border ${
+                    showHcfLcmLesson
+                      ? 'bg-amber-400 text-slate-950 border-amber-100 shadow-md'
+                      : 'bg-amber-400/20 hover:bg-amber-400/35 border-amber-300/65 text-amber-200'
+                  }`}
+                >
+                  {lang === 'nl'
+                    ? '📖 Leer GGD & KGV'
+                    : '📖 Learn HCF & LCM'}
+                </button>
+              </div>
+
+              {/* Interactive Kid-Friendly Mini-Lesson Board */}
+              {showHcfLcmLesson && (
+                <div
+                  data-testid="hcflcm-lesson-panel"
+                  className="w-full max-w-3xl grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 rounded-3xl bg-slate-950/65 backdrop-blur-md border border-indigo-300/55 text-left animate-fadeIn"
+                >
+                  {/* HCF / GGD Explanation Card */}
+                  <div className="p-3.5 rounded-2xl bg-gradient-to-br from-emerald-500/20 via-teal-600/15 to-cyan-700/20 border border-emerald-300/55 space-y-1.5">
+                    <div className="font-display font-black text-sm sm:text-base text-emerald-200 flex items-center justify-between">
+                      <span>
+                        {lang === 'nl'
+                          ? '🧩 GGD (Grootste Gemene Deler)'
+                          : '🧩 HCF (Highest Common Factor)'}
+                      </span>
+                      <span className="px-2 py-0.5 rounded-lg bg-emerald-400/30 border border-emerald-200/60 text-[11px] text-white">
+                        {lang === 'nl' ? 'Delen ÷' : 'Divide ÷'}
+                      </span>
+                    </div>
+                    <p className="text-xs sm:text-sm text-emerald-50 font-semibold leading-snug">
+                      {lang === 'nl'
+                        ? 'Het grootste bouwblokje dat precies (zonder rest) in beide getallen past!'
+                        : 'The biggest building-block factor that divides evenly into both numbers!'}
+                    </p>
+                    <div className="p-2 rounded-xl bg-slate-900/60 border border-emerald-300/40 text-xs font-mono text-emerald-100 space-y-0.5">
+                      <div>12 ➔ 1, 2, 3, 4, [6], 12</div>
+                      <div>18 ➔ 1, 2, 3, [6], 9, 18</div>
+                      <div className="text-amber-300 font-bold">
+                        {lang === 'nl'
+                          ? '👑 Grootste gedeelde deler = 6!'
+                          : '👑 Highest shared factor = 6!'}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* LCM / KGV Explanation Card */}
+                  <div className="p-3.5 rounded-2xl bg-gradient-to-br from-fuchsia-500/20 via-purple-600/15 to-amber-500/20 border border-fuchsia-300/55 space-y-1.5">
+                    <div className="font-display font-black text-sm sm:text-base text-fuchsia-200 flex items-center justify-between">
+                      <span>
+                        {lang === 'nl'
+                          ? '🚀 KGV (Kleinste Gemene Veelvoud)'
+                          : '🚀 LCM (Lowest Common Multiple)'}
+                      </span>
+                      <span className="px-2 py-0.5 rounded-lg bg-fuchsia-400/30 border border-fuchsia-200/60 text-[11px] text-white">
+                        {lang === 'nl' ? 'Sprongen ×' : 'Jumps ×'}
+                      </span>
+                    </div>
+                    <p className="text-xs sm:text-sm text-fuchsia-50 font-semibold leading-snug">
+                      {lang === 'nl'
+                        ? 'Het eerste getal waar de tafel-sprongen van beide getallen tegelijk landen!'
+                        : 'The first number where the times-table jump tracks of both numbers land together!'}
+                    </p>
+                    <div className="p-2 rounded-xl bg-slate-900/60 border border-fuchsia-300/40 text-xs font-mono text-fuchsia-100 space-y-0.5">
+                      <div>×4 ➔ 4, 8, [12], 16</div>
+                      <div>×6 ➔ 6, [12], 18, 24</div>
+                      <div className="text-amber-300 font-bold">
+                        {lang === 'nl'
+                          ? '🎯 Eerste gezamenlijke veelvoud = 12!'
+                          : '🎯 First shared multiple = 12!'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Prompt Title */}
+              <div className="text-lg sm:text-2xl font-display font-black text-indigo-100">
+                {challenge.prompt[lang]}
+              </div>
+
+              {/* Main Equation Pill + Prime Building Blocks */}
+              <div className="flex flex-wrap items-center justify-center gap-2.5">
+                <div
+                  data-testid="tang-hcflcm-equation"
+                  className="keep-dark-card pad-3d-step px-6 py-3 rounded-3xl bg-gradient-to-r from-indigo-500/45 via-purple-600/45 to-pink-500/45 border-2 border-indigo-200/80 font-display font-black text-2xl sm:text-4xl text-white shadow-[0_8px_24px_rgba(99,102,241,0.3)]"
+                >
+                  {lang === 'nl'
+                    ? challenge.equationDisplayNl
+                    : challenge.equationDisplayEn}
+                </div>
+                <div
+                  data-testid="tang-hcflcm-primes"
+                  className="px-3.5 py-2 rounded-2xl bg-slate-900/60 border border-cyan-300/50 text-cyan-200 font-mono font-bold text-xs sm:text-sm"
+                >
+                  🧱{' '}
+                  {lang === 'nl'
+                    ? challenge.primeBreakdownNl
+                    : challenge.primeBreakdownEn}
+                </div>
+              </div>
+
+              {/* VISUAL STAGE A: HCF / GGD FACTOR CRYSTAL RIBBONS */}
+              {challenge.mode === 'hcf' && (
+                <div
+                  data-testid="tang-hcflcm-visual-hcf"
+                  className="w-full max-w-3xl p-4 rounded-3xl bg-slate-900/50 backdrop-blur-md border border-emerald-300/45 space-y-3"
+                >
+                  <div className="text-xs sm:text-sm font-display font-black text-emerald-200">
+                    {lang === 'nl'
+                      ? '🔍 Vergelijk de delers (groen = gedeelde deler in elke rij):'
+                      : '🔍 Compare the factors (green = common factor shared by every row):'}
+                  </div>
+
+                  {(
+                    [
+                      { num: challenge.numbers[0], factors: challenge.factorsA },
+                      { num: challenge.numbers[1], factors: challenge.factorsB },
+                      ...(challenge.numbers[2] !== undefined && challenge.factorsC
+                        ? [{ num: challenge.numbers[2], factors: challenge.factorsC }]
+                        : []),
+                    ] as { num: number; factors: number[] }[]
+                  ).map((row) => (
+                    <div
+                      key={row.num}
+                      className="flex flex-wrap items-center gap-2 p-2.5 rounded-2xl bg-purple-950/45 border border-purple-400/35"
+                    >
+                      <span className="keep-dark-card px-3 py-1.5 rounded-xl bg-gradient-to-br from-indigo-400/50 to-purple-600/50 border border-indigo-200/75 font-display font-black text-base sm:text-lg text-white min-w-[60px]">
+                        {row.num}
+                      </span>
+                      <span className="text-purple-200 font-black text-xs">➔</span>
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        {row.factors.map((f) => {
+                          const isCommon = challenge.commonFactors.includes(f);
+                          const isHighestRevealed =
+                            (feedback === 'correct' || showCoachTip) &&
+                            f === challenge.answer;
+                          return (
+                            <span
+                              key={f}
+                              className={`keep-dark-card px-2.5 py-1 rounded-xl font-display font-black text-xs sm:text-sm transition-all ${
+                                isHighestRevealed
+                                  ? 'bg-gradient-to-b from-amber-300/80 to-pink-500/75 text-white border-2 border-amber-100 scale-110 shadow-[0_0_14px_rgba(251,191,36,0.6)]'
+                                  : isCommon
+                                    ? 'bg-gradient-to-b from-emerald-400/50 to-teal-600/50 text-white border border-emerald-200/85 shadow-sm'
+                                    : 'bg-slate-800/65 text-purple-200 border border-purple-500/35 opacity-80'
+                              }`}
+                            >
+                              {isHighestRevealed ? `👑 ${f}` : f}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Shared Common Factors Overlap Strip */}
+                  <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
+                    <span className="text-xs sm:text-sm font-display font-black text-amber-200">
+                      {lang === 'nl'
+                        ? '🔗 Gedeelde delers:'
+                        : '🔗 Shared common factors:'}
+                    </span>
+                    {challenge.commonFactors.map((cf) => {
+                      const isAnswer = cf === challenge.answer;
+                      const revealed = feedback === 'correct' || showCoachTip;
+                      return (
+                        <span
+                          key={cf}
+                          className={`keep-dark-card px-3 py-1 rounded-xl font-display font-black text-sm sm:text-base ${
+                            isAnswer
+                              ? 'bg-gradient-to-r from-amber-400/65 to-pink-500/65 text-white border-2 border-amber-100 shadow-[0_0_14px_rgba(251,191,36,0.45)]'
+                              : 'bg-emerald-500/35 text-emerald-100 border border-emerald-300/65'
+                          }`}
+                        >
+                          {isAnswer && !revealed ? '👑 ?' : cf}
+                        </span>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* VISUAL STAGE B: LCM / KGV DUAL/TRIPLE IDOL SKIP-COUNT BEAT TRACKS */}
+              {challenge.mode === 'lcm' && (
+                <div
+                  data-testid="tang-hcflcm-visual-lcm"
+                  className="w-full max-w-3xl p-4 rounded-3xl bg-slate-900/50 backdrop-blur-md border border-fuchsia-300/45 space-y-3"
+                >
+                  <div className="text-xs sm:text-sm font-display font-black text-fuchsia-200">
+                    {lang === 'nl'
+                      ? '🎵 Volg de tafel-sprongen en vind de eerste gezamenlijke 🎯 Sync-Beat:'
+                      : '🎵 Follow the times-table jumps and spot the first shared 🎯 Sync-Beat:'}
+                  </div>
+
+                  {(
+                    [
+                      { step: challenge.numbers[0], track: challenge.trackA, icon: '🎤' },
+                      { step: challenge.numbers[1], track: challenge.trackB, icon: '🎸' },
+                      ...(challenge.numbers[2] !== undefined && challenge.trackC
+                        ? [{ step: challenge.numbers[2], track: challenge.trackC, icon: '🥁' }]
+                        : []),
+                    ] as { step: number; track: number[]; icon: string }[]
+                  ).map((row) => (
+                    <div
+                      key={row.step}
+                      className="flex flex-wrap items-center gap-2 p-2.5 rounded-2xl bg-purple-950/45 border border-purple-400/35"
+                    >
+                      <span className="keep-dark-card px-3 py-1.5 rounded-xl bg-gradient-to-br from-fuchsia-400/50 to-purple-600/50 border border-fuchsia-200/75 font-display font-black text-sm sm:text-base text-white min-w-[72px]">
+                        {row.icon} ×{row.step}
+                      </span>
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        {row.track.map((val, idx) => {
+                          const isSyncTarget = val === challenge.answer;
+                          const revealed = feedback === 'correct' || showCoachTip;
+                          return (
+                            <React.Fragment key={`${row.step}-${idx}`}>
+                              <span
+                                className={`keep-dark-card px-2.5 py-1.5 rounded-xl font-display font-black text-xs sm:text-sm transition-all ${
+                                  isSyncTarget
+                                    ? 'bg-gradient-to-b from-amber-300/75 via-pink-500/65 to-rose-500/70 text-white border-2 border-amber-100 scale-105 shadow-[0_0_16px_rgba(251,191,36,0.55)]'
+                                    : 'bg-purple-900/55 text-purple-100 border border-purple-300/45'
+                                }`}
+                              >
+                                {isSyncTarget
+                                  ? revealed
+                                    ? `🎯 ${val}`
+                                    : '🎯 ?'
+                                  : val}
+                              </span>
+                              {idx < row.track.length - 1 && (
+                                <span className="text-purple-300 font-black text-xs">
+                                  ➔
+                                </span>
+                              )}
+                            </React.Fragment>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* 3-Step Visual Thinking Strip */}
+              <div
+                data-testid="tang-hcflcm-steps"
+                className="w-full max-w-3xl grid grid-cols-1 sm:grid-cols-3 gap-2 text-left"
+              >
+                {(lang === 'nl' ? challenge.stepByStepNl : challenge.stepByStepEn).map(
+                  (stepText, idx) => {
+                    const isFinalStep = idx === 2;
+                    const showFinal = feedback === 'correct' || showCoachTip;
+                    return (
+                      <div
+                        key={idx}
+                        className="p-2.5 rounded-2xl bg-purple-950/50 border border-purple-400/40 text-xs font-bold text-purple-100"
+                      >
+                        {isFinalStep && !showFinal
+                          ? lang === 'nl'
+                            ? '3️⃣ Kies hieronder het juiste antwoord!'
+                            : '3️⃣ Pick the matching number below!'
+                          : stepText}
+                      </div>
+                    );
+                  }
+                )}
+              </div>
+
+              {/* 4 Tactile 3D Answer Choice Buttons */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 w-full max-w-xl mt-2">
+                {challenge.choices.map((c) => (
+                  <button
+                    key={c}
+                    type="button"
+                    data-testid={`tang-choice-${c}`}
+                    data-correct={c === challenge.answer ? 'true' : 'false'}
+                    onClick={() => handleChoiceTap(c)}
+                    className="keep-dark-card btn-3d-key py-4 sm:py-5 rounded-2xl bg-gradient-to-b from-indigo-400/35 to-fuchsia-600/35 hover:from-indigo-400/50 hover:to-fuchsia-500/50 border border-indigo-200/75 font-display font-black text-3xl sm:text-4xl text-white transition-all hover:scale-105 cursor-pointer"
                   >
                     {c}
                   </button>
